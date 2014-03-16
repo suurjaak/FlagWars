@@ -8,9 +8,9 @@
   <!--
     body { font-family: Calibri; }
     .card {
+      position: relative;
       width: 200px;
       height: 300px;
-      overflow: hidden;
       border: 1px solid black;
       padding: 5px;
       float: left;
@@ -25,6 +25,18 @@
       max-width: 170px;
       max-height: 110px;
     }
+    img.heraldic {
+      position: absolute;
+      bottom: 5px;
+      right: 5px;
+      max-height: 50px;
+    }
+    img.heraldic.small {
+      max-height: 30px;
+    }
+    .hideHeraldic img.heraldic {
+      display: none;
+    }
     .card h1 {
       font-size: 1em;
       text-align: center;
@@ -38,21 +50,25 @@
       margin: 1em 0 0 0;
     }
     .card dt {
-      display: inline-block;
-      width: 90px;
+      width: 45%;
       font-weight: bold;
-      white-space: break-word;
-      vertical-align: bottom;
-      margin-right: 1em;
+      float: left;
+    }
+    dt.shifted {
+      position: relative;
+      top: 3px;
     }
     .card dd {
-      display: inline;
+      width: 55%;
       margin: 0px;
-      vertical-align: bottom;
+      float: left;
     }
     .card dd:after { /* add linebreak, dd is inline */
         content: "\a";
         white-space: pre;
+    }
+    label {
+      white-space: nowrap;
     }
   -->
   </style>
@@ -64,29 +80,38 @@
 <!--
 
 var NAMED_COLOURS = {"aliceblue": "#f0f8ff", "antiquewhite": "#faebd7", "aqua": "#00ffff", "aquamarine": "#7fffd4", "azure": "#f0ffff", "beige": "#f5f5dc", "bisque": "#ffe4c4", "black": "#000000", "blanchedalmond": "#ffebcd", "blue": "#0000ff", "blueviolet": "#8a2be2", "brown": "#a52a2a", "burlywood": "#deb887", "cadetblue": "#5f9ea0", "chartreuse": "#7fff00", "chocolate": "#d2691e", "coral": "#ff7f50", "cornflowerblue": "#6495ed", "cornsilk": "#fff8dc", "crimson": "#dc143c", "cyan": "#00ffff", "darkblue": "#00008b", "darkcyan": "#008b8b", "darkgoldenrod": "#b8860b", "darkgray": "#a9a9a9", "darkgreen": "#006400", "darkkhaki": "#bdb76b", "darkmagenta": "#8b008b", "darkolivegreen": "#556b2f", "darkorange": "#ff8c00", "darkorchid": "#9932cc", "darkred": "#8b0000", "darksalmon": "#e9967a", "darkseagreen": "#8fbc8f", "darkslateblue": "#483d8b", "darkslategray": "#2f4f4f", "darkturquoise": "#00ced1", "darkviolet": "#9400d3", "deeppink": "#ff1493", "deepskyblue": "#00bfff", "dimgray": "#696969", "dodgerblue": "#1e90ff", "firebrick": "#b22222", "floralwhite": "#fffaf0", "forestgreen": "#228b22", "fuchsia": "#ff00ff", "gainsboro": "#dcdcdc", "ghostwhite": "#f8f8ff", "gold": "#ffd700", "goldenrod": "#daa520", "gray": "#808080", "green": "#008000", "greenyellow": "#adff2f", "honeydew": "#f0fff0", "hotpink": "#ff69b4", "indianred": " #cd5c5c", "indigo": " #4b0082", "ivory": "#fffff0", "khaki": "#f0e68c", "lavender": "#e6e6fa", "lavenderblush": "#fff0f5", "lawngreen": "#7cfc00", "lemonchiffon": "#fffacd", "lightblue": "#add8e6", "lightcoral": "#f08080", "lightcyan": "#e0ffff", "lightgoldenrodyellow": "#fafad2", "lightgray": "#d3d3d3", "lightgreen": "#90ee90", "lightpink": "#ffb6c1", "lightsalmon": "#ffa07a", "lightseagreen": "#20b2aa", "lightskyblue": "#87cefa", "lightslategray": "#778899", "lightsteelblue": "#b0c4de", "lightyellow": "#ffffe0", "lime": "#00ff00", "limegreen": "#32cd32", "linen": "#faf0e6", "magenta": "#ff00ff", "maroon": "#800000", "mediumaquamarine": "#66cdaa", "mediumblue": "#0000cd", "mediumorchid": "#ba55d3", "mediumpurple": "#9370db", "mediumseagreen": "#3cb371", "mediumslateblue": "#7b68ee", "mediumspringgreen": "#00fa9a", "mediumturquoise": "#48d1cc", "mediumvioletred": "#c71585", "midnightblue": "#191970", "mintcream": "#f5fffa", "mistyrose": "#ffe4e1", "moccasin": "#ffe4b5", "navajowhite": "#ffdead", "navy": "#000080", "oldlace": "#fdf5e6", "olive": "#808000", "olivedrab": "#6b8e23", "orange": "#ffa500", "orangered": "#ff4500", "orchid": "#da70d6", "palegoldenrod": "#eee8aa", "palegreen": "#98fb98", "paleturquoise": "#afeeee", "palevioletred": "#db7093", "papayawhip": "#ffefd5", "peachpuff": "#ffdab9", "peru": "#cd853f", "pink": "#ffc0cb", "plum": "#dda0dd", "powderblue": "#b0e0e6", "purple": "#800080", "red": "#ff0000", "rosybrown": "#bc8f8f", "royalblue": "#4169e1", "saddlebrown": "#8b4513", "salmon": "#fa8072", "sandybrown": "#f4a460", "seagreen": "#2e8b57", "seashell": "#fff5ee", "sienna": "#a0522d", "silver": "#c0c0c0", "skyblue": "#87ceeb", "slateblue": "#6a5acd", "slategray": "#708090", "snow": "#fffafa", "springgreen": "#00ff7f", "steelblue": "#4682b4", "tan": "#d2b48c", "teal": "#008080", "thistle": "#d8bfd8", "tomato": "#ff6347", "turquoise": "#40e0d0", "violet": "#ee82ee", "wheat": "#f5deb3", "white": "#ffffff", "whitesmoke": "#f5f5f5", "yellow": "#ffff00", "yellowgreen": "#9acd32"}
-
-var LANGUAGE = "en"; // @todo tee language stringid, mitte "Area"
+var REGEX_COLOUR_SHORTHEX = /^#[0-9a-f]{3}$/ig;
+var REGEX_COLOUR = new RegExp("^(#[0-9a-f]{3}|#[0-9a-f]{6}|" +
+  Object.keys(NAMED_COLOURS).join("|") + 
+  "|((rgba*|hsla*)\\((\\s*[0-9.%]+\\s*,){2,3}\\s*[0-9.%]*\\s*\\)))$", "i");
+var REGEX_COLOURS = new RegExp("[^-a-z0-9](#[0-9a-f]{3}|#[0-9a-f]{6}|" +
+  Object.keys(NAMED_COLOURS).join("|") + 
+  "|((rgba*|hsla*)\\((\\s*[0-9.%]+\\s*,){2,3}\\s*[0-9.%]*\\s*\\)))[^-a-z0-9]", "ig");
+var REGEX_COLOUR_TUPLE = new RegExp("(^(rgba*|hsla*)\\(\\s*([0-9.%]+)\\s*,\\s*([0-9.%]+)\\s*,\\s*([0-9.%]+)\\s*,*\\s*[0-9.%]*\\s*\\)$)", "i");
 
 // Regex for matching countries where flag should not have box shadow border.
 var COUNTRIES_NOBORDER = new RegExp("Nepal", "i");
 var COUNTRIES_TOSKIP = new RegExp("Crimea", "i");
-//var COUNTRIES_TOSKIP = new RegExp("^((?!Luxembourg).)*$", "i");
+//var COUNTRIES_TOSKIP = new RegExp("^((?!brunei).)*$", "i");
 
 var WIKIPEDIA_API_URL = "http://en.wikipedia.org/w/api.php?callback=?";
 
+var KNOWN_HERALDIC_URLS = {"Canada": "http://upload.wikimedia.org/wikipedia/en/4/4f/Coat_of_arms_of_Canada.svg" };
 // Some countries do not have SVG images, or parsing yields false results.
-//var KNOWN_COLOURS = {"Flag colours":     {"Albania": 2, "Iraq": 4, "Jamaica": 3, "Jordan": 4, "Kuwait": 4, "Malawi": 3},
-var KNOWN_COLOURS = {"Flag colours":     {"Ghana": 4, "Iraq": 4, "Jamaica": 3, "Kuwait": 4, "Palestine": 4, "Saint Lucia": 4, "Somaliland": 4, "Yemen": 3, },
-                     "Heraldic colours": {"Albania": 3, "Bosnia and Herzegovina": 3, "Botswana": 3, "Cook Islands": 10, "Dominica": 8, "Grenada": 14, "Marshall Islands": 4, "Nigeria": 9, "South Africa": 11, "São Tomé and Príncipe": 10} };
+var KNOWN_COLOURS = {
+  "Flag colours":     {"Albania": 2, "Botswana": 3, "Ghana": 4, "Iraq": 4, "Jamaica": 3, "Jordan": 4, "Kuwait": 4, "Malawi": 3, "Palestine": 4, "Saint Lucia": 4, "Somaliland": 4, "Yemen": 3 },
+  "Heraldic colours": {"Albania": 3, "Bosnia and Herzegovina": 3, "Cook Islands": 10, "Cyprus": 3, "Dominica": 8, "Grenada": 14, "Lebanon": 4, "Libya": 1, "Marshall Islands": 4, "Nigeria": 9, "South Africa": 11, "São Tomé and Príncipe": 10} };
+var BLANK_IMG = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
 
+// Some values are hard to parse from Wikipedia
 var KNOWN_VALUES = {"Capital": {"Monaco": "Monaco", "Singapore": "Singapore"} };
 // Some capitals do not have population data in Wikipedia
 var KNOWN_CAPITAL_POPULATIONS = {"Cook Islands": 13373, "Nauru": 1292, "Singapore": "", "Vatican City": ""};
 
 
-var p = null;
-var actionCounter = 0; // For keeping track of completion
+var actionCounter = 0; // For keeping track of queries and completion
 var actionTotal = 0;
+
 
 /** Adds the number of colours to template, counting all colour values in SVG body. */
 var addColour = function(name, country, template, url) {
@@ -109,34 +134,36 @@ var addColour = function(name, country, template, url) {
     var actionId = registerAction();
     $.get(svg_url,
       success=function(svg) {
-        var REGEX_SHORTHEX = /^#[0-9a-f]{3}$/ig;
-        var REGEX_COLOUR = new RegExp("^(#[0-9a-f]{3}|#[0-9a-f]{6}|" + 
-                           Object.keys(NAMED_COLOURS).join("|") + ")$", "ig");
         var colourMap = {};
-        var checkColour = function(v) {
-          if (v && v.match(REGEX_COLOUR)) {
-            v = v.toLowerCase();
-            if (v.match(REGEX_SHORTHEX)) { // Convert #abc to #aabbcc
-              v = "#" + v[1] + v[1] + v[2] + v[2] + v[3] + v[3];
-            }
-            colourMap[NAMED_COLOURS[v] || v] = true;
-          }
-        }
+
         $(svg).find("*").each(function() {
-          var lookups = [this.attributes["fill"] && this.attributes["fill"].value,
-                         this.attributes["stroke"] && this.attributes["stroke"].value];
-          var style = this.attributes["style"] && this.attributes["style"].value || "";
-          $.each(style.split(";"), function(_, item) {
-            var namevalue = item.split(":");
-            if (namevalue.length == 2) {
-              lookups.push(namevalue[1]);
+          // Check any attributes for colour-like values
+          var lookups = []; // All potential values to check for colour
+          $.each(this.attributes, function(_, node) {
+            if (node.name.match(/(id)|(href)/i)) return; // Can have colour-like values
+            if (node.name.match(/style/i)) {
+              $.each(node.value.split(";"), function(_, item) {
+                var namevalue = item.split(":");
+                (2 == namevalue.length) ? lookups.push(namevalue[1]) : 0;
+              });
+            } else {
+              lookups.push(node.value);
             }
           });
-          lookups.map(function(x) { x && checkColour(x.trim()); } );
+          if ("style" == this.nodeName) {
+            // A separate CSS section: parse colours from style text
+            var m = this.textContent.replace(/\/\*(\r|\n|.)*\*\//g, "").match(REGEX_COLOURS);
+            var colours = (m || []).map(function(x) { return x.replace(/[^#a-z0-9]/ig, ""); });
+            lookups = lookups.concat(colours);
+          }
+          lookups.map(function(x) { var c = parseColour(x.trim()); if (c) colourMap[c] = true; } );
         })
         element.html(Object.keys(colourMap).length || 1);
         if (name.match(/Flag/i)) {
-          template.find("img").attr("title", Object.keys(colourMap).sort().join(", "));
+          template.find("img.flag").attr("title", Object.keys(colourMap).sort().join(", "));
+        }
+        if (name.match(/Heraldic/i)) {
+          template.find("img.heraldic").attr("title", Object.keys(colourMap).sort().join(", "));
         }
         unregisterAction(actionId);
       }
@@ -155,14 +182,17 @@ var addColour = function(name, country, template, url) {
 var addValue = function(name, country, template, valuefunc, defaultValue) {
   var result = undefined;
   var value = (typeof(defaultValue) != "undefined") ? defaultValue : "-";
-  if (KNOWN_VALUES[country] && KNOWN_VALUES[country][name]) {
-    value = KNOWN_VALUES[country][name];
+  if (KNOWN_VALUES[name] && KNOWN_VALUES[name][country]) {
+    value = KNOWN_VALUES[name][country];
   } else {
     try {
       value = result = valuefunc();
     } catch (e) { }
   }
   template.find("dl").append($("<dt />").html(name), $("<dd />").html(value));
+  if (value.match(/<sup>/i)) {
+    template.find("dt:last").addClass("shifted");
+  }
   return result;
 };
 
@@ -193,12 +223,13 @@ var addCapitalPopulation = function(name, country, template) {
           var p = $(data.parse.text["*"].replace(/<img[^>]+src=/g, function(a) { return a.substring(0, a.length - 1) + "hack="; } ));
           p.find("span[class*=sortkey]").remove(); // Invisible, interfere with parsing
           try {
-            var value = ((p.find('th,td').filter(function(){ return $(this).text().match(/population/i); }).parent().next("tr").find("td:last-child").first().text().match(/([0-9.,\s]+)/i) || "  ")[1].trim() || p.find('td').filter(function(){ return $(this).text().match(/population/i); }).next("td:first").text().match(/([0-9.,\s]+)/i)[1]).replace(/,/g, " ");
-            element.append(", " + value)
+            var value = ((p.find('th,td').filter(function(){ return $(this).text().match(/population/i); }).parent().next("tr").find("td:last-child").first().text().match(/([0-9.,\s]+)/i) || ["",""])[1] || (p.find('td').filter(function(){ return $(this).text().match(/population/i); }).next("td:first").text().match(/([0-9.,\s]+)/i) || ["",""])[1]).replace(/[.,]/g, " ").trim();
+            if (value) element.append(", " + value)
           } catch (e) {
             $("#errors").append("Parse capital population " + name + ": " + e + "\n\n");
           }
         }
+        sizeHeraldicIcon(template);
         unregisterAction(actionId);
     }).error(function(e) {
       $("#errors").append("Query capital " + name + ": " + e + "\n\n");
@@ -207,10 +238,22 @@ var addCapitalPopulation = function(name, country, template) {
   }
 };
 
+
+/** Sizes the heraldic icon to fit under text, if necessary. */
+var sizeHeraldicIcon = function(template) {
+  var dd_lastwide = template.find("dd").eq(-3);
+  var img_heraldic = template.find("img.heraldic");
+  var vspace = template.outerHeight() - dd_lastwide.position().top - dd_lastwide.height() - (parseInt(img_heraldic.css("bottom")) || 0);
+  if ((parseInt(img_heraldic.css("max-height")) || 0) > vspace) {
+    img_heraldic.addClass("small");
+  }
+};
+
+
 /** Makes a new card from country info page. */
 var makeCard = function(displaytitle, page, template) {
   // Avoid jQuery automatic image verifying
-  p = $(page.replace(/<img[^>]+src=/g, function(a) { return a.substring(0, a.length - 1) + "hack="; } ));
+  var p = $(page.replace(/<img[^>]+src=/g, function(a) { return a.substring(0, a.length - 1) + "hack="; } ));
   template.attr("data-name", displaytitle);
 
   var capital = undefined;
@@ -218,7 +261,7 @@ var makeCard = function(displaytitle, page, template) {
   var heraldic_svg_url = null;
 
   var flag_url = p.find("img[srchack*=Flag_of]:first").attr("srchack").replace(/svg\/(\d+)px/, "svg/180px") || "";
-  var heraldic_url = p.find("img").filter(function() { return $(this).attr("srchack").match(/Coats*_of_arms|Emblem|Seal_of|Koninklijk|Bundesadler|Armoiries|Staatswappen|Arms_of|Escudo_|Herb_|Palestine_COA/i); }).first().attr("srchack") || "";
+  var heraldic_url = KNOWN_HERALDIC_URLS[displaytitle] || p.find("img").filter(function() { return $(this).attr("srchack").match(/Coats*_of_arms|Emblem|Seal_of|Koninklijk|Bundesadler|Armoiries|Staatswappen|Arms_of|Escudo_|Herb_|_COA|coa_|-arms/i); }).first().attr("srchack") || "";
 
   p.find("span[class='fn org country-name']:first").find("a").remove(); // Name-span can contain superfluous links
   var title = p.find("span[class='fn org country-name']:first").text()
@@ -227,32 +270,34 @@ var makeCard = function(displaytitle, page, template) {
   }
   title = title.replace(/\s\(country\)/i, ""); // Entries like "Georgia (country)"
 
-  if (flag_url) {
-    flag_url = "http://" + flag_url.replace(/^(https*\:)*\/+/, "");
-  }
+  if (flag_url) flag_url = "http://" + flag_url.replace(/^(https*\:)*\/+/, "");
+  if (heraldic_url) heraldic_url = "http://" + heraldic_url.replace(/^(https*\:)*\/+/, "");
 
-  template.find("img").attr("src", flag_url);
+  template.find("img.flag").attr("src", flag_url);
+  var heraldic_icon = heraldic_url ? heraldic_url.replace(/svg\/(\d+)px/, "svg/50px") : BLANK_IMG;
+  template.find("img.heraldic").attr("src", heraldic_icon);
+
   template.find("a").attr("href", "http://en.wikipedia.com/wiki/" + displaytitle.replace(/ /g, "_"));
-  if (title.match(COUNTRIES_NOBORDER)) {
-    template.find("img").attr("style", "box-shadow: none;");
+  if (displaytitle.match(COUNTRIES_NOBORDER)) {
+    template.find("img.card").attr("style", "box-shadow: none;");
   }
   template.find("h1").html(title);
 
-  var defaultValue = title.match(/Vatican/i) ? "0.44 km<sup>2</sup>" : undefined;
+  var defaultValue = title.match(/Vatican/i) ? "0.44 km<sup><small>2</small></sup>" : undefined;
   addValue("Area", displaytitle, template, function() { return $("<span />").html(
       (p.find('th,td').filter(function(){ return $(this).text().toLowerCase() === "area"; }).parent().next("tr").find("th:last,td:last").html().match(/([0-9 ,.]+).*km/) || p.find('th,td').filter(function(){ return $(this).text().toLowerCase() === "area"; }).next("th,td").html().match(/([0-9 ,.]+).*km/))
       [1].trim().replace(/,/g, " ")
-    ).text() + " km<sup>2</sup>"; }, defaultValue
+    ).text() + " km<sup><small>2</small></sup>"; }, defaultValue
   );
 
   addValue("Population", displaytitle, template, function() { return $("<span />").html(
-      p.find("th,td").filter(function(){ return $(this).text().toLowerCase() === "population"; }).parent().next("tr").find("td:last").text().match(/([0-9,.\s]+)/)[1].trim().replace(/,/g, " ")
+      p.find("th,td").filter(function(){ return $(this).text().toLowerCase() === "population"; }).parent().next("tr").find("td:last").text().match(/([0-9,.\s]+)/)[1].trim().replace(/[.,]/g, " ")
     ).text(); }
   );
 
   addValue("Population density", displaytitle, template, function() { return $("<span />").html(
       p.find("th,td").filter(function(){ return $(this).text().toLowerCase() === "population"; }).parent().parent().find("th,td").filter(function(){ return $(this).text().match(/^Density/i); }).next().text().match(/([0-9.,\s]+).*\/km/i)[1].trim()
-    ).text() + " / km<sup>2</sup>"; }
+    ).text() + " / km<sup><small>2</small></sup>"; }
   );
 
   defaultValue = title.match(/Vatican/i) ? "Vatican City" : (title.match(/Monaco/i) ? "Monaco" : undefined);
@@ -297,6 +342,7 @@ var makeCard = function(displaytitle, page, template) {
 
   addColour("Heraldic colours", displaytitle, template, heraldic_url);
   addColour("Flag colours", displaytitle, template, flag_url);
+  sizeHeraldicIcon(template);
 };
 
 
@@ -304,7 +350,7 @@ var makeCard = function(displaytitle, page, template) {
 var makeCountries = function(countries) {
   var basetemplate = $("#template").remove();
   basetemplate.removeAttr("id");
-  basetemplate.find("img").attr("src", "");
+  basetemplate.find("img").attr({"src": "", "title": ""});
   basetemplate.find("h1,dl").empty();
   for (var i in countries) {
     var country = countries[i];
@@ -384,7 +430,13 @@ var getStaticPage = function() {
     '<title>Flag Trading Cards</title>';
   content += document.getElementById("stylesheet").outerHTML;
   content += "\n</head>\n<body>";
-  content += document.getElementById("cards").outerHTML;
+  var cards = document.getElementById("cards").outerHTML;
+  if ($("#cards").hasClass("hideHeraldic")) {
+    var cardsElem = $(cards);
+    cardsElem.find("img.heraldic").remove();
+    cards = cardsElem[0].outerHTML;
+  }
+  content += cards;
 
   var timestamp = function(d) {
     var a = [d.getDay(), d.getMonth(), d.getYear() + 1900, d.getHours(), d.getMinutes(), d.getSeconds()];
@@ -413,12 +465,15 @@ var registerAction = function() {
 
 
 /**
- * Returns a new action ID, used for keeping track of completion.
+ * Unregisters the action, refreshing download link every now and then.
  */
-var unregisterAction = function() {
+var unregisterAction = function(actionId) {
   actionCounter--;
-  if (!(actionTotal % 4)) {
-    makeDownloadLink();
+  if (!actionCounter || !(actionTotal % 4)) {
+    makeDownloadLink(!actionCounter);
+    if (!actionCounter) {
+      alert("Generation complete!\n\n" + actionTotal + " queries to Wikipedia.");
+    }
   }
 };
 
@@ -426,19 +481,96 @@ var unregisterAction = function() {
 /** Makes a link with current static content that can be saved to file. */
 var makeDownloadLink = function() {
   var link = document.getElementById("savelink");
-  var content = unescape(encodeURIComponent(getStaticPage())); // Make UTF-8
   if (actionCounter) {
-    link.innerHTML = ("Creating.. (" + content.length + " bytes)").replace(/ /g, "&nbsp;");
+    link.innerHTML = ("Creating.. (" + actionTotal + " Wikipedia queries)").replace(/ /g, "&nbsp;");
   } else {
+    var content = unescape(encodeURIComponent(getStaticPage())); // Make UTF-8
     link.href = "data:application/octet-stream;base64," + btoa(content);
     link.innerHTML = ("Save file (" + content.length + " bytes)").replace(/ /g, "&nbsp;");
-    alert("Generation complete!\n\n" + actionTotal + " queries to Wikipedia.");
   }
+};
+
+
+/**
+ * Returns colour hexadecimal parsed from value, or undefined if not colour.
+ * Supports #0f0, #00ff00, green, rgb(0, 100%, 0.0) and hsl(120, 100%, 0.5).
+ */
+var parseColour = function(v) {
+  var r = undefined;
+  if (v && v.match(REGEX_COLOUR)) {
+    r = v.toLowerCase();
+    if (v.match(REGEX_COLOUR_SHORTHEX)) { // Convert #abc to #aabbcc
+      r = "#" + v[1] + v[1] + v[2] + v[2] + v[3] + v[3];
+    } else {
+      var m = v.match(REGEX_COLOUR_TUPLE);
+      if (m) { // Parse rgb|rgba|hsl|hsla colour tuple like rgb(0.5, 255, 100%)
+        var MAX = v.indexOf("rgb") >= 0 ? 255 : 360;
+        var tuple = m.slice(3, 6).map(function(x) {
+          var n = (parseInt(x) || 0) % (MAX + 1);
+          if (parseFloat(x) != parseInt(x)) {
+            n = (parseFloat(x) * MAX) % (MAX + 1);
+          } else if (x.indexOf("%") > 0) {
+            n = ((parseInt(x) || 0) / 100 * MAX) % (MAX + 1);
+          }
+          return n;
+        });
+        if (v.indexOf("hsl") >= 0) tuple = hslToRgb.apply(this, tuple);
+        r = "#" + tuple.map(function(x) { return (x + 0x100).toString(16).substr(-2); }).join("");
+      }
+    }
+    r = NAMED_COLOURS[r] || r;
+  }
+  return r;
+};
+
+
+/**
+ * Converts an HSL color value to RGB. Conversion formula
+ * adapted from http://en.wikipedia.org/wiki/HSL_color_space.
+ * Assumes h, s, and l are contained in the set [0, 1] or [0, 360] and
+ * returns r, g, and b in the set [0, 255].
+ *
+ * @param   Number  h       The hue
+ * @param   Number  s       The saturation
+ * @param   Number  l       The lightness
+ * @return  Array           The RGB representation
+ * @from    http://stackoverflow.com/questions/2353211/hsl-to-rgb-color-conversion
+ */
+var hslToRgb = function(h, s, l){
+    var r, g, b;
+    if (h > 1) h /= 360;
+    if (s > 1) s /= 360;
+    if (l > 1) l /= 360;
+
+    if(s == 0){
+        r = g = b = l; // achromatic
+    }else{
+        function hue2rgb(p, q, t){
+            if(t < 0) t += 1;
+            if(t > 1) t -= 1;
+            if(t < 1/6) return p + (q - p) * 6 * t;
+            if(t < 1/2) return q;
+            if(t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+            return p;
+        }
+
+        var q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+        var p = 2 * l - q;
+        r = hue2rgb(p, q, h + 1/3);
+        g = hue2rgb(p, q, h);
+        b = hue2rgb(p, q, h - 1/3);
+    }
+
+    return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
 };
 
 
 $(document).ready(function() {
   $("#generate").click(generateCards);
+  $("#hide_heraldic_img").click(function() {
+    $("#cards").toggleClass("hideHeraldic");
+    if (actionTotal && !actionCounter) makeDownloadLink();
+  });
 });
 
 -->
@@ -448,18 +580,18 @@ $(document).ready(function() {
 
 <div class="card" id="template">
   <a href="http://en.wikipedia.org/wiki/Estonia" target="_blank"><img class="flag" src="http://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/Flag_of_Estonia.svg/170px-Flag_of_Estonia.svg.png" title="#000000, #4891d9, #ffffff" alt="" /></a>
+  <img class="heraldic" src="http://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/Coat_of_arms_of_Estonia.svg/50px-Coat_of_arms_of_Estonia.svg.png" title="#1f1a17, #3a75c3, #c51f3a, #efa900" alt="" />
   <h1>Republic of Estonia</h1>
   <dl>
-    <dt>Area</dt><dd>45 227 km<sup>2</sup></dd>
+    <dt class="shifted">Area</dt><dd>45 227 km<sup><small>2</small></sup></dd>
     <dt>Population</dt><dd>1 311 870</dd>
-    <dt>Density</dt><dd>29 / km<sup>2</sup></dd>
+    <dt class="shifted">Density</dt><dd>29 / km<sup><small>2</small></sup></dd>
     <dt>Capital</dt><dd>Tallinn, 430 594</dd>
     <dt>Human Dev. Index</dt><dd>0.846</dd>
     <dt>Gini index</dt><dd>32.5</dd>
-    <dt>GDP per capita</dt><dd>$22 351</dd>
-
-    <dt>Letters</dt><dd>state: 17 / capital: 7</dd>
-    <dt>Flag colours</dt><dd>3</dd>
+    <dt>GDP per capita</dt><dd>$18 127</dd>
+    <dt>Letters</dt><dd>state 17, capital 7</dd>
+    <dt>Flag colours</dt><dd>4</dd>
     <dt>Heraldic colours</dt><dd>3</dd>
   </dl>
 </div>
@@ -467,6 +599,8 @@ $(document).ready(function() {
 </div>
 
 <input type="button" value="Start" id="generate"/>
+<label for="hide_heraldic_img"><input type="checkbox" id="hide_heraldic_img" checked="checked" />Include heraldic icon</label>
+<br />
 <a id="savelink" download="flags.html" title="Save as a static page"></a>
 <br /><br />
 Generate flag cards from online Wikipedia data.
@@ -474,8 +608,9 @@ Generate flag cards from online Wikipedia data.
 <div id="footer" style="clear: both; text-align: center; font-size: 0.8em; padding-top: 20px;">
 Flag Trading Cards<br />
 <br />
-&copy; 2014 Erki Suurjaak. Version 1.1.2, 13.03.2014.
+&copy; 2014 Erki Suurjaak. Version 1.1.5, 15.03.2014.
 </div>
+
 
 <pre id="errors" style="padding-top: 20px; font-size: 0.85em; color: #444;"></pre>
 
