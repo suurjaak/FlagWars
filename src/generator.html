@@ -566,7 +566,7 @@ var registerAction = function() {
 var unregisterAction = function(actionId) {
   actionCounter--;
   if (actionCounter) {
-    document.getElementById("savelink").innerHTML = ("Creating.. (" + actionTotal + " Wikipedia queries)");
+    document.getElementById("savelink").innerHTML = ("Creating.. (" + (actionTotal - actionCounter) + " Wikipedia queries)");
   } else {
     makeDownloadLink(!actionCounter);
     document.getElementById("info").innerHTML = ("Generated " + document.getElementById("cards").children.length + " flag cards from " + actionTotal + " Wikipedia queries.");
@@ -712,22 +712,21 @@ function formatNumberRgx(num) {
 
 <div id="footer">
   <table><tr>
-    <th>Opening:</th><td>Shuffle and deal all cards.</td>
+    <th>Opening:</th><td>Shuffle and deal all cards. Player next to dealer leads the first round.</td>
   </tr><tr>
-    <th>Each round:</th><td>Player next to dealer announces a field from their topmost card. <br />
+    <th>Each round:</th><td>Leader announces a field from their topmost card. <br />
     Player with the best score puts the trick under their deck and leads the next round. <br />
     If a player's card has no value in chosen field, leader must choose another field.
     </td>
   </tr><tr>
-    <th>Comparing:</th><td>Higher values are better, except for Human Development Index and Gini index.</td>
+    <th>Comparing:</th><td>Higher values are better, except for Human Development Index and Gini index.<br />
+    On equal score, tied players include their next card.</td>
   </tr><tr>
     <th>Endgame:</th><td>With 3 cards or less, player can choose which card to use.</td>
   </tr><tr>
-    <th>Tie:</th><td>On equal score, tied players include their next card.</td>
-  </tr><tr>
-    <th>Finish:</th><td>Until first player to lose all cards; or until last player remaining.</td>
+    <th>Finish:</th><td>Until first player to lose all cards. Or until last remaining player.</td>
   </tr></table>
-<p>&copy; 2014 Erki Suurjaak. Version 1.1.8, 17.03.2014.</p>
+<p>&copy; 2014 Erki Suurjaak. Version 1.1.9, 17.03.2014.</p>
 </div>
 
 <pre id="errors" style="padding-top: 20px; font-size: 0.85em; color: #444;"></pre>
