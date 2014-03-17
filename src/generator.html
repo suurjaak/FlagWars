@@ -4,10 +4,12 @@
   <meta name="Author" content="Erki Suurjaak" />
   <title>Flag Trading Cards | Generator</title>
   <script src="http://code.jquery.com/jquery.min.js"></script>
-  <link rel="shortcut icon" type="image/png" id="favicon" href="data:image/png;base64,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" />
   <style id="stylesheet">
   <!--
     body { font-family: Calibri; }
+    #cards {
+      clear: both;
+    }
     div.card {
       position: relative;
       width: 200px;
@@ -36,7 +38,7 @@
     img.heraldic.small {
       max-height: 30px;
     }
-    #cards.hideHeraldic img.heraldic {
+    .hideHeraldic img.heraldic {
       display: none;
     }
     div.card h1 {
@@ -51,21 +53,21 @@
       font-size: 0.7em;
       margin: 1em 0 0 0;
     }
-    div.card dt {
+    dt {
       width: 48%;
       font-weight: bold;
       float: left;
     }
-    div.card dt.shifted {
+    dt.shifted {
       position: relative;
       top: 3px;
     }
-    div.card dd {
+    dd {
       width: 52%;
       margin: 0px;
       float: left;
     }
-    div.card dd:after { /* add linebreak, dd is inline */
+    dd:after { /* add linebreak, dd is inline */
       content: "\a";
       white-space: pre;
     }
@@ -76,15 +78,31 @@
       bottom: 0px;
       left: 3px;
     }
-    label {
+    #header {
+      text-align: center;
+    }
+    #footer table {
+     max-width: 600px;
+     margin-left: auto;
+     margin-right: auto;
+    }
+    #footer {
+      clear: both;
+      font-size: 0.8em;
+      padding-top: 20px;
+    }
+    #footer tr {
+      vertical-align: top;
+    }
+    #footer th {
+      text-align: left;
       white-space: nowrap;
     }
+    #footer p { text-align: center; }
   -->
   </style>
+  <link rel="shortcut icon" type="image/png" id="favicon" href="data:image/png;base64,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" />
 </head>
-
-<body>
-
 <script type="text/javascript">
 <!--
 
@@ -103,8 +121,8 @@ var REGEX_COLOUR_TUPLE = new RegExp("(^(rgba*|hsla*)\\(\\s*([0-9.%]+)\\s*,\\s*([
 // Regex for matching countries where flag should not have box shadow border.
 var REGEX_COUNTRIES_NOBORDER = new RegExp("Nepal", "i");
 
-var REGEX_COUNTRIES_TOSKIP = new RegExp("Crimea", "i");
 var REGEX_COUNTRIES_TOSKIP = new RegExp("^((?!sudan).)*$", "i");
+var REGEX_COUNTRIES_TOSKIP = new RegExp("Crimea|Abkhazia", "i");
 
 var KNOWN_HERALDIC_URLS = {"Canada": "http://upload.wikimedia.org/wikipedia/en/4/4f/Coat_of_arms_of_Canada.svg" };
 // Some countries do not have SVG images, or parsing yields false results.
@@ -116,10 +134,15 @@ var KNOWN_VALUES = {
   "Capital": {"Monaco": "Monaco", "Singapore": "Singapore"},
   "Capital population": {"Cook Islands": 13373, "Nauru": 1292, "Singapore": "", "Vatican City": ""},
   "Human Dev. Index": {"Kingdom of the Netherlands": "0.921"},
-  "GDP per capita": {"Abkhazia": "-"},
   "Flag colours": {"Albania": 2, "Belgium": 3, "Botswana": 3, "Ghana": 4, "Iraq": 4, "Jamaica": 3, "Jordan": 4, "Kuwait": 4, "Malawi": 3, "State of Palestine": 4, "Saint Lucia": 4, "Somaliland": 4, "United Arab Emirates": 4, "Yemen": 3 },
   "Heraldic colours": {"Albania": 3, "Bosnia and Herzegovina": 3, "Cook Islands": 10, "Cyprus": 3, "Dominica": 8, "Grenada": 14, "Lebanon": 4, "Libya": 1, "Marshall Islands": 4, "Nigeria": 9, "South Africa": 11, "São Tomé and Príncipe": 10}
 };
+
+var FORMATTERS = {
+  "GDP per capita": function(v) { return (v.indexOf("$") < 1 ? "$" : "") + v.replace(/,/, " "); },
+  "Population density": function(v) { return v.replace(/,/, " ") + " / km<sup><small>2</small></sup>"; }
+};
+
 
 var actionCounter = 0; // For keeping track of queries and completion
 var actionTotal = 0;
@@ -409,10 +432,6 @@ var makeCountries = function(countries) {
   }
 };
 
-var FORMATTERS = {
-  "GDP per capita": function(v) { return (v.indexOf("$") < 1 ? "$" : "") + v.replace(/,/, " "); },
-  "Population density": function(v) { return v.replace(/,/, " ") + " / km<sup><small>2</small></sup>"; }
-};
 
 /** Generates a full country card list, querying Wikipedia data. */
 var generateCards = function() {
@@ -501,11 +520,17 @@ var getStaticPage = function() {
   content += document.getElementById("favicon").outerHTML;
   content += document.getElementById("stylesheet").outerHTML;
   content += "\n</head>\n<body>";
-  var cards = document.getElementById("cards").outerHTML;
+  content += document.getElementById("header").outerHTML;
+
+  var cardsElem = document.getElementById("cards");
+  var styleBackup = cardsElem.getAttribute("style");
+  cardsElem.removeAttribute("style"); // Clear generator-page specific styles
+  var cards = cardsElem.outerHTML;
+  cardsElem.setAttribute("style", styleBackup);
   if ($("#cards").hasClass("hideHeraldic")) {
-    var cardsElem = $(cards);
-    cardsElem.find("img.heraldic").remove();
-    cards = cardsElem[0].outerHTML;
+    var cardsDoc = $(cards);
+    cardsDoc.find("img.heraldic").remove();
+    cards = cardsDoc[0].outerHTML;
   }
   content += cards;
 
@@ -516,10 +541,10 @@ var getStaticPage = function() {
     }
     return a[0] + "." + a[1] + "." + a[2] + " " + a[3] + ":" + a[4] + ":" + a[5];
   }
-  var backup = document.getElementById("footer").innerHTML;
-  document.getElementById("footer").innerHTML += "<br /><br />Page generated " + timestamp(new Date()) + ".";
+  var footerBackup = document.getElementById("footer").innerHTML;
+  document.getElementById("footer").innerHTML += "<p>Page generated " + timestamp(new Date()) + ".</p>";
   content += document.getElementById("footer").outerHTML;
-  document.getElementById("footer").innerHTML = backup;
+  document.getElementById("footer").innerHTML = footerBackup;
   content += "</body>\n</html>";
   return content;
 };
@@ -541,7 +566,7 @@ var registerAction = function() {
 var unregisterAction = function(actionId) {
   actionCounter--;
   if (actionCounter) {
-    document.getElementById("savelink").innerHTML = ("Creating.. (" + actionTotal + " Wikipedia queries)").replace(/ /g, "&nbsp;");
+    document.getElementById("savelink").innerHTML = ("Creating.. (" + actionTotal + " Wikipedia queries)");
   } else {
     makeDownloadLink(!actionCounter);
     document.getElementById("info").innerHTML = ("Generated " + document.getElementById("cards").children.length + " flag cards from " + actionTotal + " Wikipedia queries.");
@@ -594,6 +619,15 @@ var parseColour = function(v) {
 };
 
 
+$(document).ready(function() {
+  $("#generate").click(generateCards);
+  $("#hide_heraldic_img").click(function() {
+    $("#cards").toggleClass("hideHeraldic");
+    if (actionTotal && !actionCounter) makeDownloadLink();
+  });
+});
+
+
 /**
  * Converts an HSL color value to RGB. Conversion formula
  * adapted from http://en.wikipedia.org/wiki/HSL_color_space.
@@ -636,8 +670,7 @@ var hslToRgb = function(h, s, l){
 
 
 /**
- *
- @from    http://jsperf.com/number-formatting-with-commas
+ * @from    http://jsperf.com/number-formatting-with-commas
  */
 function formatNumberRgx(num) {
   var parts = num.toString().split(".");
@@ -646,19 +679,15 @@ function formatNumberRgx(num) {
 };
 
 
-$(document).ready(function() {
-  $("#generate").click(generateCards);
-  $("#hide_heraldic_img").click(function() {
-    $("#cards").toggleClass("hideHeraldic");
-    if (actionTotal && !actionCounter) makeDownloadLink();
-  });
-});
-
 -->
 </script>
+<body>
 
-<table><tr><td>
-<div id="cards">
+<div id="header">
+<h1>Flag Trading Cards</h1>
+</div>
+
+<div id="cards" style="margin-right: 250px;">
 
 <div class="card" id="template">
   <span class="index">1</span>
@@ -681,24 +710,36 @@ $(document).ready(function() {
 
 </div>
 
-</td><td valign="top">
-
-<input type="button" value="Start" id="generate"/>
-<label for="hide_heraldic_img"><input type="checkbox" id="hide_heraldic_img" checked="checked" />Include heraldic icon</label>
-<br /><br />
-<a id="savelink" download="flags.html" title="Save as a static page"></a>
-<br /><br />
-<div id="info">Generate flag cards from online Wikipedia data.</div>
-
-</td></tr></table>
-
-<div id="footer" style="clear: both; text-align: center; font-size: 0.8em; padding-top: 20px;">
-Flag Trading Cards<br />
-<br />
-&copy; 2014 Erki Suurjaak. Version 1.1.7, 17.03.2014.
+<div id="footer">
+  <table><tr>
+    <th>Opening:</th><td>Shuffle and deal all cards.</td>
+  </tr><tr>
+    <th>Each round:</th><td>Player next to dealer announces a field from their topmost card. <br />
+    Player with the best score puts the trick under their deck and leads the next round. <br />
+    If a player's card has no value in chosen field, leader must choose another field.
+    </td>
+  </tr><tr>
+    <th>Comparing:</th><td>Higher values are better, except for Human Development Index and Gini index.</td>
+  </tr><tr>
+    <th>Endgame:</th><td>With 3 cards or less, player can choose which card to use.</td>
+  </tr><tr>
+    <th>Tie:</th><td>On equal score, tied players include their next card.</td>
+  </tr><tr>
+    <th>Finish:</th><td>Until first player to lose all cards; or until last player remaining.</td>
+  </tr></table>
+<p>&copy; 2014 Erki Suurjaak. Version 1.1.8, 17.03.2014.</p>
 </div>
 
 <pre id="errors" style="padding-top: 20px; font-size: 0.85em; color: #444;"></pre>
+
+<div id="sidebar" style="width: 250px; position: fixed; right: 0px; top: 100px;">
+  <input type="button" id="generate" value="Start" />
+  <label for="hide_heraldic_img">
+    <input type="checkbox" id="hide_heraldic_img" checked="checked" />Include heraldic icon
+  </label>
+  <p><a id="savelink" download="flags.html" title="Save as a static page"></a></p>
+  <p id="info">Generate flag cards from online Wikipedia data.</p>
+</div>
 
 </body>
 </html>
