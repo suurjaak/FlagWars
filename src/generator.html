@@ -4,6 +4,7 @@
   <meta name="Author" content="Erki Suurjaak" />
   <title>Flag Trading Cards | Generator</title>
   <script src="http://code.jquery.com/jquery.min.js"></script>
+  <link rel="shortcut icon" type="image/png" id="favicon" href="data:image/png;base64,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" />
   <style id="stylesheet">
   <!--
     body { font-family: Calibri; }
@@ -11,10 +12,11 @@
       position: relative;
       width: 200px;
       height: 300px;
-      border: 1px solid black;
       padding: 5px;
       float: left;
       margin: 5px;
+      border: 1px solid black;
+      border-radius: 2px;
     }
     img.flag {
       margin-left: auto;
@@ -86,6 +88,8 @@
 <script type="text/javascript">
 <!--
 
+var WIKIPEDIA_API_URL = "http://en.wikipedia.org/w/api.php?callback=?";
+
 var NAMED_COLOURS = {"aliceblue": "#f0f8ff", "antiquewhite": "#faebd7", "aqua": "#00ffff", "aquamarine": "#7fffd4", "azure": "#f0ffff", "beige": "#f5f5dc", "bisque": "#ffe4c4", "black": "#000000", "blanchedalmond": "#ffebcd", "blue": "#0000ff", "blueviolet": "#8a2be2", "brown": "#a52a2a", "burlywood": "#deb887", "cadetblue": "#5f9ea0", "chartreuse": "#7fff00", "chocolate": "#d2691e", "coral": "#ff7f50", "cornflowerblue": "#6495ed", "cornsilk": "#fff8dc", "crimson": "#dc143c", "cyan": "#00ffff", "darkblue": "#00008b", "darkcyan": "#008b8b", "darkgoldenrod": "#b8860b", "darkgray": "#a9a9a9", "darkgreen": "#006400", "darkkhaki": "#bdb76b", "darkmagenta": "#8b008b", "darkolivegreen": "#556b2f", "darkorange": "#ff8c00", "darkorchid": "#9932cc", "darkred": "#8b0000", "darksalmon": "#e9967a", "darkseagreen": "#8fbc8f", "darkslateblue": "#483d8b", "darkslategray": "#2f4f4f", "darkturquoise": "#00ced1", "darkviolet": "#9400d3", "deeppink": "#ff1493", "deepskyblue": "#00bfff", "dimgray": "#696969", "dodgerblue": "#1e90ff", "firebrick": "#b22222", "floralwhite": "#fffaf0", "forestgreen": "#228b22", "fuchsia": "#ff00ff", "gainsboro": "#dcdcdc", "ghostwhite": "#f8f8ff", "gold": "#ffd700", "goldenrod": "#daa520", "gray": "#808080", "green": "#008000", "greenyellow": "#adff2f", "honeydew": "#f0fff0", "hotpink": "#ff69b4", "indianred": " #cd5c5c", "indigo": " #4b0082", "ivory": "#fffff0", "khaki": "#f0e68c", "lavender": "#e6e6fa", "lavenderblush": "#fff0f5", "lawngreen": "#7cfc00", "lemonchiffon": "#fffacd", "lightblue": "#add8e6", "lightcoral": "#f08080", "lightcyan": "#e0ffff", "lightgoldenrodyellow": "#fafad2", "lightgray": "#d3d3d3", "lightgreen": "#90ee90", "lightpink": "#ffb6c1", "lightsalmon": "#ffa07a", "lightseagreen": "#20b2aa", "lightskyblue": "#87cefa", "lightslategray": "#778899", "lightsteelblue": "#b0c4de", "lightyellow": "#ffffe0", "lime": "#00ff00", "limegreen": "#32cd32", "linen": "#faf0e6", "magenta": "#ff00ff", "maroon": "#800000", "mediumaquamarine": "#66cdaa", "mediumblue": "#0000cd", "mediumorchid": "#ba55d3", "mediumpurple": "#9370db", "mediumseagreen": "#3cb371", "mediumslateblue": "#7b68ee", "mediumspringgreen": "#00fa9a", "mediumturquoise": "#48d1cc", "mediumvioletred": "#c71585", "midnightblue": "#191970", "mintcream": "#f5fffa", "mistyrose": "#ffe4e1", "moccasin": "#ffe4b5", "navajowhite": "#ffdead", "navy": "#000080", "oldlace": "#fdf5e6", "olive": "#808000", "olivedrab": "#6b8e23", "orange": "#ffa500", "orangered": "#ff4500", "orchid": "#da70d6", "palegoldenrod": "#eee8aa", "palegreen": "#98fb98", "paleturquoise": "#afeeee", "palevioletred": "#db7093", "papayawhip": "#ffefd5", "peachpuff": "#ffdab9", "peru": "#cd853f", "pink": "#ffc0cb", "plum": "#dda0dd", "powderblue": "#b0e0e6", "purple": "#800080", "red": "#ff0000", "rosybrown": "#bc8f8f", "royalblue": "#4169e1", "saddlebrown": "#8b4513", "salmon": "#fa8072", "sandybrown": "#f4a460", "seagreen": "#2e8b57", "seashell": "#fff5ee", "sienna": "#a0522d", "silver": "#c0c0c0", "skyblue": "#87ceeb", "slateblue": "#6a5acd", "slategray": "#708090", "snow": "#fffafa", "springgreen": "#00ff7f", "steelblue": "#4682b4", "tan": "#d2b48c", "teal": "#008080", "thistle": "#d8bfd8", "tomato": "#ff6347", "turquoise": "#40e0d0", "violet": "#ee82ee", "wheat": "#f5deb3", "white": "#ffffff", "whitesmoke": "#f5f5f5", "yellow": "#ffff00", "yellowgreen": "#9acd32"}
 var REGEX_COLOUR_SHORTHEX = /^#[0-9a-f]{3}$/ig;
 var REGEX_COLOUR = new RegExp("^(#[0-9a-f]{3}|#[0-9a-f]{6}|" +
@@ -98,27 +102,24 @@ var REGEX_COLOUR_TUPLE = new RegExp("(^(rgba*|hsla*)\\(\\s*([0-9.%]+)\\s*,\\s*([
 
 // Regex for matching countries where flag should not have box shadow border.
 var REGEX_COUNTRIES_NOBORDER = new RegExp("Nepal", "i");
-var REGEX_COUNTRIES_TOSKIP = new RegExp("^((?!nepal).)*$", "i");
-var REGEX_COUNTRIES_TOSKIP = new RegExp("Crimea", "i");
 
-var WIKIPEDIA_API_URL = "http://en.wikipedia.org/w/api.php?callback=?";
+var REGEX_COUNTRIES_TOSKIP = new RegExp("Crimea", "i");
+var REGEX_COUNTRIES_TOSKIP = new RegExp("^((?!sudan).)*$", "i");
 
 var KNOWN_HERALDIC_URLS = {"Canada": "http://upload.wikimedia.org/wikipedia/en/4/4f/Coat_of_arms_of_Canada.svg" };
 // Some countries do not have SVG images, or parsing yields false results.
 var BLANK_IMG = "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==";
 
-// Some values are hard to parse from Wikipedia
+// Some values are hard to parse from Wikipedia, or missing altogether
 var KNOWN_VALUES = {
+  "Area": {"South Korea": "100 210 km<sup><small>2</small></sup>", "Taiwan": "35 883 km<sup><small>2</small></sup>"},
   "Capital": {"Monaco": "Monaco", "Singapore": "Singapore"},
+  "Capital population": {"Cook Islands": 13373, "Nauru": 1292, "Singapore": "", "Vatican City": ""},
   "Human Dev. Index": {"Kingdom of the Netherlands": "0.921"},
   "GDP per capita": {"Abkhazia": "-"},
-  "Area": {"South Korea": "100 210 km<sup><small>2</small></sup>", "Taiwan": "35 883 km<sup><small>2</small></sup>"},
   "Flag colours": {"Albania": 2, "Belgium": 3, "Botswana": 3, "Ghana": 4, "Iraq": 4, "Jamaica": 3, "Jordan": 4, "Kuwait": 4, "Malawi": 3, "State of Palestine": 4, "Saint Lucia": 4, "Somaliland": 4, "United Arab Emirates": 4, "Yemen": 3 },
   "Heraldic colours": {"Albania": 3, "Bosnia and Herzegovina": 3, "Cook Islands": 10, "Cyprus": 3, "Dominica": 8, "Grenada": 14, "Lebanon": 4, "Libya": 1, "Marshall Islands": 4, "Nigeria": 9, "South Africa": 11, "São Tomé and Príncipe": 10}
 };
-// Some capitals do not have population data in Wikipedia
-var KNOWN_CAPITAL_POPULATIONS = {"Cook Islands": 13373, "Nauru": 1292, "Singapore": "", "Vatican City": ""};
-
 
 var actionCounter = 0; // For keeping track of queries and completion
 var actionTotal = 0;
@@ -149,6 +150,7 @@ var addColourValue = function(name, country, template, url) {
 
         $(svg).find("*").each(function() {
           // Check any attributes for colour-like values
+          if (this.nodeName.match(/sodipodi:namedview/i)) return; // Root element values not really used
           var lookups = []; // All potential values to check for colour
           $.each(this.attributes, function(_, node) {
             if (node.name.match(/(id)|(href)/i)) return; // Can have colour-like values
@@ -193,7 +195,7 @@ var addColourValue = function(name, country, template, url) {
 var addValue = function(name, country, template, valuefunc, defaultValue) {
   var result = undefined;
   var value = (typeof(defaultValue) != "undefined") ? defaultValue : "-";
-  if (KNOWN_VALUES[name] && KNOWN_VALUES[name][country]) {
+  if (KNOWN_VALUES[name] && country in KNOWN_VALUES[name]) {
     value = KNOWN_VALUES[name][country];
   } else {
     try {
@@ -211,12 +213,10 @@ var addValue = function(name, country, template, valuefunc, defaultValue) {
 /**
  * Adds capital population to existing capital element, querying Wikipedia data.
  */
-var addCapitalPopulation = function(name, country, template) {
+var addCapitalPopulation = function(capital, country, template) {
   var element = template.find("dt:contains('Capital')").next("dd");
-  if (typeof(KNOWN_CAPITAL_POPULATIONS[country]) != "undefined") {
-    if (KNOWN_CAPITAL_POPULATIONS[country]) {
-      element.append(", " + KNOWN_CAPITAL_POPULATIONS[country])
-    }
+  if (KNOWN_VALUES["Capital population"] && country in KNOWN_VALUES["Capital population"]) {
+    element.append(", " + KNOWN_VALUES["Capital population"][country])
   } else {
     var actionId = registerAction();
     $.getJSON(WIKIPEDIA_API_URL,
@@ -226,7 +226,7 @@ var addCapitalPopulation = function(name, country, template) {
         "redirects": "1",
         "section": 0,
         "format": "json",
-        "page": name
+        "page": capital
       },
       function(data) {
         if (data.parse && data.parse.displaytitle) {
@@ -237,14 +237,13 @@ var addCapitalPopulation = function(name, country, template) {
             var value = ((p.find('th,td').filter(function(){ return $(this).text().match(/population/i); }).parent().next("tr").find("td:last-child").first().text().match(/([0-9.,\s]+)/i) || ["",""])[1] || (p.find('td').filter(function(){ return $(this).text().match(/population/i); }).next("td:first").text().match(/([0-9.,\s]+)/i) || ["",""])[1]).replace(/[.,]/g, " ").trim();
             if (value) element.append(", " + value)
           } catch (e) {
-            $("#errors").append("Parse capital population " + name + ": " + e + "\n\n");
+            $("#errors").append("Parse capital population " + capital + ": " + e + "\n\n");
           }
         }
         sizeHeraldicIcon(template);
         unregisterAction(actionId);
     }).error(function(e) {
-      $("#errors").append("Query capital " + name + ": " + e + "\n\n");
-      sizeHeraldicIcon(template);
+      $("#errors").append("Query capital " + capital + ": " + e + "\n\n");
       unregisterAction(actionId);
     });
   }
@@ -369,42 +368,44 @@ var makeCountries = function(countries) {
   basetemplate.removeAttr("id");
   basetemplate.find("img").attr({"src": "", "title": ""});
   basetemplate.find("h1,dl,span").empty();
+  var index = 0;
   for (var i in countries) {
     var country = countries[i];
-    if (country.match(REGEX_COUNTRIES_TOSKIP)) {
-      continue; // continue for countries
-    }
+    if (country.match(REGEX_COUNTRIES_TOSKIP)) continue; // continue for countries
+    index++;
     var template = basetemplate.clone().appendTo($("#cards"));
     template.find("h1").html(country);
-    template.find(".index").html(parseInt(i) + 1);
+    template.find(".index").html(index);
 
-    var actionId = registerAction();
-    $.getJSON(WIKIPEDIA_API_URL,
-      {
-        "action": "parse",
-        "disablepp": "1",
-        "redirects": "1",
-        "section": 0,
-        "format": "json",
-        "page": country
-      },
-      function(template) { return function(data) {
-        if (data.parse && data.parse.displaytitle) {
-          try {
-            var displaytitle = $("<span />").html(data.parse.displaytitle).text();
-            makeCard(displaytitle, data.parse.text["*"], template);
-          } catch (e) {
-            $("#errors").append("makeCard (" + country + "): " + e + "\n\n");
+    (function(country, template) {
+      var actionId = registerAction();
+      $.getJSON(WIKIPEDIA_API_URL,
+        {
+          "action": "parse",
+          "disablepp": "1",
+          "redirects": "1",
+          "section": 0,
+          "format": "json",
+          "page": country
+        },
+        function(data) {
+          if (data.parse && data.parse.displaytitle) {
+            try {
+              var displaytitle = $("<span />").html(data.parse.displaytitle).text();
+              makeCard(displaytitle, data.parse.text["*"], template);
+            } catch (e) {
+              $("#errors").append("makeCard (" + country + "): " + e + "\n\n");
+            }
+          } else {
+            template.remove();
           }
-        } else {
-          template.remove();
-        }
+          unregisterAction(actionId);
+      }).error(function(e) {
+        $("#errors").append("Query " + country + ": " + e + "\n\n");
+        template.remove();
         unregisterAction(actionId);
-      } }(template)).error(function(e) {
-      $("#errors").append("Query " + country + ": " + e + "\n\n");
-      template.remove();
-      unregisterAction(actionId);
-    });
+      });
+    })(country, template);
   }
 };
 
@@ -412,6 +413,12 @@ var FORMATTERS = {
   "GDP per capita": function(v) { return (v.indexOf("$") < 1 ? "$" : "") + v.replace(/,/, " "); },
   "Population density": function(v) { return v.replace(/,/, " ") + " / km<sup><small>2</small></sup>"; }
 };
+
+/** Generates a full country card list, querying Wikipedia data. */
+var generateCards = function() {
+  $("#generate").attr("disabled", "disabled");
+  $("#cards").find("div:not([id])").remove();
+  $("#savelink").html("Creating..");
 
   var DATAQUERIES = {
     "GDP per capita": {
@@ -425,13 +432,6 @@ var FORMATTERS = {
       "key": function(x) { return x.find("a:first").text(); },
       "filter": function() { return $(this).find("td:first").text(); } }
   };
-
-/** Generates a full country card list, querying Wikipedia data. */
-var generateCards = function() {
-  $("#generate").attr("disabled", "disabled");
-  $("#cards").find("div:not([id])").remove();
-  $("#savelink").html("Creating..");
-
   for (var valuename in DATAQUERIES) {
     (function(valuename, query) {
       var actionId = registerAction();
@@ -498,6 +498,7 @@ var getStaticPage = function() {
     '<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />' +
     '<meta name="Author" content="Erki Suurjaak" />' +
     '<title>Flag Trading Cards</title>';
+  content += document.getElementById("favicon").outerHTML;
   content += document.getElementById("stylesheet").outerHTML;
   content += "\n</head>\n<body>";
   var cards = document.getElementById("cards").outerHTML;
@@ -543,6 +544,7 @@ var unregisterAction = function(actionId) {
     document.getElementById("savelink").innerHTML = ("Creating.. (" + actionTotal + " Wikipedia queries)").replace(/ /g, "&nbsp;");
   } else {
     makeDownloadLink(!actionCounter);
+    document.getElementById("info").innerHTML = ("Generated " + document.getElementById("cards").children.length + " flag cards from " + actionTotal + " Wikipedia queries.");
     setTimeout(function() { alert("Generation complete!"); }, 50);
   }
 };
@@ -583,7 +585,7 @@ var parseColour = function(v) {
           return n;
         });
         if (v.indexOf("hsl") >= 0) tuple = hslToRgb.apply(this, tuple);
-        r = "#" + tuple.map(function(x) { return (x + 0x100).toString(16).substr(-2); }).join("");
+        r = "#" + tuple.map(function(x) { return (x + 256).toString(16).substr(-2); }).join("");
       }
     }
     r = NAMED_COLOURS[r] || r;
@@ -595,8 +597,8 @@ var parseColour = function(v) {
 /**
  * Converts an HSL color value to RGB. Conversion formula
  * adapted from http://en.wikipedia.org/wiki/HSL_color_space.
- * Assumes h, s, and l are contained in the set [0, 1] or [0, 360] and
- * returns r, g, and b in the set [0, 255].
+ * Assumes h, s, and l are contained in the set [0..1] or [0..360], and
+ * returns r, g, and b in the set [0..255].
  *
  * @param   Number  h       The hue
  * @param   Number  s       The saturation
@@ -605,31 +607,42 @@ var parseColour = function(v) {
  * @from    http://stackoverflow.com/questions/2353211/hsl-to-rgb-color-conversion
  */
 var hslToRgb = function(h, s, l){
-    var r, g, b;
-    if (h > 1) h /= 360;
-    if (s > 1) s /= 360;
-    if (l > 1) l /= 360;
+  var r, g, b;
+  if (h > 1) h /= 360;
+  if (s > 1) s /= 360;
+  if (l > 1) l /= 360;
 
-    if(s == 0){
-        r = g = b = l; // achromatic
-    }else{
-        function hue2rgb(p, q, t){
-            if(t < 0) t += 1;
-            if(t > 1) t -= 1;
-            if(t < 1/6) return p + (q - p) * 6 * t;
-            if(t < 1/2) return q;
-            if(t < 2/3) return p + (q - p) * (2/3 - t) * 6;
-            return p;
-        }
-
-        var q = l < 0.5 ? l * (1 + s) : l + s - l * s;
-        var p = 2 * l - q;
-        r = hue2rgb(p, q, h + 1/3);
-        g = hue2rgb(p, q, h);
-        b = hue2rgb(p, q, h - 1/3);
+  if (s == 0){
+    r = g = b = l; // achromatic
+  } else {
+    function hue2rgb(p, q, t) {
+      if (t < 0) t += 1;
+      if (t > 1) t -= 1;
+      if (t < 1/6) return p + (q - p) * 6 * t;
+      if (t < 1/2) return q;
+      if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+      return p;
     }
 
-    return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
+    var q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+    var p = 2 * l - q;
+    r = hue2rgb(p, q, h + 1/3);
+    g = hue2rgb(p, q, h);
+    b = hue2rgb(p, q, h - 1/3);
+  }
+
+  return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
+};
+
+
+/**
+ *
+ @from    http://jsperf.com/number-formatting-with-commas
+ */
+function formatNumberRgx(num) {
+  var parts = num.toString().split(".");
+  parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  return parts.join(".");
 };
 
 
@@ -675,14 +688,14 @@ $(document).ready(function() {
 <br /><br />
 <a id="savelink" download="flags.html" title="Save as a static page"></a>
 <br /><br />
-Generate flag cards from online Wikipedia data.
+<div id="info">Generate flag cards from online Wikipedia data.</div>
 
 </td></tr></table>
 
 <div id="footer" style="clear: both; text-align: center; font-size: 0.8em; padding-top: 20px;">
 Flag Trading Cards<br />
 <br />
-&copy; 2014 Erki Suurjaak. Version 1.1.6, 17.03.2014.
+&copy; 2014 Erki Suurjaak. Version 1.1.7, 17.03.2014.
 </div>
 
 <pre id="errors" style="padding-top: 20px; font-size: 0.85em; color: #444;"></pre>
