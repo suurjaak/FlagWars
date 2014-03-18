@@ -63,7 +63,7 @@
       top: 3px;
     }
     dd {
-      width: 52%;
+      width: 45%;
       margin: 0px;
       float: left;
     }
@@ -121,8 +121,8 @@ var REGEX_COLOUR_TUPLE = new RegExp("(^(rgba*|hsla*)\\(\\s*([0-9.%]+)\\s*,\\s*([
 // Regex for matching countries where flag should not have box shadow border.
 var REGEX_COUNTRIES_NOBORDER = new RegExp("Nepal", "i");
 
+var REGEX_COUNTRIES_TOSKIP = new RegExp("^((?!vatica).)*$", "i"); // @todo remove when done
 var REGEX_COUNTRIES_TOSKIP = new RegExp("Crimea|Abkhazia", "i");
-var REGEX_COUNTRIES_TOSKIP = new RegExp("^((?!korea).)*$", "i");
 
 var KNOWN_HERALDIC_URLS = {"Canada": "http://upload.wikimedia.org/wikipedia/en/4/4f/Coat_of_arms_of_Canada.svg" };
 // Some countries do not have SVG images, or parsing yields false results.
@@ -131,9 +131,8 @@ var BLANK_IMG = "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAA
 // Some values are hard to parse from Wikipedia, or missing altogether
 var KNOWN_VALUES = {
   "Area": {"South Korea": 100210, "Taiwan": 35883},
-  "Capital": {"Monaco": "Monaco", "Singapore": "Singapore"},
+  "Capital": {"Monaco": "Monaco", "Singapore": "Singapore", "Vatican City": "Vatican City"},
   "Capital population": {"Cook Islands": 13373, "Nauru": 1292, "Singapore": "", "Vatican City": ""},
-  "Human Dev. Index": {"Kingdom of the Netherlands": "0.921"},
   "Obesity ratio": {"Afghanistan": 2.2, "Albania": 21.3, "Algeria": 16.0, "American Samoa": 74.6, "Andorra": 25.2, "Angola": 6.4, "Antigua and Barbuda": 25.6, "Argentina": 29.7, "Armenia": 24.0, "Australia": 26.8, "Austria": 20.9, "Azerbaijan": 23.8, "Bahamas": 34.7, "Bahrain": 32.9, "Bangladesh": 3.5, "Barbados": 34.7, "Belarus": 24.3, "Belgium": 22.1, "Belize": 33.7, "Benin": 6.0, "Bhutan": 5.3, "Bolivia": 17.9, "Bosnia and Herzegovina": 26.5, "Botswana": 11.2, "Brazil": 18.8, "Brunei": 7.5, "Bulgaria": 23.7, "Burkina Faso": 2.3, "Burma": 4.0, "Burundi": 2.9, "Cabo Verde": 10.0, "Cambodia": 2.1, "Cameroon": 10.3, "Canada": 26.2, "Central African Republic": 3.5, "Chad": 2.7, "Chile": 29.4, "China": 5.7, "Colombia": 17.3, "Comoros": 4.4, "Democratic Republic of the Congo": 1.7, "Republic of the Congo": 4.7, "Cook Islands": 63.7, "Costa Rica": 23.7, "Cote d'Ivoire": 6.2, "Croatia": 24.2, "Cuba": 21.5, "Cyprus": 25.5, "Czech Republic": 32.7, "Denmark": 18.2, "Djibouti": 9.4, "Dominica": 24.9, "Dominican Republic": 21.2, "Ecuador": 21.4, "Egypt": 33.1, "El Salvador": 25.8, "Equatorial Guinea": 10.6, "Eritrea": 1.5, "Estonia": 20.6, "Ethiopia": 1.1, "Fiji": 30.6, "Finland": 23.0, "France": 18.2, "Gabon": 13.9, "Gambia": 7.9, "Georgia": 41934, "Germany": 41937, "Ghana": 18445, "Greece": 41932, "Grenada": 22.5, "Guatemala": 19.2, "Guinea": 4.4, "Guinea-Bissau": 4.9, "Guyana": 17.2, "Haiti": 33055, "Honduras": 18.4, "Hungary": 27.6, "Iceland": 23.2, "India": 1.9, "Indonesia": 4.8, "Iran": 19.4, "Iraq": 27.0, "Ireland": 25.2, "Israel": 26.2, "Italy": 19.8, "Jamaica": 24.1, "Japan": 5.0, "Jordan": 30.0, "Kazakhstan": 23.7, "Kenya": 4.2, "Kiribati": 46.0, "North Korea": 3.9, "South Korea": 7.7, "Kuwait": 42.0, "Kyrgyzstan": 15.5, "Laos": 2.6, "Latvia": 24.9, "Lebanon": 27.4, "Lesotho": 14.6, "Liberia": 4.8, "Libya": 27.8, "Lithuania": 27.6, "Luxembourg": 26.0, "Republic of Macedonia": 21.1, "Madagascar": 1.6, "Malawi": 4.3, "Malaysia": 14.0, "Maldives": 12.9, "Mali": 4.3, "Malta": 28.8, "Marshall Islands": 45.4, "Mauritania": 12.7, "Mauritius": 18.5, "Mexico": 32.1, "Federated States of Micronesia": 40.6, "Moldova": 21.2, "Mongolia": 14.4, "Montenegro": 22.5, "Morocco": 16.4, "Mozambique": 4.9, "Namibia": 9.5, "Nauru": 71.1, "Nepal": 1.4, "Netherlands": 18.8, "New Zealand": 28.3, "Nicaragua": 22.2, "Niger": 2.4, "Nigeria": 6.5, "Norway": 21.5, "Oman": 20.9, "Pakistan": 5.5, "Palau": 48.9, "Panama": 25.4, "Papua New Guinea": 16.2, "Paraguay": 17.9, "Peru": 15.7, "Philippines": 6.3, "Poland": 25.3, "Portugal": 24.0, "Qatar": 33.2, "Romania": 19.1, "Russia": 26.5, "Rwanda": 4.3, "Saint Kitts and Nevis": 40.7, "Saint Lucia": 21.4, "Saint Vincent and the Grenadines": 23.4, "Samoa": 54.1, "São Tomé and Príncipe": 9.5, "Saudi Arabia": 33.0, "Senegal": 6.8, "Serbia": 24.8, "Seychelles": 23.9, "Sierra Leone": 6.8, "Singapore": 7.1, "Slovakia": 25.4, "Slovenia": 28.6, "Solomon Islands": 30.0, "Somalia": 4.8, "South Africa": 31.3, "Spain": 26.6, "Sri Lanka": 5.1, "Sudan": 6.0, "Suriname": 25.1, "Swaziland": 19.7, "Sweden": 18.6, "Switzerland": 17.5, "Syria": 27.1, "Tajikistan": 8.6, "Tanzania": 5.0, "Thailand": 8.8, "Timor-Leste": 2.7, "Togo": 4.3, "Tokelau": 63.4, "Tonga": 57.6, "Trinidad and Tobago": 29.3, "Tunisia": 22.3, "Turkey": 27.8, "Turkmenistan": 13.2, "Uganda": 11049, "Ukraine": 21.3, "United Arab Emirates": 32.7, "United Kingdom": 26.9, "United States": 33.0, "Uruguay": 24.8, "Uzbekistan": 15.1, "Vanuatu": 27.5, "Venezuela": 30.3, "Vietnam": 1.7, "Yemen": 14.5, "Zambia": 3.6, "Zimbabwe": 7.0},
   "Flag colours": {"Albania": 2, "Belgium": 3, "Botswana": 3, "Ghana": 4, "Iraq": 4, "Jamaica": 3, "Jordan": 4, "Kuwait": 4, "Malawi": 3, "State of Palestine": 4, "Saint Lucia": 4, "Somaliland": 4, "United Arab Emirates": 4, "Yemen": 3 },
   "Heraldic colours": {"Albania": 3, "Bosnia and Herzegovina": 3, "Cook Islands": 10, "Cyprus": 3, "Dominica": 8, "Grenada": 14, "Lebanon": 4, "Libya": 1, "Marshall Islands": 4, "Nigeria": 9, "South Africa": 11, "São Tomé and Príncipe": 10}
@@ -150,10 +149,11 @@ var formatNumber = function (val, sep) {
 
 var FORMATTERS = {
   "default": function(v) { return ("" + v).trim(); },
-  "GDP per capita": function(v) { return (v.indexOf("$") < 0 ? "$" : "") + formatNumber(v); },
+  "GDP per capita": function(v) { return (v.length > 1 && v.indexOf("$") < 0 ? "$" : "") + formatNumber(v); },
   "Population density": function(v) { return formatNumber(v) + " / km<sup><small>2</small></sup>"; },
   "Area": function(v) { return formatNumber(v) + " km<sup><small>2</small></sup>"; },
-  "Population": function(v) { return formatNumber(v); }
+  "Population": function(v) { return formatNumber(v); },
+  "Obesity ratio": function(v) { return (v != "-") ? v.toFixed(1) : v; }
 };
 
 
@@ -247,9 +247,7 @@ var addValue = function(name, country, template, valuefunc, defaultValue) {
 };
 
 
-/**
- * Adds capital population to existing capital element, querying Wikipedia data.
- */
+/** Adds capital population to existing element, querying Wikipedia data. */
 var addCapitalPopulation = function(capital, country, template) {
   var element = template.find("dt:contains('Capital')").next("dd");
   if (KNOWN_VALUES["Capital population"] && country in KNOWN_VALUES["Capital population"]) {
@@ -289,9 +287,7 @@ var addCapitalPopulation = function(capital, country, template) {
 
 /** Sizes the heraldic icon to fit under text, if necessary. */
 var sizeHeraldicIcon = function(template) {
-  //template.find("dl").css("display", "none");
   setTimeout(function() {
-    //template.find("dl").css("display", "");
     var dd_lastwide = template.find("dd").eq(-3);
     var img_heraldic = template.find("img.heraldic");
     var vspace = template.outerHeight() - dd_lastwide.position().top
@@ -353,7 +349,7 @@ var makeCard = function(displaytitle, page, template) {
   );
 
   defaultValue = title.match(/Vatican/i) ? "Vatican City" : (title.match(/Monaco/i) ? "Monaco" : undefined);
-  var capitalDisambig = [];
+  var capitalDisambig = []; // Need non-ambiguous Wikipedia title for population lookup
   capital = addValue("Capital", displaytitle, template, function() { 
       var elem = p.find('th,td').filter(function(){ return $(this).text().match(/^Capital/i); }).next("th,td").find("a[title]").filter(function(){ return $(this).text() && !$(this).attr("title").match(/de jure/i); }).first();
       if (elem) {
@@ -376,19 +372,9 @@ var makeCard = function(displaytitle, page, template) {
     ).text(); }
   );
 
-  addValue("Human Dev. Index", displaytitle, template, function() { return $("<span />").html(
-      p.find('th,td').filter(function(){ return $(this).text().match(/hdi/i); }).next().text().match(/([\d.]+)/)[0]
-    ).text(); }
-  );
-
+  addValue("Life expectancy", displaytitle, template);
   addValue("Obesity ratio", displaytitle, template);
 
-  /*
-  addValue("Gini index", displaytitle, template, function() { return $("<span />").html(
-      p.find('th,td').filter(function(){ return $(this).text().match(/gini/i); }).next().text().match(/([\d.]+)/)[1]
-    ).text(); }
-  );
-  */
   var letters = "state " + title.replace(/\s/, "").length;
   if (capital) {
     letters += ", capital " + capital.replace(/\s/, "").length;
@@ -461,6 +447,15 @@ var generateCards = function() {
       "val": function(x) { return x.find("td").eq(2).text(); },
       "key": function(x) { return x.find("a:first").attr("title"); },
       "filter": function() { return $(this).find("td").length; }},
+    "Life expectancy": {
+      "page": "life expectancy",
+      "val": function(x) { 
+        var format = function(v) { return parseFloat(v).toFixed(1); };
+        var total = x.find("td").eq(3).text(), m = x.find("td").eq(4).text(), f = x.find("td").eq(5).text();
+        return format(total) + " (" + format(m) + "M, " + format(f) + "F)";
+      },
+      "key": function(x) { return x.find("a:first").attr("title"); },
+      "filter": function() { return $(this).find("a:first").attr("title"); }},
     "Population density": {
       "page": "population density",
       "val": function(x) { return x.find("td").eq(6).text(); },
@@ -486,7 +481,7 @@ var generateCards = function() {
           $(tables[0]).find("tr").filter(query.filter).each(function() {
             var k = query.key($(this)).replace(/[ _]\(country\)$/i, "");
             var v = query.val($(this));
-            if (v) KNOWN_VALUES[valuename][k] = FORMATTERS[valuename] && FORMATTERS[valuename](v) || v;
+            if (v) KNOWN_VALUES[valuename][k] = v;
           });
           KNOWN_VALUES[valuename]["Kingdom of the Netherlands"] = KNOWN_VALUES[valuename]["Netherlands"];
           unregisterAction(actionId);
@@ -506,7 +501,7 @@ var generateCards = function() {
       "redirects": "1",
       "format": "json",
       "prop": "text",
-      "page": "List_of_countries"
+      "page": "List of countries"
     },
     function(data) { 
       if (data.parse && data.parse.text) {
@@ -566,9 +561,7 @@ var getStaticPage = function() {
 };
 
 
-/**
- * Returns a new action ID, used for keeping track of completion.
- */
+/** Returns a new action ID, used for keeping track of progress. */
 var registerAction = function() {
   actionCounter++;
   actionTotal++;
@@ -576,9 +569,7 @@ var registerAction = function() {
 };
 
 
-/**
- * Unregisters the action, refreshing download link every now and then.
- */
+/** Unregisters the action and refreshes counters. */
 var unregisterAction = function(actionId) {
   actionCounter--;
   if (actionCounter) {
@@ -586,7 +577,7 @@ var unregisterAction = function(actionId) {
   } else {
     makeDownloadLink(!actionCounter);
     document.getElementById("info").innerHTML = ("Generated " + document.getElementById("cards").children.length + " flag cards from " + actionTotal + " Wikipedia queries.");
-    setTimeout(function() { alert("Generation complete!"); }, 50);
+    setTimeout(function() { alert("Generation complete!"); }, 200);
   }
 };
 
@@ -707,7 +698,7 @@ var hslToRgb = function(h, s, l){
     <dt>Capital</dt><dd>Tallinn, 430 594</dd>
     <dt>GDP per capita</dt><dd>$18 127</dd>
     <dt>Life expectancy</dt><dd>76.1 (71M, 81.2F)</dd>
-    <dt>Obesity ratio</dt><dd>20.6%</dd>
+    <dt>Obesity ratio</dt><dd>20.6</dd>
     <dt>Letters</dt><dd>state 17, capital 7</dd>
     <dt>Flag colours</dt><dd>4</dd>
     <dt>Heraldic colours</dt><dd>3</dd>
@@ -726,13 +717,13 @@ var hslToRgb = function(h, s, l){
     </td>
   </tr><tr>
     <th>Compare:</th><td>Higher numbers are better, except for obesity ratio.<br />
-    If values are equal, tied players include their next card.</td>
+    If best values are equal, tied players include their next card.</td>
   </tr><tr>
     <th>Endgame:</th><td>With 3 cards or less, player can choose which card to use.</td>
   </tr><tr>
-    <th>Finish:</th><td>Until the first to lose all cards. Or until the last remaining player.</td>
+    <th>Game over:</th><td>When one player loses all cards. Or when last player remains.</td>
   </tr></table>
-<p>&copy; 2014 Erki Suurjaak. Version 1.1.10, 18.03.2014.</p>
+<p>&copy; 2014 Erki Suurjaak. Version 1.1.11, 18.03.2014.</p>
 </div>
 
 <pre id="errors" style="padding-top: 20px; font-size: 0.85em; color: #444;"></pre>
