@@ -105,6 +105,14 @@
 </head>
 <script type="text/javascript">
 <!--
+/**
+ * Generates flag trading cards from Wikipedia data.
+ * Released under the MIT License.
+ *
+ * @author    Erki Suurjaak
+ * @created   09.03.2014
+ * @modified  19.03.2014
+ */
 
 var WIKIPEDIA_API_URL = "http://en.wikipedia.org/w/api.php?callback=?";
 
@@ -121,11 +129,12 @@ var REGEX_COLOUR_TUPLE = new RegExp("(^(rgba*|hsla*)\\(\\s*([0-9.%]+)\\s*,\\s*([
 // Regex for matching countries where flag should not have box shadow border.
 var REGEX_COUNTRIES_NOBORDER = new RegExp("Nepal", "i");
 
-var REGEX_COUNTRIES_TOSKIP = new RegExp("^((?!(georg|hong|macau|puerto)).)*$", "i"); // @todo remove when done
-var REGEX_COUNTRIES_TOSKIP = new RegExp("Crimea|Abkhazia", "i");
+var REGEX_COUNTRIES_TOSKIP = new RegExp("^((?!(georg|hong|macau|puerto|polynesia|faroe|isle|guam|cura|caledo)).)*$", "i"); // @todo remove when done
+var REGEX_COUNTRIES_TOSKIP = new RegExp("Crimea|Abkhazia|Ossetia", "i");
+var REGEX_COUNTRIES_TOSKIP = new RegExp("^((?!(venez)).)*$", "i"); // @todo remove when done
 
 /** List of countries to include additionally. */
-var COUNTRIES_EXTRA = ["Hong Kong", "Macau", "Puerto Rico"];
+var COUNTRIES_EXTRA = ["Hong Kong", "Macau", "Puerto Rico", "French Polynesia", "Faroe Islands", "Isle of Man", "Guam", "Curaçao", "New Caledonia"];
 
 var KNOWN_HERALDIC_URLS = {"Canada": "http://upload.wikimedia.org/wikipedia/en/4/4f/Coat_of_arms_of_Canada.svg" };
 // Some countries do not have SVG images, or parsing yields false results.
@@ -183,8 +192,8 @@ var addColourValue = function(name, country, template, url) {
 
   if (svg_url) {
     var actionId = registerAction();
-    $.get(svg_url,
-      success=function(svg) {
+    $.get(svg_url).done(function(svg, status, xhr) {
+      try {
         var colourMap = {};
 
         $(svg).find("*").each(function() {
@@ -217,10 +226,13 @@ var addColourValue = function(name, country, template, url) {
         if (name.match(/Heraldic/i)) {
           template.find("img.heraldic").attr("title", Object.keys(colourMap).sort().join(", "));
         }
+      } catch (e) {
+        $("#errors").append("Parse colours from " + svg_url + ": " + e + "<hr />");
+      } finally {
         unregisterAction(actionId);
       }
-    ).error(function(e) {
-      $("#errors").append("Get " + svg_url + ": " + e + "\n\n");
+    }).fail(function(xhr, status, e) {
+      $("#errors").append("Get " + svg_url + ": " + e + "<hr />");
       element.html("-");
       unregisterAction(actionId);
     });
@@ -267,21 +279,26 @@ var addCapitalPopulation = function(capital, country, template) {
         "page": capital
       },
       function(data) {
-        if (data.parse && data.parse.displaytitle) {
-          // Bypass jQuery automatic image verification
-          var p = $(data.parse.text["*"].replace(/<img[^>]+src=/g, function(a) { return a.substring(0, a.length - 1) + "hack="; } ));
-          p.find("span[class*=sortkey]").remove(); // Invisible, interfere with parsing
-          try {
-            var value = ((p.find('th,td').filter(function(){ return $(this).text().match(/population/i); }).parent().next("tr").find("td:last-child").first().text().match(/([0-9.,\s]+)/i) || ["",""])[1] || (p.find('td').filter(function(){ return $(this).text().match(/population/i); }).next("td:first").text().match(/([0-9.,\s]+)/i) || ["",""])[1]).replace(/[.,]/g, " ").trim();
-            if (value) element.append(", " + value)
-          } catch (e) {
-            $("#errors").append("Parse capital population " + capital + ": " + e + "\n\n");
+        try {
+          if (data.parse && data.parse.displaytitle) {
+            // Bypass jQuery automatic image verification
+            var p = $(data.parse.text["*"].replace(/<img[^>]+src=/g, function(a) { return a.substring(0, a.length - 1) + "hack="; } ));
+            p.find("span[class*=sortkey]").remove(); // Invisible, interfere with parsing
+            try {
+              var value = ((p.find('th,td').filter(function(){ return $(this).text().match(/population/i); }).parent().next("tr").find("td:last-child").first().text().match(/([0-9.,\s]+)/i) || ["",""])[1] || (p.find('td').filter(function(){ return $(this).text().match(/population/i); }).next("td:first").text().match(/([0-9.,\s]+)/i) || ["",""])[1]).replace(/[.,]/g, " ").trim();
+              if (value) element.append(", " + value)
+            } catch (e) {
+              $("#errors").append("Parse capital population " + capital + ": " + e + "<hr />");
+            }
           }
+          sizeHeraldicIcon(template);
+        } catch (e) {
+          $("#errors").append("Query capital " + capital + ": " + e + "<hr />");
+        } finally {
+          unregisterAction(actionId);
         }
-        sizeHeraldicIcon(template);
-        unregisterAction(actionId);
-    }).error(function(e) {
-      $("#errors").append("Query capital " + capital + ": " + e + "\n\n");
+    }).error(function(xhr) {
+      $("#errors").append("Query capital " + capital + ": " + xhr.statusText + "<hr />");
       unregisterAction(actionId);
     });
   }
@@ -325,13 +342,47 @@ var parseColour = function(v) {
           }
           return n;
         });
-        if (v.indexOf("hsl") >= 0) tuple = hslToRgb.apply(this, tuple);
+        if (v.indexOf("hsl") >= 0) tuple = hslToRgb(tuple[0], tuple[1], tuple[2]);
         r = "#" + tuple.map(function(x) { return (x + 256).toString(16).substr(-2); }).join("");
       }
     }
     r = NAMED_COLOURS[r] || r;
   }
   return r;
+};
+
+
+/** Downloads the image file and embeds it to img element src as data URL. */
+var addEmbeddedImage = function(url, img) {
+  if (url.match(/^data\:image/)) return; // Already an embedded data URL
+  var actionId = registerAction();
+  try {
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", url, async=true);
+    xhr.responseType = "arraybuffer";
+    xhr.onload = function(e) {
+      try {
+        if (200 == this.status) {
+          var type = url.split(".").pop();
+          if (type.length > 4) type = "png";
+          var raw = "";
+          var byteArray = new Uint8Array(this.response);
+          for (var i = 0; i < byteArray.byteLength; i++) {
+            raw += String.fromCharCode(byteArray[i]);
+          }
+          img.attr("src", "data:image/" + type + ";base64," + btoa(raw));
+        }
+      } catch (e) {
+        $("#errors").append("Add embedded " + url + ": " + e + "<hr />");
+      } finally {
+        unregisterAction(actionId);
+      }
+    };
+    xhr.send();
+  } catch (e) {
+    $("#errors").append("Get " + url + ": " + e + "<hr />");
+    unregisterAction(actionId);
+  }
 };
 
 
@@ -365,6 +416,8 @@ var makeCard = function(displaytitle, page, template) {
   template.find("img.flag").attr("src", flag_url);
   var heraldic_icon = heraldic_url ? heraldic_url.replace(/svg\/(\d+)px/, "svg/50px") : BLANK_IMG;
   template.find("img.heraldic").attr("src", heraldic_icon);
+  addEmbeddedImage(flag_url, template.find("img.flag"));
+  addEmbeddedImage(heraldic_icon, template.find("img.heraldic"));
 
   template.find("a").attr("href", "http://en.wikipedia.com/wiki/" + displaytitle.replace(/ /g, "_"));
   if (displaytitle.match(REGEX_COUNTRIES_NOBORDER)) {
@@ -452,19 +505,20 @@ var makeCountries = function(countries) {
           "page": country
         },
         function(data) {
-          if (data.parse && data.parse.displaytitle) {
-            try {
+          try {
+            if (data.parse && data.parse.displaytitle) {
               var displaytitle = $("<span />").html(data.parse.displaytitle).text().replace(/[ _]\(country\)$/i, "");
               makeCard(displaytitle, data.parse.text["*"], template);
-            } catch (e) {
-              $("#errors").append("makeCard (" + country + "): " + e + "\n\n");
+            } else {
+              template.remove();
             }
-          } else {
-            template.remove();
+          } catch (e) {
+            $("#errors").append("Make card for " + country + ": " + e + "<hr />");
+          } finally {
+            unregisterAction(actionId);
           }
-          unregisterAction(actionId);
-      }).error(function(e) {
-        $("#errors").append("Query " + country + ": " + e + "\n\n");
+      }).error(function(xhr) {
+        $("#errors").append("Query " + country + ": " + xhr.statusText + "<hr />");
         template.remove();
         unregisterAction(actionId);
       });
@@ -513,19 +567,24 @@ var generateCards = function() {
           "page": "List of countries by " + query.page
         },
         function(data) {
-          if (!KNOWN_VALUES[valuename]) KNOWN_VALUES[valuename] = {};
-          var p = $("<span />").html(data.parse.text["*"].replace(/<img[^>]+src=/g, function(a) { return a.substring(0, a.length - 1) + "hack="; } ));
-          var tables = p.find("table.wikitable").sort(function(a,b) { return $(b).find("tr").length - $(a).find("tr").length; });
-          $(tables[0]).find("tr").filter(query.filter).each(function() {
-            var k = query.key($(this)).replace(/[ _]\(country\)$/i, "");
-            var v = query.val($(this));
-            if (v) KNOWN_VALUES[valuename][k] = v;
-          });
-          KNOWN_VALUES[valuename]["Kingdom of the Netherlands"] = KNOWN_VALUES[valuename]["Netherlands"];
-          unregisterAction(actionId);
+          try {
+            if (!KNOWN_VALUES[valuename]) KNOWN_VALUES[valuename] = {};
+            var p = $("<span />").html(data.parse.text["*"].replace(/<img[^>]+src=/g, function(a) { return a.substring(0, a.length - 1) + "hack="; } ));
+            var tables = p.find("table.wikitable").sort(function(a,b) { return $(b).find("tr").length - $(a).find("tr").length; });
+            $(tables[0]).find("tr").filter(query.filter).each(function() {
+              var k = query.key($(this)).replace(/[ _]\(country\)$/i, "");
+              var v = query.val($(this));
+              if (v) KNOWN_VALUES[valuename][k] = v;
+            });
+            KNOWN_VALUES[valuename]["Kingdom of the Netherlands"] = KNOWN_VALUES[valuename]["Netherlands"];
+          } catch (e) {
+            $("#errors").append("Query " + valuename + ": " + e + "<hr />");
+          } finally {
+            unregisterAction(actionId);
+          }
         }
-      ).error(function(e) {
-        $("#errors").append("Query general data: " + e + "\n\n");
+      ).error(function(xhr) {
+        $("#errors").append("Query " + valuename + ": " + xhr.statusText + "<hr />");
         unregisterAction(actionId);
       });
     })(valuename, DATAQUERIES[valuename]);
@@ -542,22 +601,27 @@ var generateCards = function() {
       "page": "List of countries"
     },
     function(data) { 
-      if (data.parse && data.parse.text) {
-        // Bypass jQuery automatic image verification
-        var page = $(data.parse.text["*"].replace(/<img[^>]+src=/g, function(a) { return a.substring(0, a.length - 1) + "hack="; } ));
-        var links = page.find("td:first-child > span[id]:first-child").parent().find("a");
-        var titles = links.map(function() { return ($(this).attr("title") || ""); }).get();
-        COUNTRIES_EXTRA.map(function(x) { 
-          titles.indexOf(x) < 0 ? titles.push(x) : ""; 
-        });
-        var countries = titles.sort().filter(function(x) { return x && true; });
+      try {
+        if (data.parse && data.parse.text) {
+          // Bypass jQuery automatic image verification
+          var page = $(data.parse.text["*"].replace(/<img[^>]+src=/g, function(a) { return a.substring(0, a.length - 1) + "hack="; } ));
+          var links = page.find("td:first-child > span[id]:first-child").parent().find("a");
+          var titles = links.map(function() { return ($(this).attr("title") || ""); }).get();
+          COUNTRIES_EXTRA.map(function(x) { 
+            titles.indexOf(x) < 0 ? titles.push(x) : ""; 
+          });
+          var countries = titles.sort().filter(function(x) { return x && true; });
 
-        makeCountries(countries);
+          makeCountries(countries);
+        }
+      } catch (e) {
+        $("#errors").append("Making countries: " + e + "<hr />");
+      } finally {
+        unregisterAction(actionId);
       }
-      unregisterAction(actionId);
     }
-  ).error(function(e) {
-    $("#errors").append("Query countries: " + e + "\n\n");
+  ).error(function(xhr) {
+    $("#errors").append("Query countries: " + xhr.statusText + "<hr />");
     unregisterAction(actionId);
   });
 };
@@ -731,10 +795,8 @@ var hslToRgb = function(h, s, l){
   </tr><tr>
     <th>Game over:</th><td>When one player loses all cards. Or when last player remains.</td>
   </tr></table>
-<p>&copy; 2014 Erki Suurjaak. Version 1.1.14, 18.03.2014.</p>
+<p>&copy; 2014 Erki Suurjaak. Version 1.1.15, 19.03.2014.</p>
 </div>
-
-<pre id="errors" style="padding-top: 20px; font-size: 0.85em; color: #444;"></pre>
 
 <div id="sidebar" style="width: 250px; position: fixed; right: 0px; top: 100px;">
   <input type="button" id="generate" value="Start" />
@@ -743,6 +805,9 @@ var hslToRgb = function(h, s, l){
   </label>
   <p><a id="savelink" download="flags.html" title="Save as a static page"></a></p>
   <p id="info">Generate flag cards from online Wikipedia data.</p>
+
+  <code id="errors" style="padding-top: 20px; font-size: 0.8em; color: green; word-wrap: break-word;"></code>
+
 </div>
 
 </body>
