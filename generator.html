@@ -232,7 +232,7 @@ var addColourValue = function(name, country, template, url) {
         unregisterAction(actionId);
       }
     }).fail(function(xhr, status, e) {
-      $("#errors").append("Get " + svg_url + ": " + e + "<hr />");
+      $("#errors").append("Get " + svg_url + ": " + status + " " + e + "<hr />");
       element.html("-");
       unregisterAction(actionId);
     });
@@ -269,36 +269,34 @@ var addCapitalPopulation = function(capital, country, template) {
     element.append(", " + KNOWN_VALUES["Capital population"][country])
   } else {
     var actionId = registerAction();
-    $.getJSON(WIKIPEDIA_API_URL,
-      {
-        "action": "parse",
-        "disablepp": "1",
-        "redirects": "1",
-        "section": 0,
-        "format": "json",
-        "page": capital
-      },
-      function(data) {
-        try {
-          if (data.parse && data.parse.displaytitle) {
-            // Bypass jQuery automatic image verification
-            var p = $(data.parse.text["*"].replace(/<img[^>]+src=/g, function(a) { return a.substring(0, a.length - 1) + "hack="; } ));
-            p.find("span[class*=sortkey]").remove(); // Invisible, interfere with parsing
-            try {
-              var value = ((p.find('th,td').filter(function(){ return $(this).text().match(/population/i); }).parent().next("tr").find("td:last-child").first().text().match(/([0-9.,\s]+)/i) || ["",""])[1] || (p.find('td').filter(function(){ return $(this).text().match(/population/i); }).next("td:first").text().match(/([0-9.,\s]+)/i) || ["",""])[1]).replace(/[.,]/g, " ").trim();
-              if (value) element.append(", " + value)
-            } catch (e) {
-              $("#errors").append("Parse capital population " + capital + ": " + e + "<hr />");
-            }
+    $.getJSON(WIKIPEDIA_API_URL, {
+      "action": "parse",
+      "disablepp": "1",
+      "redirects": "1",
+      "section": 0,
+      "format": "json",
+      "page": capital
+    }).done(function(data) {
+      try {
+        if (data.parse && data.parse.displaytitle) {
+          // Bypass jQuery automatic image verification
+          var p = $(data.parse.text["*"].replace(/<img[^>]+src=/g, function(a) { return a.substring(0, a.length - 1) + "hack="; } ));
+          p.find("span[class*=sortkey]").remove(); // Invisible, interfere with parsing
+          try {
+            var value = ((p.find('th,td').filter(function(){ return $(this).text().match(/population/i); }).parent().next("tr").find("td:last-child").first().text().match(/([0-9.,\s]+)/i) || ["",""])[1] || (p.find('td').filter(function(){ return $(this).text().match(/population/i); }).next("td:first").text().match(/([0-9.,\s]+)/i) || ["",""])[1]).replace(/[.,]/g, " ").trim();
+            if (value) element.append(", " + value)
+          } catch (e) {
+            $("#errors").append("Parse capital population " + capital + ": " + e + "<hr />");
           }
-          sizeHeraldicIcon(template);
-        } catch (e) {
-          $("#errors").append("Query capital " + capital + ": " + e + "<hr />");
-        } finally {
-          unregisterAction(actionId);
         }
-    }).error(function(xhr) {
-      $("#errors").append("Query capital " + capital + ": " + xhr.statusText + "<hr />");
+        sizeHeraldicIcon(template);
+      } catch (e) {
+        $("#errors").append("Query capital " + capital + ": " + e + "<hr />");
+      } finally {
+        unregisterAction(actionId);
+      }
+    }).fail(function(xhr, status, e) {
+      $("#errors").append("Query capital " + capital + ": " + status + " " + e + "<hr />");
       unregisterAction(actionId);
     });
   }
@@ -495,30 +493,28 @@ var makeCountries = function(countries) {
 
     (function(country, template) {
       var actionId = registerAction();
-      $.getJSON(WIKIPEDIA_API_URL,
-        {
-          "action": "parse",
-          "disablepp": "1",
-          "redirects": "1",
-          "section": 0,
-          "format": "json",
-          "page": country
-        },
-        function(data) {
-          try {
-            if (data.parse && data.parse.displaytitle) {
-              var displaytitle = $("<span />").html(data.parse.displaytitle).text().replace(/[ _]\(country\)$/i, "");
-              makeCard(displaytitle, data.parse.text["*"], template);
-            } else {
-              template.remove();
-            }
-          } catch (e) {
-            $("#errors").append("Make card for " + country + ": " + e + "<hr />");
-          } finally {
-            unregisterAction(actionId);
+      $.getJSON(WIKIPEDIA_API_URL, {
+        "action": "parse",
+        "disablepp": "1",
+        "redirects": "1",
+        "section": 0,
+        "format": "json",
+        "page": country
+      }).done(function(data) {
+        try {
+          if (data.parse && data.parse.displaytitle) {
+            var displaytitle = $("<span />").html(data.parse.displaytitle).text().replace(/[ _]\(country\)$/i, "");
+            makeCard(displaytitle, data.parse.text["*"], template);
+          } else {
+            template.remove();
           }
-      }).error(function(xhr) {
-        $("#errors").append("Query " + country + ": " + xhr.statusText + "<hr />");
+        } catch (e) {
+          $("#errors").append("Make card for " + country + ": " + e + "<hr />");
+        } finally {
+          unregisterAction(actionId);
+        }
+      }).fail(function(xhr, status, e) {
+        $("#errors").append("Query " + country + ": " + status + " " + e + "<hr />");
         template.remove();
         unregisterAction(actionId);
       });
@@ -557,71 +553,65 @@ var generateCards = function() {
   for (var valuename in DATAQUERIES) {
     (function(valuename, query) {
       var actionId = registerAction();
-      $.getJSON(WIKIPEDIA_API_URL,
-        {
-          "action": "parse",
-          "disablepp": "1",
-          "redirects": "1",
-          "format": "json",
-          "prop": "text",
-          "page": "List of countries by " + query.page
-        },
-        function(data) {
-          try {
-            if (!KNOWN_VALUES[valuename]) KNOWN_VALUES[valuename] = {};
-            var p = $("<span />").html(data.parse.text["*"].replace(/<img[^>]+src=/g, function(a) { return a.substring(0, a.length - 1) + "hack="; } ));
-            var tables = p.find("table.wikitable").sort(function(a,b) { return $(b).find("tr").length - $(a).find("tr").length; });
-            $(tables[0]).find("tr").filter(query.filter).each(function() {
-              var k = query.key($(this)).replace(/[ _]\(country\)$/i, "");
-              var v = query.val($(this));
-              if (v) KNOWN_VALUES[valuename][k] = v;
-            });
-            KNOWN_VALUES[valuename]["Kingdom of the Netherlands"] = KNOWN_VALUES[valuename]["Netherlands"];
-          } catch (e) {
-            $("#errors").append("Query " + valuename + ": " + e + "<hr />");
-          } finally {
-            unregisterAction(actionId);
-          }
+      $.getJSON(WIKIPEDIA_API_URL, {
+        "action": "parse",
+        "disablepp": "1",
+        "redirects": "1",
+        "format": "json",
+        "prop": "text",
+        "page": "List of countries by " + query.page
+      }).done(function(data) {
+        try {
+          if (!KNOWN_VALUES[valuename]) KNOWN_VALUES[valuename] = {};
+          var p = $("<span />").html(data.parse.text["*"].replace(/<img[^>]+src=/g, function(a) { return a.substring(0, a.length - 1) + "hack="; } ));
+          var tables = p.find("table.wikitable").sort(function(a,b) { return $(b).find("tr").length - $(a).find("tr").length; });
+          $(tables[0]).find("tr").filter(query.filter).each(function() {
+            var k = query.key($(this)).replace(/[ _]\(country\)$/i, "");
+            var v = query.val($(this));
+            if (v) KNOWN_VALUES[valuename][k] = v;
+          });
+          KNOWN_VALUES[valuename]["Kingdom of the Netherlands"] = KNOWN_VALUES[valuename]["Netherlands"];
+        } catch (e) {
+          $("#errors").append("Query " + valuename + ": " + e + "<hr />");
+        } finally {
+          unregisterAction(actionId);
         }
-      ).error(function(xhr) {
-        $("#errors").append("Query " + valuename + ": " + xhr.statusText + "<hr />");
+      }).fail(function(xhr, status, e) {
+        $("#errors").append("Query " + valuename + ": " + status + " " + e + "<hr />");
         unregisterAction(actionId);
       });
     })(valuename, DATAQUERIES[valuename]);
   }
 
   var actionId = registerAction();
-  $.getJSON(WIKIPEDIA_API_URL,
-    {
-      "action": "parse",
-      "disablepp": "1",
-      "redirects": "1",
-      "format": "json",
-      "prop": "text",
-      "page": "List of countries"
-    },
-    function(data) { 
-      try {
-        if (data.parse && data.parse.text) {
-          // Bypass jQuery automatic image verification
-          var page = $(data.parse.text["*"].replace(/<img[^>]+src=/g, function(a) { return a.substring(0, a.length - 1) + "hack="; } ));
-          var links = page.find("td:first-child > span[id]:first-child").parent().find("a");
-          var titles = links.map(function() { return ($(this).attr("title") || ""); }).get();
-          COUNTRIES_EXTRA.map(function(x) { 
-            titles.indexOf(x) < 0 ? titles.push(x) : ""; 
-          });
-          var countries = titles.sort().filter(function(x) { return x && true; });
+  $.getJSON(WIKIPEDIA_API_URL, {
+    "action": "parse",
+    "disablepp": "1",
+    "redirects": "1",
+    "format": "json",
+    "prop": "text",
+    "page": "List of countries"
+  }).done(function(data) { 
+    try {
+      if (data.parse && data.parse.text) {
+        // Bypass jQuery automatic image verification
+        var page = $(data.parse.text["*"].replace(/<img[^>]+src=/g, function(a) { return a.substring(0, a.length - 1) + "hack="; } ));
+        var links = page.find("td:first-child > span[id]:first-child").parent().find("a");
+        var titles = links.map(function() { return ($(this).attr("title") || ""); }).get();
+        COUNTRIES_EXTRA.map(function(x) { 
+          titles.indexOf(x) < 0 ? titles.push(x) : ""; 
+        });
+        var countries = titles.sort().filter(function(x) { return x && true; });
 
-          makeCountries(countries);
-        }
-      } catch (e) {
-        $("#errors").append("Making countries: " + e + "<hr />");
-      } finally {
-        unregisterAction(actionId);
+        makeCountries(countries);
       }
+    } catch (e) {
+      $("#errors").append("Making countries: " + e + "<hr />");
+    } finally {
+      unregisterAction(actionId);
     }
-  ).error(function(xhr) {
-    $("#errors").append("Query countries: " + xhr.statusText + "<hr />");
+  }).fail(function(xhr, status, e) {
+    $("#errors").append("Query countries: " + status + " " + e + "<hr />");
     unregisterAction(actionId);
   });
 };
