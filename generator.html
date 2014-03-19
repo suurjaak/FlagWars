@@ -6,6 +6,9 @@
   <script src="http://code.jquery.com/jquery.min.js"></script>
   <style id="stylesheet">
   <!--
+    @media print {
+      div.card { page-break-inside: avoid; }
+    }
     body { font-family: Calibri; }
     #cards {
       clear: both;
@@ -131,7 +134,6 @@ var REGEX_COUNTRIES_NOBORDER = new RegExp("Nepal", "i");
 
 var REGEX_COUNTRIES_TOSKIP = new RegExp("^((?!(georg|hong|macau|puerto|polynesia|faroe|isle|guam|cura|caledo)).)*$", "i"); // @todo remove when done
 var REGEX_COUNTRIES_TOSKIP = new RegExp("Crimea|Abkhazia|Ossetia", "i");
-var REGEX_COUNTRIES_TOSKIP = new RegExp("^((?!(venez)).)*$", "i"); // @todo remove when done
 
 /** List of countries to include additionally. */
 var COUNTRIES_EXTRA = ["Hong Kong", "Macau", "Puerto Rico", "French Polynesia", "Faroe Islands", "Isle of Man", "Guam", "Curaçao", "New Caledonia"];
