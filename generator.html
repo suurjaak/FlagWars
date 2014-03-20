@@ -54,32 +54,33 @@
     }
     div.card dl {
       font-size: 0.7em;
-      margin: 1em 0 0 0;
+      margin: 5px 0 0 0;
     }
-    dt {
+    div.card dt {
       width: 48%;
       font-weight: bold;
       float: left;
     }
-    dt.shifted {
+    div.card dt.shifted {
       position: relative;
       top: 3px;
     }
-    dd {
+    div.card dd {
       width: 45%;
       margin: 0px;
       float: left;
     }
-    dd:after { /* add linebreak, dd is inline */
+    div.card dd:after { /* add linebreak, dd is inline */
       content: "\a";
       white-space: pre;
     }
-    span.index {
+    div.card span.index {
       color: #DDD;
       font-size: 0.6em;
       position: absolute;
       bottom: 0px;
       left: 3px;
+      z-index: -1;
     }
     #header {
       text-align: center;
@@ -133,7 +134,7 @@ var REGEX_COLOUR_TUPLE = new RegExp("(^(rgba*|hsla*)\\(\\s*([0-9.%]+)\\s*,\\s*([
 var REGEX_COUNTRIES_NOBORDER = new RegExp("Nepal", "i");
 
 var REGEX_COUNTRIES_TOSKIP = new RegExp("Crimea|Abkhazia|Ossetia", "i");
-var REGEX_COUNTRIES_TOSKIP = new RegExp("^((?!(georg|hong|macau|puerto|polynesia|faroe|isle|guam|cura|caledo)).)*$", "i"); // @todo remove when done
+var REGEX_COUNTRIES_TOSKIP = new RegExp("^((?!(georg|hong|macau|puerto|polynesia|faroe|isle|guam|cura|caledo|papua|maurita|cyprus)).)*$", "i"); // @todo remove when done
 
 /** List of countries to include additionally. */
 var COUNTRIES_EXTRA = ["Hong Kong", "Macau", "Puerto Rico", "French Polynesia", "Faroe Islands", "Isle of Man", "Guam", "Curaçao", "New Caledonia"];
