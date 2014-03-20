@@ -37,6 +37,7 @@
       bottom: 5px;
       right: 5px;
       max-height: 50px;
+      z-index: -1;
     }
     img.heraldic.small {
       max-height: 30px;
@@ -48,7 +49,7 @@
       font-size: 1em;
       text-align: center;
       padding: 0px;
-      margin: 0px;
+      margin: 0 10px 0 10px;
       font-weight: normal;
       text-transform: uppercase;
     }
@@ -80,7 +81,28 @@
       position: absolute;
       bottom: 0px;
       left: 3px;
-      z-index: -1;
+      z-index: -2;
+    }
+    div.card span.nativename {
+      color: #DDD;
+      font-size: 0.8em;
+      white-space: nowrap;
+      z-index: -2;
+      transform-origin: right;
+      transform: rotate(-90deg);
+      -webkit-transform-origin: right;
+      -webkit-transform: rotate(-90deg);
+      -o-transform-origin: right;
+      -o-transform: rotate(-90deg);
+      -moz-transform-origin: right;
+      -moz-transform: rotate(-90deg);
+      position: absolute;
+      top: 0px;
+      right: 0px;
+      margin-right: 10px;
+    }
+    .hideNativeName span.nativename {
+      display: none;
     }
     #header {
       text-align: center;
@@ -115,7 +137,7 @@
  *
  * @author    Erki Suurjaak
  * @created   09.03.2014
- * @modified  19.03.2014
+ * @modified  20.03.2014
  */
 
 var WIKIPEDIA_API_URL = "http://en.wikipedia.org/w/api.php?callback=?";
@@ -133,8 +155,8 @@ var REGEX_COLOUR_TUPLE = new RegExp("(^(rgba*|hsla*)\\(\\s*([0-9.%]+)\\s*,\\s*([
 // Regex for matching countries where flag should not have box shadow border.
 var REGEX_COUNTRIES_NOBORDER = new RegExp("Nepal", "i");
 
+var REGEX_COUNTRIES_TOSKIP = new RegExp("^((?!(estonia|georg|hong|macau|puerto|polynesia|faroe|isle|guam|cura|caledo|papua|maurita)).)*$", "i"); // @todo remove when done
 var REGEX_COUNTRIES_TOSKIP = new RegExp("Crimea|Abkhazia|Ossetia", "i");
-var REGEX_COUNTRIES_TOSKIP = new RegExp("^((?!(georg|hong|macau|puerto|polynesia|faroe|isle|guam|cura|caledo|papua|maurita|cyprus)).)*$", "i"); // @todo remove when done
 
 /** List of countries to include additionally. */
 var COUNTRIES_EXTRA = ["Hong Kong", "Macau", "Puerto Rico", "French Polynesia", "Faroe Islands", "Isle of Man", "Guam", "Curaçao", "New Caledonia"];
@@ -152,7 +174,8 @@ var KNOWN_VALUES = {
   "Life expectancy": {"Montenegro": "74.5 (71.5M 77.5F)", "Swaziland": "50 (49M 51F)"},
   "Flag colours": {"Albania": 2, "Belgium": 3, "Botswana": 3, "Ghana": 4, "Iraq": 4, "Jamaica": 3, "Jordan": 4, "Kuwait": 4, "Malawi": 3, "State of Palestine": 4, "Saint Lucia": 4, "Somaliland": 4, "United Arab Emirates": 4, "Yemen": 3 },
   "Heraldic colours": {"Albania": 3, "Bosnia and Herzegovina": 3, "Cook Islands": 10, "Cyprus": 3, "Dominica": 8, "Grenada": 14, "Lebanon": 4, "Libya": 1, "Marshall Islands": 4, "Nigeria": 9, "South Africa": 11, "São Tomé and Príncipe": 10},
-  "Title": {"Hong Kong": "Hong Kong Special Administrative Region of the PRC", "Macau": "Macau Special Administrative Region of the PRC"}
+  "Title": {"Hong Kong": "Hong Kong Special Administrative Region of the PRC", "Macau": "Macau Special Administrative Region of the PRC"},
+  "Native name": {"Curaçao": "Pais Kòrsou", "Burma": "Pyidaunzu Thanmăda Myăma Nainngandaw", "Cambodia": "Preăh Réachéanachâk Kâmpŭchéa", "Chad": "جمهورية تشاد", "Comoros": "Udzima wa Komori", "East Timor": "Repúblika Demokrátika Timór-Leste", "Monaco": "Principauté de Monaco", "South Korea": "대한민국", "Switzerland": "Svizra", "Togo": "République Togolaise"}
 };
 
 /** Formats number with thousand separator char. */
@@ -394,7 +417,7 @@ var addEmbeddedImage = function(url, img) {
 /** Makes a new card from country info page. */
 var makeCard = function(displaytitle, page, template) {
   // Avoid jQuery automatic image verifying
-  var p = $(page.replace(/<img[^>]+src=/g, function(a) { return a.substring(0, a.length - 1) + "hack="; } ));
+  var p = $("<span />").html(page.replace(/<img[^>]+src=/g, function(a) { return a.substring(0, a.length - 1) + "hack="; } ));
   template.attr("data-name", displaytitle);
 
   var capital = undefined;
@@ -404,10 +427,10 @@ var makeCard = function(displaytitle, page, template) {
   var flag_url = p.find("img[srchack*=Flag_of]:first").attr("srchack").replace(/svg\/(\d+)px/, "svg/180px") || "";
   var heraldic_url = KNOWN_HERALDIC_URLS[displaytitle] || p.find("img").filter(function() { return $(this).attr("srchack").match(/Coats*_of_arms|Emblem|Seal_of|Koninklijk|Bundesadler|Armoiries|Staatswappen|Arms_of|Escudo_|Herb_|_COA|coa_|-arms/i); }).first().attr("srchack") || "";
 
+  p.find("span[class='fn org country-name']:first").find("a").remove(); // Name-span can contain bothersome links
   if (displaytitle in KNOWN_VALUES["Title"]) {
     title = KNOWN_VALUES["Title"][displaytitle];
   } else {
-    p.find("span[class='fn org country-name']:first").find("a").remove(); // Name-span can contain superfluous links
     var title = p.find("span[class='fn org country-name']:first").text()
     if (displaytitle.length > title.length) { // Go with the longer defined name
       title = displaytitle;
@@ -429,6 +452,22 @@ var makeCard = function(displaytitle, page, template) {
     template.find("img.flag").attr("style", "box-shadow: none;");
   }
   template.find("h1").html(title);
+  template.find(".nativename").html((function() {
+    var name = KNOWN_VALUES["Native name"] && KNOWN_VALUES["Native name"][displaytitle] || "";
+    if (!name) try { // Find first flat element with content after official name
+      var infocell = p.find("table.infobox").find("span.country-name").parent();
+      infocell.find("span.country-name").remove();
+      infocell.find("*").each(function() {
+        if (this.firstChild && this.firstChild.data && this.firstChild.data.trim()) { 
+          name = this.firstChild.data.trim();
+        } else if (this.lastChild && this.lastChild.data && this.lastChild.data.trim()) {
+          name = this.lastChild.data.trim(); // @todo nii ei saa hästi, lastChild võib tulla enne kui nested firstChild
+        }
+        if (name) return false; // break each()
+      });
+    } catch (e) { console.log(e); }
+    return name || title;
+  })());
 
   addValue("Area", displaytitle, template, function() { return $("<span />").html(
       (p.find('th,td').filter(function(){ return $(this).text().toLowerCase() === "area"; }).parent().next("tr").find("th:last,td:last").html().match(/([0-9 ,.]+).*km/) || p.find('th,td').filter(function(){ return $(this).text().toLowerCase() === "area"; }).next("th,td").html().match(/([0-9 ,.]+).*km/))[1]
@@ -640,13 +679,12 @@ var getStaticPage = function() {
   cardsElem.removeAttribute("style"); // Clear generator-page specific styles
   var cardsDoc = $(cardsElem.outerHTML);
   cardsElem.setAttribute("style", styleBackup);
-  if ($("#cards").hasClass("hideHeraldic")) {
-    cardsDoc.find("img.heraldic").remove();
+  if ($("#cards").hasClass("hideHeraldic")) cardsDoc.find("img.heraldic").remove();
+  if ($("#cards").hasClass("hideNativeName")) cardsDoc.find("span.nativename").remove();
+  if ($("#embed_img")[0].checked) {
+    cardsDoc.find("img").each(function() { $(this).attr("src", $(this).attr("data-binary")); })
   }
-  var embed_img = $("#embed_img")[0].checked;
-  cardsDoc.find("img.flag, img.heraldic").each(function() {
-    if (embed_img) $(this).attr("src", $(this).attr("data-binary"));
-  }).removeAttr("data-url data-binary");
+  cardsDoc.find("img").removeAttr("data-url data-binary");
   content += cardsDoc[0].outerHTML;
 
   var timestamp = function(d) {
@@ -679,7 +717,7 @@ var unregisterAction = function(actionId) {
   if (actionCounter) {
     document.getElementById("savelink").innerHTML = ("Creating.. (" + (actionTotal - actionCounter) + " Wikipedia queries)");
   } else {
-    makeDownloadLink(!actionCounter);
+    makeDownloadLink();
     document.getElementById("info").innerHTML = ("Generated " + document.getElementById("cards").children.length + " flag cards with " + actionTotal + " Wikipedia queries.");
     setTimeout(function() { alert("Generation complete!"); }, 200);
   }
@@ -688,7 +726,7 @@ var unregisterAction = function(actionId) {
 
 /** Makes a link with current static content that can be saved to file. */
 var makeDownloadLink = function() {
-  if (!actionCounter) {
+  if (actionTotal && !actionCounter) {
     var content = unescape(encodeURIComponent(getStaticPage())); // Make UTF-8
     var link = document.getElementById("savelink");
     link.href = "data:application/octet-stream;base64," + btoa(content);
@@ -696,18 +734,6 @@ var makeDownloadLink = function() {
     link.title = "Save as a static page";
   }
 };
-
-
-$(document).ready(function() {
-  $("#generate").click(generateCards);
-  $("#hide_heraldic_img").click(function() {
-    $("#cards").toggleClass("hideHeraldic");
-    if (actionTotal && !actionCounter) makeDownloadLink();
-  });
-  $("#embed_img").click(function() {
-    if (actionTotal && !actionCounter) makeDownloadLink();
-  });
-});
 
 
 /**
@@ -751,6 +777,22 @@ var hslToRgb = function(h, s, l){
 };
 
 
+$(document).ready(function() {
+  $("#generate").click(generateCards);
+  $("#include_heraldic_img").click(function() {
+    $("#cards").toggleClass("hideHeraldic");
+    makeDownloadLink();
+  });
+  $("#include_nativename").click(function() {
+    $("#cards").toggleClass("hideNativeName");
+    makeDownloadLink();
+  });
+  $("#embed_img").click(function() {
+    makeDownloadLink();
+  });
+});
+
+
 -->
 </script>
 <body>
@@ -766,6 +808,7 @@ var hslToRgb = function(h, s, l){
   <a href="http://en.wikipedia.org/wiki/Estonia"><img class="flag" src="http://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/Flag_of_Estonia.svg/170px-Flag_of_Estonia.svg.png" title="#000000, #4891d9, #ffffff" alt="" /></a>
   <img class="heraldic" src="http://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/Coat_of_arms_of_Estonia.svg/50px-Coat_of_arms_of_Estonia.svg.png" title="#1f1a17, #3a75c3, #c51f3a, #efa900" alt="" />
   <h1>Republic of Estonia</h1>
+  <span class="nativename">Eesti Vabariik</span>
   <dl>
     <dt class="shifted">Area</dt><dd>45 227 km<sup><small>2</small></sup></dd>
     <dt>Population</dt><dd>1 311 870</dd>
@@ -798,14 +841,18 @@ var hslToRgb = function(h, s, l){
   </tr><tr>
     <th>Game over:</th><td>When one player loses all cards. Or when last player remains.</td>
   </tr></table>
-<p>&copy; 2014 Erki Suurjaak. Version 1.1.16, 20.03.2014.</p>
+<p>&copy; 2014 Erki Suurjaak. Version 1.1.17, 20.03.2014.</p>
 </div>
 
 <div id="sidebar" style="width: 250px; position: fixed; right: 0px; top: 100px;">
   <input type="button" id="generate" value="Start" />
   <br /><br />
-  <label for="hide_heraldic_img" title="Include coat-of-arms images in lower right corner">
-    <input type="checkbox" id="hide_heraldic_img" checked="checked" />Include heraldic icon
+  <label for="include_heraldic_img" title="Include coat-of-arms images in lower right corner.">
+    <input type="checkbox" id="include_heraldic_img" checked="checked" />Include heraldic icon
+  </label>
+  <br />
+  <label for="include_nativename" title="Include the name of the country in its native language along the right edge.">
+    <input type="checkbox" id="include_nativename" checked="checked" />Include name in native language
   </label>
   <br />
   <label for="embed_img" title="Embed image data in generated HTML. Can make page too large to save in some browsers.">
