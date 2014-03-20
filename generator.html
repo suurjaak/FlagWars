@@ -15,11 +15,11 @@
     }
     div.card {
       position: relative;
-      width: 200px;
+      width: 208px;
       height: 300px;
       padding: 5px;
       float: left;
-      margin: 5px;
+      margin: 10px;
       border: 1px solid black;
       border-radius: 2px;
     }
@@ -132,8 +132,8 @@ var REGEX_COLOUR_TUPLE = new RegExp("(^(rgba*|hsla*)\\(\\s*([0-9.%]+)\\s*,\\s*([
 // Regex for matching countries where flag should not have box shadow border.
 var REGEX_COUNTRIES_NOBORDER = new RegExp("Nepal", "i");
 
-var REGEX_COUNTRIES_TOSKIP = new RegExp("^((?!(georg|hong|macau|puerto|polynesia|faroe|isle|guam|cura|caledo)).)*$", "i"); // @todo remove when done
 var REGEX_COUNTRIES_TOSKIP = new RegExp("Crimea|Abkhazia|Ossetia", "i");
+var REGEX_COUNTRIES_TOSKIP = new RegExp("^((?!(georg|hong|macau|puerto|polynesia|faroe|isle|guam|cura|caledo)).)*$", "i"); // @todo remove when done
 
 /** List of countries to include additionally. */
 var COUNTRIES_EXTRA = ["Hong Kong", "Macau", "Puerto Rico", "French Polynesia", "Faroe Islands", "Isle of Man", "Guam", "Curaçao", "New Caledonia"];
@@ -315,7 +315,7 @@ var sizeHeraldicIcon = function(template) {
     if ((parseInt(img_heraldic.css("max-height")) || 0) > vspace) {
       img_heraldic.addClass("small");
     }
-  }, 100);
+  }, 500);
 };
 
 
@@ -354,7 +354,11 @@ var parseColour = function(v) {
 
 /** Downloads the image file and embeds it to img element src as data URL. */
 var addEmbeddedImage = function(url, img) {
-  if (url.match(/^data\:image/)) return; // Already an embedded data URL
+  img.attr("data-url", url);
+  if (url.match(/^data\:image/)) {
+    img.attr("data-binary", url);
+    return; // Already an embedded data URL
+  }
   var actionId = registerAction();
   try {
     var xhr = new XMLHttpRequest();
@@ -370,7 +374,7 @@ var addEmbeddedImage = function(url, img) {
           for (var i = 0; i < byteArray.byteLength; i++) {
             raw += String.fromCharCode(byteArray[i]);
           }
-          img.attr("src", "data:image/" + type + ";base64," + btoa(raw));
+          img.attr("data-binary", "data:image/" + type + ";base64," + btoa(raw));
         }
       } catch (e) {
         $("#errors").append("Add embedded " + url + ": " + e + "<hr />");
@@ -413,7 +417,7 @@ var makeCard = function(displaytitle, page, template) {
   if (flag_url) flag_url = "http://" + flag_url.replace(/^(https*\:)*\/+/, "");
   if (heraldic_url) heraldic_url = "http://" + heraldic_url.replace(/^(https*\:)*\/+/, "");
 
-  template.find("img.flag").attr("src", flag_url);
+  template.find("img.flag").attr({"src": flag_url, "alt": displaytitle});
   var heraldic_icon = heraldic_url ? heraldic_url.replace(/svg\/(\d+)px/, "svg/50px") : BLANK_IMG;
   template.find("img.heraldic").attr("src", heraldic_icon);
   addEmbeddedImage(flag_url, template.find("img.flag"));
@@ -633,14 +637,16 @@ var getStaticPage = function() {
   var cardsElem = document.getElementById("cards");
   var styleBackup = cardsElem.getAttribute("style");
   cardsElem.removeAttribute("style"); // Clear generator-page specific styles
-  var cards = cardsElem.outerHTML;
+  var cardsDoc = $(cardsElem.outerHTML);
   cardsElem.setAttribute("style", styleBackup);
   if ($("#cards").hasClass("hideHeraldic")) {
-    var cardsDoc = $(cards);
     cardsDoc.find("img.heraldic").remove();
-    cards = cardsDoc[0].outerHTML;
   }
-  content += cards;
+  var embed_img = $("#embed_img")[0].checked;
+  cardsDoc.find("img.flag, img.heraldic").each(function() {
+    if (embed_img) $(this).attr("src", $(this).attr("data-binary"));
+  }).removeAttr("data-url data-binary");
+  content += cardsDoc[0].outerHTML;
 
   var timestamp = function(d) {
     var a = [d.getDate(), d.getMonth() + 1, d.getYear() + 1900, d.getHours(), d.getMinutes(), d.getSeconds()];
@@ -673,7 +679,7 @@ var unregisterAction = function(actionId) {
     document.getElementById("savelink").innerHTML = ("Creating.. (" + (actionTotal - actionCounter) + " Wikipedia queries)");
   } else {
     makeDownloadLink(!actionCounter);
-    document.getElementById("info").innerHTML = ("Generated " + document.getElementById("cards").children.length + " flag cards from " + actionTotal + " Wikipedia queries.");
+    document.getElementById("info").innerHTML = ("Generated " + document.getElementById("cards").children.length + " flag cards with " + actionTotal + " Wikipedia queries.");
     setTimeout(function() { alert("Generation complete!"); }, 200);
   }
 };
@@ -686,6 +692,7 @@ var makeDownloadLink = function() {
     var link = document.getElementById("savelink");
     link.href = "data:application/octet-stream;base64," + btoa(content);
     link.innerHTML = ("Save file (" + content.length + " bytes)").replace(/ /g, "&nbsp;");
+    link.title = "Save as a static page";
   }
 };
 
@@ -694,6 +701,9 @@ $(document).ready(function() {
   $("#generate").click(generateCards);
   $("#hide_heraldic_img").click(function() {
     $("#cards").toggleClass("hideHeraldic");
+    if (actionTotal && !actionCounter) makeDownloadLink();
+  });
+  $("#embed_img").click(function() {
     if (actionTotal && !actionCounter) makeDownloadLink();
   });
 });
@@ -752,7 +762,7 @@ var hslToRgb = function(h, s, l){
 
 <div class="card" id="template">
   <span class="index">1</span>
-  <a href="http://en.wikipedia.org/wiki/Estonia" target="_blank"><img class="flag" src="http://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/Flag_of_Estonia.svg/170px-Flag_of_Estonia.svg.png" title="#000000, #4891d9, #ffffff" alt="" /></a>
+  <a href="http://en.wikipedia.org/wiki/Estonia"><img class="flag" src="http://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/Flag_of_Estonia.svg/170px-Flag_of_Estonia.svg.png" title="#000000, #4891d9, #ffffff" alt="" /></a>
   <img class="heraldic" src="http://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/Coat_of_arms_of_Estonia.svg/50px-Coat_of_arms_of_Estonia.svg.png" title="#1f1a17, #3a75c3, #c51f3a, #efa900" alt="" />
   <h1>Republic of Estonia</h1>
   <dl>
@@ -787,15 +797,20 @@ var hslToRgb = function(h, s, l){
   </tr><tr>
     <th>Game over:</th><td>When one player loses all cards. Or when last player remains.</td>
   </tr></table>
-<p>&copy; 2014 Erki Suurjaak. Version 1.1.15, 19.03.2014.</p>
+<p>&copy; 2014 Erki Suurjaak. Version 1.1.16, 20.03.2014.</p>
 </div>
 
 <div id="sidebar" style="width: 250px; position: fixed; right: 0px; top: 100px;">
   <input type="button" id="generate" value="Start" />
-  <label for="hide_heraldic_img">
+  <br /><br />
+  <label for="hide_heraldic_img" title="Include coat-of-arms images in lower right corner">
     <input type="checkbox" id="hide_heraldic_img" checked="checked" />Include heraldic icon
   </label>
-  <p><a id="savelink" download="flags.html" title="Save as a static page"></a></p>
+  <br />
+  <label for="embed_img" title="Embed image data in generated HTML. Can make page too large to save in some browsers.">
+    <input type="checkbox" id="embed_img" />Embed images on page
+  </label>
+  <p><a id="savelink" download="cards.html" target="_blank"></a></p>
   <p id="info">Generate flag cards from online Wikipedia data.</p>
 
   <code id="errors" style="padding-top: 20px; font-size: 0.8em; color: green; word-wrap: break-word;"></code>
