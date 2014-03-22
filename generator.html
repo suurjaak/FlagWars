@@ -105,6 +105,13 @@
     .hideNativeName span.nativename {
       display: none;
     }
+    .narrowSize div.card {
+      width: 195px;
+      height: 310px;
+    }
+    .narrowSize div.card span.nativename {
+      margin-right: 8px;
+    }
     #header {
       text-align: center;
     }
@@ -788,6 +795,10 @@ $(document).ready(function() {
     $("#cards").toggleClass("hideNativeName");
     makeDownloadLink();
   });
+  $("#wide_size").click(function() {
+    $("#cards").toggleClass("narrowSize");
+    makeDownloadLink();
+  });
   $("#embed_img").click(function() {
     makeDownloadLink();
   });
@@ -842,7 +853,7 @@ $(document).ready(function() {
   </tr><tr>
     <th>Game over:</th><td>When one player loses all cards. Or when last player remains.</td>
   </tr></table>
-<p>&copy; 2014 Erki Suurjaak. Version 1.1.17, 21.03.2014.</p>
+<p>&copy; 2014 Erki Suurjaak. Version 1.1.18, 22.03.2014.</p>
 </div>
 
 <div id="sidebar" style="width: 250px; position: fixed; right: 0px; top: 100px;">
@@ -854,6 +865,10 @@ $(document).ready(function() {
   <br />
   <label for="include_nativename" title="Include the name of the country in its native language along the right edge.">
     <input type="checkbox" id="include_nativename" checked="checked" />Include name in native language
+  </label>
+  <br />
+  <label for="wide_size" title="Cards in poker size (88x62mm) instead of bridge size (88x56mm).">
+    <input type="checkbox" id="wide_size" checked="checked" />Poker size cards
   </label>
   <br />
   <label for="embed_img" title="Embed image data in generated HTML. Can make page too large to save in some browsers.">
