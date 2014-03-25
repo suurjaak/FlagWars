@@ -165,6 +165,7 @@ var REGEX_COLOUR_TUPLE = new RegExp("(^(rgba*|hsla*)\\(\\s*([0-9.%]+)\\s*,\\s*([
 var REGEX_COUNTRIES_NOBORDER = new RegExp("Nepal", "i");
 
 var REGEX_COUNTRIES_TOSKIP = new RegExp("^((?!(estonia|georg|hong|macau|puerto|polynesia|faroe|isle|guam|cura|caledo|papua|maurita)).)*$", "i"); // @todo remove when done
+/** Regex for matching countries to skip (unrecognized/disputed states). */
 var REGEX_COUNTRIES_TOSKIP = new RegExp("Crimea|Abkhazia|Ossetia|Transnistria|Karabakh", "i");
 
 /** List of countries to include additionally. */
@@ -324,7 +325,7 @@ var addCapitalPopulation = function(capital, country, template) {
             $("#errors").append("Parse capital population " + capital + ": " + e + "<hr />");
           }
         }
-        sizeHeraldicIcon(template);
+        setTimeout(function() { sizeHeraldicIcon(template); }, 500);
       } catch (e) {
         $("#errors").append("Query capital " + capital + ": " + e + "<hr />");
       } finally {
@@ -340,15 +341,15 @@ var addCapitalPopulation = function(capital, country, template) {
 
 /** Sizes the heraldic icon to fit under text, if necessary. */
 var sizeHeraldicIcon = function(template) {
-  setTimeout(function() {
-    var dd_lastwide = template.find("dd").eq(-3);
-    var img_heraldic = template.find("img.heraldic");
-    var vspace = template.outerHeight() - dd_lastwide.position().top
-                 - dd_lastwide.height() - (parseInt(img_heraldic.css("bottom")) || 0);
-    if ((parseInt(img_heraldic.css("max-height")) || 0) > vspace) {
-      img_heraldic.addClass("small");
-    }
-  }, 500);
+  var dd_lastwide = template.find("dd").eq(-3); // Measure by "Letters" or "Life expectancy"
+  if (dd_lastwide.text().length < 10) dd_lastwide = template.find("dd").eq(-5);
+  var img_heraldic = template.find("img.heraldic");
+  var vspace = template.outerHeight() - dd_lastwide.position().top
+               - dd_lastwide.height() - (parseInt(img_heraldic.css("bottom")) || 0);
+  img_heraldic.removeClass("small");
+  if ((parseInt(img_heraldic.css("max-height")) || 0) > vspace) {
+    img_heraldic.addClass("small");
+  }
 };
 
 
@@ -527,7 +528,7 @@ var makeCard = function(displaytitle, page, template) {
 
   addColourValue("Heraldic colours", displaytitle, template, heraldic_url);
   addColourValue("Flag colours", displaytitle, template, flag_url);
-  sizeHeraldicIcon(template);
+  setTimeout(function() { sizeHeraldicIcon(template); }, 500);
 };
 
 
@@ -798,6 +799,7 @@ $(document).ready(function() {
   });
   $("#wide_size").click(function() {
     $("#cards").toggleClass("narrowSize");
+    $("div.card").each(function() { sizeHeraldicIcon($(this)); });
     makeDownloadLink();
   });
   $("#embed_img").click(function() {
@@ -854,7 +856,7 @@ $(document).ready(function() {
   </tr><tr>
     <th>Game over:</th><td>When one player loses all cards. Or when last player remains.</td>
   </tr></table>
-<p>&copy; 2014 Erki Suurjaak. Version 1.1.19, 23.03.2014.</p>
+<p>&copy; 2014 Erki Suurjaak. Version 1.1.20, 25.03.2014.</p>
 </div>
 
 <div id="sidebar" style="width: 250px; position: fixed; right: 0px; top: 100px;">
@@ -869,7 +871,7 @@ $(document).ready(function() {
   </label>
   <br />
   <label for="wide_size" title="Cards in poker size (88x62mm) instead of bridge size (88x56mm).">
-    <input type="checkbox" id="wide_size" checked="checked" />Poker size cards
+    <input type="checkbox" id="wide_size" checked="checked" />Poker size
   </label>
   <br />
   <label for="embed_img" title="Embed image data in generated HTML. Can make page too large to save in some browsers.">
