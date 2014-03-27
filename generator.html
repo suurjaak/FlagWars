@@ -4,37 +4,34 @@
   <meta name="Author" content="Erki Suurjaak" />
   <title>Flag Cards | Generator</title>
   <script src="http://code.jquery.com/jquery.min.js"></script>
-  <style id="stylesheet">
+  <style type="text/css" id="staticstyle">
   <!--
     @media print {
-      div.card { page-break-inside: avoid; }
       #header h1 { margin: 0px; padding: 0px; }
       #sidebar { display: none; }
       #footer label { display: none; }
+      div.card { page-break-inside: avoid; }
     }
     body { font-family: Calibri; }
-    #cards {
-      clear: both;
-    }
     div.card {
       position: relative;
+      float: left;
       width: 208px;
       height: 300px;
       padding: 5px;
-      float: left;
       margin: 10px;
       border: 1px solid black;
       border-radius: 2px;
       overflow: hidden;
     }
     img.flag {
-      margin-left: auto;
-      margin-right: auto;
       display: block;
-      border: 0px;
-      box-shadow: 1px 1px 3px #888;
       max-width: 170px;
       max-height: 100px;
+      margin-left: auto;
+      margin-right: auto;
+      border: 0px;
+      box-shadow: 1px 1px 3px #888;
     }
     img.heraldic {
       position: absolute;
@@ -43,56 +40,39 @@
       max-height: 50px;
       z-index: -1;
     }
-    img.heraldic.small {
-      max-height: 30px;
-    }
-    .hideHeraldic img.heraldic {
-      display: none;
-    }
+    img.heraldic.small { max-height: 30px; }
+    .hideHeraldic img.heraldic { display: none; }
     div.card h1 {
       font-size: 1em;
+      font-weight: normal;
       text-align: center;
+      text-transform: uppercase;
       padding: 0px;
       margin: 0 10px 0 10px;
-      font-weight: normal;
-      text-transform: uppercase;
     }
-    div.card dl {
-      font-size: 0.7em;
-      margin: 5px 0 0 0;
-    }
-    div.card dt {
-      width: 48%;
-      font-weight: bold;
-      float: left;
-    }
-    div.card dt.shifted {
-      position: relative;
-      top: 3px;
-    }
+    div.card dl { font-size: 0.7em; margin: 5px 0 0 0; }
+    div.card dt { width: 48%; font-weight: bold; float: left; }
+    div.card dt.shifted { position: relative; top: 3px; }
     div.card dd {
       width: 47%;
       margin: 0px;
       float: left;
       word-wrap: break-word;
     }
-    div.card dd:after { /* add linebreak, dd is inline */
-      content: "\a";
-      white-space: pre;
-    }
+    div.card dd:after { content: "\a"; white-space: pre; } /* adds linebreak */
     div.card span.index {
-      color: #DDD;
-      font-size: 0.6em;
       position: absolute;
       bottom: 0px;
       left: 3px;
       z-index: -2;
+      color: #DDD;
+      font-size: 0.6em;
     }
     div.card span.nativename {
-      color: #DDD;
-      font-size: 0.8em;
-      white-space: nowrap;
-      z-index: -2;
+      position: absolute;
+      top: 0px;
+      right: 0px;
+      margin-right: 10px;
       transform-origin: right;
       transform: rotate(-90deg);
       -webkit-transform-origin: right;
@@ -101,24 +81,15 @@
       -o-transform: rotate(-90deg);
       -moz-transform-origin: right;
       -moz-transform: rotate(-90deg);
-      position: absolute;
-      top: 0px;
-      right: 0px;
-      margin-right: 10px;
+      color: #DDD;
+      font-size: 0.8em;
+      white-space: nowrap;
+      z-index: -2;
     }
-    .hideNativeName span.nativename {
-      display: none;
-    }
-    .narrowSize div.card {
-      width: 195px;
-      height: 310px;
-    }
-    .narrowSize div.card span.nativename {
-      margin-right: 8px;
-    }
-    #header {
-      text-align: center;
-    }
+    .hideNativeName span.nativename { display: none; }
+    .narrowSize div.card { width: 195px; height: 310px; }
+    .narrowSize div.card span.nativename { margin-right: 8px; }
+    #header { text-align: center; }
     #footer {
       clear: both;
       font-size: 0.8em;
@@ -132,16 +103,18 @@
      margin-right: auto;
      text-align: left;
     }
-    #footer tr {
-      vertical-align: top;
-    }
-    #footer th {
-      text-align: left;
-      white-space: nowrap;
-    }
-    #footer label {
-      display: inline-block;
-      padding-bottom: 10px;
+    #footer tr { vertical-align: top; }
+    #footer th { text-align: left; white-space: nowrap; }
+    #footer label { display: inline-block; padding-bottom: 10px; }
+  -->
+  </style>
+  <style type="text/css">
+  <!--
+    #sidebar {
+      position: fixed;
+      right: 0px;
+      top: 100px;
+      width: 250px;
     }
     #sidebar label { display: block; }
   -->
@@ -151,12 +124,14 @@
 <script type="text/javascript">
 <!--
 /**
- * Generates flag cards from Wikipedia data.
+ * Generates flag cards from Wikipedia data, loading text and binary content
+ * dynamically and offering it for printing or saving.
+ *
  * Released under the MIT License.
  *
  * @author    Erki Suurjaak
  * @created   09.03.2014
- * @modified  21.03.2014
+ * @modified  27.03.2014
  */
 "use strict";
 
@@ -182,11 +157,11 @@ var REGEX_COUNTRIES_TOSKIP = new RegExp("Crimea|Abkhazia|Ossetia|Transnistria|Ka
 /** List of countries to include additionally. */
 var COUNTRIES_EXTRA = ["Hong Kong", "Macau", "Puerto Rico", "French Polynesia", "Faroe Islands", "Isle of Man", "Guam", "Curaçao", "New Caledonia"];
 
+// Some countries do not have coat-of-arms images on their Wiki page.
 var KNOWN_HERALDIC_URLS = {"Canada": "http://upload.wikimedia.org/wikipedia/en/4/4f/Coat_of_arms_of_Canada.svg" };
-// Some countries do not have SVG images, or parsing yields false results.
 var BLANK_IMG = "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==";
 
-// Some values are hard to parse from Wikipedia, or missing altogether
+// Some values are hard to parse from Wikipedia, or missing there altogether.
 var KNOWN_VALUES = {
   "Area": {"South Korea": 100210, "Taiwan": 35883, "Vatican City": 0.44},
   "Capital": {"Monaco": "Monaco", "Singapore": "Singapore", "Vatican City": "Vatican City"},
@@ -199,16 +174,16 @@ var KNOWN_VALUES = {
   "Native name": {"Curaçao": "Pais Kòrsou", "Burma": "Pyidaunzu Thanmăda Myăma Nainngandaw", "Cambodia": "Preăh Réachéanachâk Kâmpŭchéa", "Chad": "جمهورية تشاد", "Comoros": "Udzima wa Komori", "East Timor": "Repúblika Demokrátika Timór-Leste", "Monaco": "Principauté de Monaco", "South Korea": "대한민국", "Switzerland": "Svizra", "Togo": "République Togolaise"}
 };
 
-/** Formats number with thousand separator char. */
+/** Formats number with thousand separator char (default " "). */
 var formatNumber = function (val, sep) {
   sep = (typeof(sep) == "undefined") ? " " : sep;
   var parts = val.toString().replace(/,/g, "").trim().split(".");
   parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, sep);
-  return parts.join(".").replace(/ /g, "&nbsp;");
+  return parts.join(".").replace(/ /g, "&nbsp;"); // Avoid wrap inside number
 };
 var FORMATTERS = {
   "default": function(v) { return ("" + v).trim(); },
-  "GDP per capita": function(v) { return (v.length > 1 && v.indexOf("$") < 0 ? "$" : "") + formatNumber(v); },
+  "GDP per capita": function(v) { return (v != "-" && v.indexOf("$") < 0 ? "$" : "") + formatNumber(v); },
   "Population density": function(v) { return formatNumber(v) + " / km<sup><small>2</small></sup>"; },
   "Area": function(v) { return formatNumber(v) + " km<sup><small>2</small></sup>"; },
   "Population": function(v) { return formatNumber(v); },
@@ -338,7 +313,7 @@ var addCapitalPopulation = function(capital, country, template) {
             $("#errors").append("Parse capital population " + capital + ": " + e + "<hr />");
           }
         }
-        setTimeout(function() { sizeHeraldicIcon(template); }, 500);
+        setTimeout(function() { sizeHeraldicIcon(template[0]); }, 500);
       } catch (e) {
         $("#errors").append("Query capital " + capital + ": " + e + "<hr />");
       } finally {
@@ -348,20 +323,6 @@ var addCapitalPopulation = function(capital, country, template) {
       $("#errors").append("Query capital " + capital + ": " + status + " " + e + "<hr />");
       unregisterAction(actionId);
     });
-  }
-};
-
-
-/** Sizes the heraldic icon to fit under text, if necessary. */
-var sizeHeraldicIcon = function(template) {
-  var dd_lastwide = template.find("dd").eq(-3); // Measure by "Letters" or "Life expectancy"
-  if (dd_lastwide.text().length < 10) dd_lastwide = template.find("dd").eq(-5);
-  var img_heraldic = template.find("img.heraldic");
-  var vspace = template.outerHeight() - dd_lastwide.position().top
-               - dd_lastwide.height() - (parseInt(img_heraldic.css("bottom")) || 0);
-  img_heraldic.removeClass("small");
-  if ((parseInt(img_heraldic.css("max-height")) || 0) > vspace) {
-    img_heraldic.addClass("small");
   }
 };
 
@@ -541,7 +502,7 @@ var makeCard = function(displaytitle, page, template) {
 
   addColourValue("Heraldic colours", displaytitle, template, heraldic_url);
   addColourValue("Flag colours", displaytitle, template, flag_url);
-  setTimeout(function() { sizeHeraldicIcon(template); }, 500);
+  setTimeout(function() { sizeHeraldicIcon(template[0]); }, 500);
 };
 
 
@@ -693,7 +654,7 @@ var getStaticPage = function() {
     '<meta name="Author" content="Erki Suurjaak" />' +
     '<title>Flag Cards</title>';
   content += document.getElementById("favicon").outerHTML;
-  content += document.getElementById("stylesheet").outerHTML;
+  content += document.getElementById("staticstyle").outerHTML;
   content += "\n</head>\n<body>";
   content += document.getElementById("header").outerHTML;
 
@@ -705,21 +666,23 @@ var getStaticPage = function() {
   cardsDoc.find("img").removeAttr("data-url data-binary");
   content += cardsDoc[0].outerHTML;
 
-  var timestamp = function(d) {
-    var a = [d.getDate(), d.getMonth() + 1, d.getYear() + 1900, d.getHours(), d.getMinutes(), d.getSeconds()];
+  var formatDate = function(d) {
+    var a = [d.getDate(), d.getMonth() + 1, d.getYear() + 1900,
+             d.getHours(), d.getMinutes(), d.getSeconds()];
+    var result = "", inter = ".. ::";
     for (var i in a) {
-      a[i] = (a[i] < 10 ? "0" : "") + a[i];
+      result += (a[i] < 10 ? "0" : "") + a[i] + inter.substr(i, 1);
     }
-    return a[0] + "." + a[1] + "." + a[2] + " " + a[3] + ":" + a[4] + ":" + a[5];
+    return result;
   }
   var footerElem = document.getElementById("footer");
   var footerBackup = footerElem.innerHTML;
   var inputs = document.getElementById("staticoptions").getElementsByTagName("input");
-  for (var i = 0; i < inputs.length; i++) {
+  for (var i = 0; i < inputs.length; i++) { // Force input state to HTML
     !inputs[i].checked ? inputs[i].removeAttribute("checked") : inputs[i].setAttribute("checked", "checked");
   }
   var options = document.getElementById("staticoptions").outerHTML;
-  footerElem.innerHTML = options + footerElem.innerHTML + "<p>Page generated " + timestamp(new Date()) + ".</p>";
+  footerElem.innerHTML = options + footerElem.innerHTML + "<p>Page generated " + formatDate(new Date()) + ".</p>";
   content += footerElem.outerHTML;
   footerElem.innerHTML = footerBackup;
 
@@ -737,7 +700,7 @@ var registerAction = function() {
 };
 
 
-/** Unregisters the action and refreshes counters. */
+/** Unregisters the action, refreshes counters, builds static page if all done. */
 var unregisterAction = function(actionId) {
   actionCounter--;
   if (actionCounter) {
@@ -804,63 +767,63 @@ var hslToRgb = function(h, s, l){
 
 
 $(document).ready(function() {
+  var refreshDownload = function(middleAction) {
+    if ($("#savelink")[0].href) $("#savelink").text("Building..").removeAttr("href");
+    "function" == typeof(middleAction) && middleAction();
+    makeDownloadLink();
+  };
   $("#generate").click(generateCards);
   $("#include_heraldic").click(function() {
-    $("#savelink").text("Building..").removeAttr("href");
-    $("#cards").toggleClass("hideHeraldic");
-    makeDownloadLink();
+    refreshDownload(function() { $("#cards").toggleClass("hideHeraldic"); });
   });
   $("#include_native").click(function() {
-    $("#savelink").text("Building..").removeAttr("href");
-    $("#cards").toggleClass("hideNativeName");
-    makeDownloadLink();
+    refreshDownload(function() { $("#cards").toggleClass("hideNativeName"); });
   });
   $("#size_wide").click(function() {
-    $("#savelink").text("Building..").removeAttr("href");
-    $("#cards").toggleClass("narrowSize");
-    $("div.card").each(function() { sizeHeraldicIcon($(this)); });
-    makeDownloadLink();
+    refreshDownload(function() {
+      $("#cards").toggleClass("narrowSize");
+      $("div.card").each(function() { sizeHeraldicIcon(this); });
+    });
   });
-  $("#embed_img").click(function() {
-    $("#savelink").text("Building..").removeAttr("href");
-    makeDownloadLink();
-  });
+  $("#embed_img").click(refreshDownload);
 });
-
 
 -->
 </script>
 <body>
 
+
 <div id="header">
 <h1>Flag Cards</h1>
 </div>
 
+
 <div id="cards" style="margin-right: 250px;">
 
-<div class="card" id="template">
-  <span class="index">1</span>
-  <a href="http://en.wikipedia.org/wiki/Estonia" target="_blank"><img class="flag" src="http://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/Flag_of_Estonia.svg/170px-Flag_of_Estonia.svg.png" title="#000000, #4891d9, #ffffff" alt="" /></a>
-  <img class="heraldic" src="http://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/Coat_of_arms_of_Estonia.svg/50px-Coat_of_arms_of_Estonia.svg.png" title="#1f1a17, #3a75c3, #c51f3a, #efa900" alt="" />
-  <h1>Republic of Estonia</h1>
-  <span class="nativename">Eesti Vabariik</span>
-  <dl>
-    <dt class="shifted">Area</dt><dd>45&nbsp;227 km<sup><small>2</small></sup></dd>
-    <dt>Population</dt><dd>1&nbsp;311&nbsp;870</dd>
-    <dt class="shifted">Population density</dt><dd>29 / km<sup><small>2</small></sup></dd>
-    <dt>Capital</dt><dd>Tallinn, 430&nbsp;594</dd>
-    <dt>GDP per capita</dt><dd>$18 127</dd>
-    <dt>Life expectancy</dt><dd>76.1 (71M, 81.2F)</dd>
-    <dt>Obesity rate</dt><dd>32.0</dd>
-    <dt>Letters</dt><dd>state 17, capital 7</dd>
-    <dt>Flag colours</dt><dd>4</dd>
-    <dt>Heraldic colours</dt><dd>3</dd>
-  </dl>
-</div>
+  <div class="card" id="template">
+    <span class="index">1</span>
+    <a href="http://en.wikipedia.org/wiki/Estonia" target="_blank"><img class="flag" src="http://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/Flag_of_Estonia.svg/170px-Flag_of_Estonia.svg.png" title="#000000, #4891d9, #ffffff" alt="" /></a>
+    <img class="heraldic" src="http://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/Coat_of_arms_of_Estonia.svg/50px-Coat_of_arms_of_Estonia.svg.png" title="#1f1a17, #3a75c3, #c51f3a, #efa900" alt="" />
+    <h1>Republic of Estonia</h1>
+    <span class="nativename">Eesti Vabariik</span>
+    <dl>
+      <dt class="shifted">Area</dt><dd>45&nbsp;227 km<sup><small>2</small></sup></dd>
+      <dt>Population</dt><dd>1&nbsp;311&nbsp;870</dd>
+      <dt class="shifted">Population density</dt><dd>29 / km<sup><small>2</small></sup></dd>
+      <dt>Capital</dt><dd>Tallinn, 430&nbsp;594</dd>
+      <dt>GDP per capita</dt><dd>$18 127</dd>
+      <dt>Life expectancy</dt><dd>76.1 (71M, 81.2F)</dd>
+      <dt>Obesity rate</dt><dd>32.0</dd>
+      <dt>Letters</dt><dd>state 17, capital 7</dd>
+      <dt>Flag colours</dt><dd>4</dd>
+      <dt>Heraldic colours</dt><dd>3</dd>
+    </dl>
+  </div>
 
 </div>
 
-<div id="sidebar" style="width: 250px; position: fixed; right: 0px; top: 100px;">
+
+<div id="sidebar">
   <input type="button" id="generate" value="Start" />
   <br /><br />
   <span id="staticoptions">
@@ -883,6 +846,7 @@ $(document).ready(function() {
   <code id="errors" style="padding-top: 20px; font-size: 0.8em; color: green; word-wrap: break-word;"></code>
 </div>
 
+
 <div id="footer">
   <table><tr>
     <th>Play:</th><td>Shuffle and deal all cards. Player next to dealer leads the first round.</td>
@@ -899,11 +863,27 @@ $(document).ready(function() {
   </tr><tr>
     <th>Game over:</th><td>When one player loses all cards. Or when last player remains.</td>
   </tr></table>
-<p>&copy; 2014 Erki Suurjaak. Version 1.1.21, 26.03.2014.</p>
+  <p>&copy; 2014 Erki Suurjaak. Version 1.1.22, 27.03.2014.</p>
 </div>
+
 
 <script type="text/javascript" id="staticscript">
 <!--
+/** Sizes the heraldic icon to fit under text, if necessary. */
+var sizeHeraldicIcon = function(cardElem) {
+  var values = cardElem.getElementsByTagName("dd");
+  var dd_lastwide = values[values.length - 3];
+  if (dd_lastwide.textContent.length < 10) dd_lastwide = values[values.length - 5];
+  var img_heraldic = cardElem.getElementsByClassName("heraldic")[0];
+  var vspace = cardElem.offsetHeight - dd_lastwide.offsetTop
+               - dd_lastwide.offsetHeight - (parseInt(window.getComputedStyle(img_heraldic).bottom) || 0);
+  img_heraldic.className = img_heraldic.className.replace(/\bsmall\b/, "");
+  if ((parseInt(window.getComputedStyle(img_heraldic).maxHeight) || 0) > vspace) {
+    img_heraldic.className += " small";
+  }
+};
+
+
 if (!document.getElementById("generate")) {
   var optionClassMap = {"include_heraldic": "hideHeraldic",
                         "include_native": "hideNativeName", "size_wide": "narrowSize"};
@@ -913,6 +893,10 @@ if (!document.getElementById("generate")) {
       var cards = document.getElementById("cards");
       var current = cards.className, name = optionClassMap[this.id];
       cards.className = current.match(name) ? current.replace(name, "") : current + " " + name;
+      if ("size_wide" == this.id) {
+        var elms = cards.getElementsByClassName("card");
+        for (var i = 0; i < elms.length; i++) sizeHeraldicIcon(elms[i]);
+      }
   };
   var onLoad = function() { 
     for (var id in optionClassMap) {
@@ -923,5 +907,6 @@ if (!document.getElementById("generate")) {
 }
 -->
 </script>
+
 </body>
 </html>
