@@ -2,7 +2,7 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
   <meta name="Author" content="Erki Suurjaak" />
-  <title>Flag Cards | Generator</title>
+  <title>Flag Wars | Generator</title>
   <script src="http://code.jquery.com/jquery.min.js"></script>
   <style type="text/css" id="staticstyle">
   <!--
@@ -104,7 +104,9 @@
     #cards { margin-right: 250px; }
     #sidebar { position: fixed; right: 0px; top: 100px; width: 250px; }
     #sidebar label { display: block; }
-    #sidebar textarea { display: none; min-width: 230px; min-height: 100px; }
+    #sidebar #savetext { min-width: 230px; min-height: 60px; }
+    #sidebar #savelink { white-space: nowrap; }
+    #complete { display: none; }
     #errors { padding-top: 20px; font-size: 0.8em; color: green; word-wrap: break-word; }
   -->
   </style>
@@ -113,7 +115,7 @@
 <script type="text/javascript">
 <!--
 /**
- * Generates flag cards from Wikipedia data, loading text and binary content
+ * Generates flag war cards from Wikipedia data, loading text and binary content
  * dynamically and offering it for printing or saving.
  *
  * Released under the MIT License.
@@ -142,6 +144,7 @@ var REGEX_COUNTRIES_NOBORDER = new RegExp("Nepal", "i");
 /** Regex for matching countries to skip (unrecognized/disputed states). */
 var REGEX_COUNTRIES_TOSKIP = new RegExp("^((?!(estonia|georg|hong|macau|puerto|polynesia|faroe|isle|guam|cura|caledo|papua|maurita)).)*$", "i"); // @todo remove when done
 var REGEX_COUNTRIES_TOSKIP = new RegExp("Crimea|Abkhazia|Ossetia|Transnistria|Karabakh", "i");
+var REGEX_COUNTRIES_TOSKIP = new RegExp("^((?!(estonia|cura|caledo|papua|maurita|venezu)).)*$", "i"); // @todo remove when done
 
 /** List of countries to include additionally. */
 var COUNTRIES_EXTRA = ["Hong Kong", "Macau", "Puerto Rico", "French Polynesia", "Faroe Islands", "Isle of Man", "Guam", "Curaçao", "New Caledonia"];
@@ -232,12 +235,14 @@ var addColourValue = function(name, country, template, url) {
           lookups.map(function(x) { var c = parseColour(x.trim()); if (c) colourMap[c] = true; } );
         })
         element.html(Object.keys(colourMap).length || 1);
+        /* @todo clean
         if (name.match(/Flag/i)) {
           template.find("img.flag").attr("title", Object.keys(colourMap).sort().join(", "));
         }
         if (name.match(/Heraldic/i)) {
           template.find("img.heraldic").attr("title", Object.keys(colourMap).sort().join(", "));
         }
+        */
       } catch (e) {
         $("#errors").append("Parse colours from " + svg_url + ": " + e + "<hr />");
       } finally {
@@ -546,7 +551,7 @@ var makeCountries = function(countries) {
 var generateCards = function() {
   $("#generate").attr("disabled", "disabled");
   $("#cards").find("div:not([id])").remove();
-  $("#savelink").html("Creating..");
+  $("#progress").html("Creating..");
 
   var DATAQUERIES = {
     "GDP per capita": {
@@ -639,9 +644,9 @@ var generateCards = function() {
 /** Returns a complete static page HTML of the current content. */
 var getStaticPage = function() {
   var content = '<!doctype html>\n<html>\n<head>' +
+    '<title>Flag Wars</title>' +
     '<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />' +
-    '<meta name="Author" content="Erki Suurjaak" />' +
-    '<title>Flag Cards</title>';
+    '<meta name="Author" content="Erki Suurjaak" />';
   content += document.getElementById("favicon").outerHTML;
   content += document.getElementById("staticstyle").outerHTML;
   content += "\n</head>\n<body>";
@@ -693,11 +698,12 @@ var registerAction = function() {
 var unregisterAction = function(actionId) {
   actionCounter--;
   if (actionCounter) {
-    document.getElementById("savelink").innerHTML = ("Creating.. (" + (actionTotal - actionCounter) + " Wikipedia queries)");
+    document.getElementById("progress").innerHTML = "Creating.. (" + (actionTotal - actionCounter) + " Wikipedia queries)";
   } else {
+    document.getElementById("progress").innerHTML = "";
     makeDownloadLink();
     document.getElementById("info").innerHTML = ("Generated " + document.getElementById("cards").children.length + " flag cards with " + actionTotal + " Wikipedia queries.");
-    setTimeout(function() { alert("Generation complete!"); }, 200);
+    setTimeout(function() { alert("Generation complete!"); }, 100);
   }
 };
 
@@ -706,12 +712,11 @@ var unregisterAction = function(actionId) {
 var makeDownloadLink = function() {
   if (actionTotal && !actionCounter) {
     var content = getStaticPage();
-    var textarea = document.getElementById("savetext");
-    textarea.value = content; textarea.style.display = "block";
-    var link = document.getElementById("savelink");
-    link.href = "data:application/octet-stream;base64," + btoa(unescape(encodeURIComponent(content))); // Make UTF-8
-    link.innerHTML = ("Save file (" + content.length + " bytes)").replace(/ /g, "&nbsp;");
-    link.title = "Save as a static page";
+    $("#savetext").val(content);
+    var contentUtf8 = unescape(encodeURIComponent(content));
+    $("#savelink").html("Save file (" + contentUtf8.length + " bytes)")
+      .attr("href", "data:application/octet-stream;base64," + btoa(contentUtf8));
+    $("#complete").show();
   }
 };
 
@@ -759,8 +764,8 @@ var hslToRgb = function(h, s, l) {
 
 $(document).ready(function() {
   var refreshDownload = function(middleAction) {
-    if ($("#savelink")[0].href) $("#savelink").removeAttr("href").text("Building..");
-    "function" === typeof(middleAction) && middleAction();
+    $("#complete").hide();
+    if ("function" === typeof(middleAction)) middleAction();
     makeDownloadLink();
   };
   $("#generate").click(generateCards);
@@ -784,7 +789,7 @@ $(document).ready(function() {
 <body>
 
 <div id="header">
-<h1>Flag Cards</h1>
+<h1>Flag Wars</h1>
 </div>
 
 
@@ -814,11 +819,11 @@ $(document).ready(function() {
 
 
 <div id="sidebar">
-  <input type="button" id="generate" value="Start" />
+  <input type="button" id="generate" value="Generate deck" />
   <br /><br />
   <span id="staticoptions">
   <label for="include_heraldic" title="Include coat-of-arms images in lower right corner.">
-    <input type="checkbox" id="include_heraldic" checked="checked" />Include heraldic icon
+    <input type="checkbox" id="include_heraldic" checked="checked" />Include heraldic image
   </label>
   <label for="include_native" title="Include the name of the country in its native language along the right edge.">
     <input type="checkbox" id="include_native" checked="checked" />Include name in native language
@@ -830,9 +835,13 @@ $(document).ready(function() {
   <label for="embed_img" title="Embed image data in generated HTML. Can make page too large to save in some browsers.">
     <input type="checkbox" id="embed_img" />Embed images on page
   </label>
-  <p><a id="savelink" download="cards.html" target="_blank" title="Save generated content into a static file."></a></p>
-  <p id="info">Generate country flag cards from online Wikipedia data.</p>
+  <p id="progress"></p>
+  <p id="complete">
+  <a id="savelink" download="cards.html" target="_blank" title="Save generated content to a file on your computer."></a>
+  <br />or copy-paste HTML:
   <textarea id="savetext"></textarea>
+  </p>
+  <p id="info">Generate a deck of country flag cards from online Wikipedia data.</p>
   <code id="errors"></code>
 </div>
 
@@ -879,7 +888,7 @@ if (!document.getElementById("generate")) {
                         "include_native": "hideNativeName", "size_wide": "narrowSize"};
   var binder = window.addEventListener ? "addEventListener" : "attachEvent";
   var prefix = window.addEventListener ? "" : "on"; // Older IE support
-  var onToggle = function() {
+  var onToggleCheckbox = function() {
       var cards = document.getElementById("cards");
       var current = cards.className, name = optionClassMap[this.id];
       cards.className = current.match(name) ? current.replace(name, "") : current + " " + name;
@@ -890,7 +899,7 @@ if (!document.getElementById("generate")) {
   };
   var onLoad = function() { 
     for (var id in optionClassMap) {
-      document.getElementById(id)[binder](prefix + "click", onToggle, false);
+      document.getElementById(id)[binder](prefix + "click", onToggleCheckbox, false);
     }
   };
   window[binder](prefix + "load", onLoad, false);
