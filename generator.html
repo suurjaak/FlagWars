@@ -8,8 +8,9 @@
   <!--
     @media print {
       #header h1 { margin: 0px; padding: 0px; }
+      #cards { margin-right: 0px; }
       #sidebar { display: none; }
-      #footer label { display: none; }
+      #staticoptions { display: none; }
       div.card { page-break-inside: avoid; }
     }
     body { font-family: Calibri; }
@@ -53,12 +54,7 @@
     div.card dl { font-size: 0.7em; margin: 5px 0 0 0; }
     div.card dt { width: 48%; font-weight: bold; float: left; }
     div.card dt.shifted { position: relative; top: 3px; }
-    div.card dd {
-      width: 47%;
-      margin: 0px;
-      float: left;
-      word-wrap: break-word;
-    }
+    div.card dd { width: 47%; margin: 0px; float: left; word-wrap: break-word; }
     div.card dd:after { content: "\a"; white-space: pre; } /* adds linebreak */
     div.card span.index {
       position: absolute;
@@ -90,12 +86,7 @@
     .narrowSize div.card { width: 195px; height: 310px; }
     .narrowSize div.card span.nativename { margin-right: 8px; }
     #header { text-align: center; }
-    #footer {
-      clear: both;
-      font-size: 0.8em;
-      padding-top: 10px;
-      text-align: center;
-    }
+    #footer { clear: both; font-size: 0.8em; padding-top: 10px; text-align: center; }
     #footer table {
      max-width: 600px;
      padding-top: 10px;
@@ -110,13 +101,11 @@
   </style>
   <style type="text/css">
   <!--
-    #sidebar {
-      position: fixed;
-      right: 0px;
-      top: 100px;
-      width: 250px;
-    }
+    #cards { margin-right: 250px; }
+    #sidebar { position: fixed; right: 0px; top: 100px; width: 250px; }
     #sidebar label { display: block; }
+    #sidebar textarea { display: none; min-width: 230px; min-height: 100px; }
+    #errors { padding-top: 20px; font-size: 0.8em; color: green; word-wrap: break-word; }
   -->
   </style>
   <link rel="shortcut icon" type="image/png" id="favicon" href="data:image/png;base64,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" />
@@ -176,19 +165,19 @@ var KNOWN_VALUES = {
 
 /** Formats number with thousand separator char (default " "). */
 var formatNumber = function (val, sep) {
-  sep = (typeof(sep) == "undefined") ? " " : sep;
+  sep = (typeof(sep) === "undefined") ? " " : sep;
   var parts = val.toString().replace(/,/g, "").trim().split(".");
   parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, sep);
   return parts.join(".").replace(/ /g, "&nbsp;"); // Avoid wrap inside number
 };
 var FORMATTERS = {
   "default": function(v) { return ("" + v).trim(); },
-  "GDP per capita": function(v) { return (v != "-" && v.indexOf("$") < 0 ? "$" : "") + formatNumber(v); },
+  "GDP per capita": function(v) { return (v !== "-" && v.indexOf("$") < 0 ? "$" : "") + formatNumber(v); },
   "Population density": function(v) { return formatNumber(v) + " / km<sup><small>2</small></sup>"; },
   "Area": function(v) { return formatNumber(v) + " km<sup><small>2</small></sup>"; },
   "Population": function(v) { return formatNumber(v); },
   "Capital population": function(v) { return formatNumber(v); },
-  "Obesity rate": function(v) { return (v != "-") ? v.toFixed(1) : v; }
+  "Obesity rate": function(v) { return (v !== "-") ? v.toFixed(1) : v; }
 };
 
 
@@ -228,13 +217,13 @@ var addColourValue = function(name, country, template, url) {
             if (node.name.match(/style/i)) {
               $.each(node.value.split(";"), function(_, item) {
                 var namevalue = item.split(":");
-                (2 == namevalue.length) ? lookups.push(namevalue[1]) : 0;
+                (2 === namevalue.length) ? lookups.push(namevalue[1]) : 0;
               });
             } else {
               lookups.push(node.value);
             }
           });
-          if ("style" == this.nodeName) {
+          if ("style" === this.nodeName) {
             // A separate CSS section: parse colours from style text
             var m = this.textContent.replace(/\/\*(\r|\n|.)*\*\//g, "").match(REGEX_COLOURS);
             var colours = (m || []).map(function(x) { return x.replace(/[^#a-z0-9]/ig, ""); });
@@ -343,7 +332,7 @@ var parseColour = function(v) {
         var MAX = v.indexOf("rgb") >= 0 ? 255 : 360;
         var tuple = m.slice(3, 6).map(function(x) {
           var n = (parseInt(x) || 0) % (MAX + 1);
-          if (parseFloat(x) != parseInt(x)) {
+          if (parseFloat(x) !== parseInt(x)) {
             n = (parseFloat(x) * MAX) % (MAX + 1);
           } else if (x.indexOf("%") > 0) {
             n = ((parseInt(x) || 0) / 100 * MAX) % (MAX + 1);
@@ -374,7 +363,7 @@ var addEmbeddedImage = function(url, img) {
     xhr.responseType = "arraybuffer";
     xhr.onload = function(e) {
       try {
-        if (200 == this.status) {
+        if (200 === this.status) {
           var type = url.split(".").pop();
           if (type.length > 4) type = "png";
           var raw = "";
@@ -482,7 +471,7 @@ var makeCard = function(displaytitle, page, template) {
     }
   );
   var capitalPage = capitalDisambig && capitalDisambig[0] ? capitalDisambig[0] : capital;
-  if (capitalPage && capitalPage != "-") {
+  if (capitalPage && capitalPage !== "-") {
     addCapitalPopulation(capitalPage, displaytitle, template);
   }
 
@@ -495,7 +484,7 @@ var makeCard = function(displaytitle, page, template) {
   addValue("Obesity rate", displaytitle, template);
 
   var letters = "state " + title.replace(/\s/, "").length;
-  if (capital != "-") {
+  if (capital !== "-") {
     letters += ", capital " + capital.replace(/\s/, "").length;
   }
   template.find("dl").append($("<dt />").html("Letters"), $("<dd />").html(letters));
@@ -561,12 +550,12 @@ var generateCards = function() {
 
   var DATAQUERIES = {
     "GDP per capita": {
-      "page": "GDP (PPP) per capita",
+      "page": "List of countries by GDP (PPP) per capita",
       "val": function(x) { return x.find("td").eq(2).text(); },
       "key": function(x) { return x.find("a:first").attr("title"); },
       "filter": function() { return $(this).find("td").length; }},
     "Life expectancy": {
-      "page": "life expectancy",
+      "page": "List of countries by life expectancy",
       "val": function(x) { 
         var format = function(v) { return parseFloat(v).toFixed(1); };
         var total = x.find("td").eq(3).text(), m = x.find("td").eq(4).text(), f = x.find("td").eq(5).text();
@@ -575,8 +564,8 @@ var generateCards = function() {
       "key": function(x) { return x.find("a:first").attr("title"); },
       "filter": function() { return $(this).find("a:first").attr("title"); }},
     "Population density": {
-      "page": "population density",
-      "val": function(x) { return x.find("td").eq(6).text(); },
+      "page": "List of countries by population density",
+      "val": function(x) { return x.find("td").eq(5).text(); },
       "key": function(x) { return x.find("a:first").text(); },
       "filter": function() { return $(this).find("td:first").text(); } }
   };
@@ -589,7 +578,7 @@ var generateCards = function() {
         "redirects": "1",
         "format": "json",
         "prop": "text",
-        "page": "List of countries by " + query.page
+        "page": query.page
       }).done(function(data) {
         try {
           if (!KNOWN_VALUES[valuename]) KNOWN_VALUES[valuename] = {};
@@ -716,9 +705,11 @@ var unregisterAction = function(actionId) {
 /** Makes a link with current static content that can be saved to file. */
 var makeDownloadLink = function() {
   if (actionTotal && !actionCounter) {
-    var content = unescape(encodeURIComponent(getStaticPage())); // Make UTF-8
+    var content = getStaticPage();
+    var textarea = document.getElementById("savetext");
+    textarea.value = content; textarea.style.display = "block";
     var link = document.getElementById("savelink");
-    link.href = "data:application/octet-stream;base64," + btoa(content);
+    link.href = "data:application/octet-stream;base64," + btoa(unescape(encodeURIComponent(content))); // Make UTF-8
     link.innerHTML = ("Save file (" + content.length + " bytes)").replace(/ /g, "&nbsp;");
     link.title = "Save as a static page";
   }
@@ -737,13 +728,13 @@ var makeDownloadLink = function() {
  * @return  Array           The RGB representation
  * @from    http://stackoverflow.com/questions/2353211/hsl-to-rgb-color-conversion
  */
-var hslToRgb = function(h, s, l){
+var hslToRgb = function(h, s, l) {
   var r, g, b;
   if (h > 1) h /= 360;
   if (s > 1) s /= 360;
   if (l > 1) l /= 360;
 
-  if (s == 0){
+  if (s === 0) {
     r = g = b = l; // achromatic
   } else {
     var hue2rgb = function(p, q, t) {
@@ -768,8 +759,8 @@ var hslToRgb = function(h, s, l){
 
 $(document).ready(function() {
   var refreshDownload = function(middleAction) {
-    if ($("#savelink")[0].href) $("#savelink").text("Building..").removeAttr("href");
-    "function" == typeof(middleAction) && middleAction();
+    if ($("#savelink")[0].href) $("#savelink").removeAttr("href").text("Building..");
+    "function" === typeof(middleAction) && middleAction();
     makeDownloadLink();
   };
   $("#generate").click(generateCards);
@@ -792,13 +783,12 @@ $(document).ready(function() {
 </script>
 <body>
 
-
 <div id="header">
 <h1>Flag Cards</h1>
 </div>
 
 
-<div id="cards" style="margin-right: 250px;">
+<div id="cards">
 
   <div class="card" id="template">
     <span class="index">1</span>
@@ -842,8 +832,8 @@ $(document).ready(function() {
   </label>
   <p><a id="savelink" download="cards.html" target="_blank" title="Save generated content into a static file."></a></p>
   <p id="info">Generate country flag cards from online Wikipedia data.</p>
-
-  <code id="errors" style="padding-top: 20px; font-size: 0.8em; color: green; word-wrap: break-word;"></code>
+  <textarea id="savetext"></textarea>
+  <code id="errors"></code>
 </div>
 
 
@@ -863,7 +853,7 @@ $(document).ready(function() {
   </tr><tr>
     <th>Game over:</th><td>When one player loses all cards. Or when last player remains.</td>
   </tr></table>
-  <p>&copy; 2014 Erki Suurjaak. Version 1.1.22, 27.03.2014.</p>
+  <p>&copy; 2014 Erki Suurjaak. Version 1.1.22, 28.03.2014.</p>
 </div>
 
 
@@ -893,7 +883,7 @@ if (!document.getElementById("generate")) {
       var cards = document.getElementById("cards");
       var current = cards.className, name = optionClassMap[this.id];
       cards.className = current.match(name) ? current.replace(name, "") : current + " " + name;
-      if ("size_wide" == this.id) {
+      if ("size_wide" === this.id) {
         var elms = cards.getElementsByClassName("card");
         for (var i = 0; i < elms.length; i++) sizeHeraldicIcon(elms[i]);
       }
