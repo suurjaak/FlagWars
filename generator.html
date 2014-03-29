@@ -897,6 +897,7 @@ $(document).ready(function() {
 /** Sizes the heraldic icon to fit under text, if necessary. */
 var sizeHeraldicIcon = function(cardElem) {
   var values = cardElem.getElementsByTagName("dd");
+  if (!values.length) return;
   var dd_floor = values[values.length - 3]; // -3: Letters, -5: Life expectancy
   if (dd_floor.textContent.length < 10) dd_floor = values[values.length - 5];
   var img_heraldic = cardElem.getElementsByClassName("heraldic")[0];
