@@ -146,7 +146,6 @@ var REGEX_COLOUR_TUPLE = new RegExp("(^(rgba*|hsla*)\\(\\s*([0-9.%]+)\\s*,\\s*([
 var REGEX_COUNTRIES_NOBORDER = new RegExp("Nepal", "i");
 
 /** Regex for matching countries to skip (unrecognized/disputed states). */
-var REGEX_COUNTRIES_TOSKIP = new RegExp("^((?!(estonia|georg|hong|macau|puerto|polynesia|faroe|isle|guam|cura|caledo|papua|maurita)).)*$", "i"); // @todo remove when done
 var REGEX_COUNTRIES_TOSKIP = new RegExp("Crimea|Abkhazia|Ossetia|Transnistria|Karabakh", "i");
 
 /** List of countries to include additionally. */
@@ -240,14 +239,8 @@ var addColourValue = function(name, country, template, url) {
           lookups.map(function(x) { var c = parseColour(x.trim()); if (c) colourMap[c] = true; } );
         })
         element.html(Object.keys(colourMap).length || 1);
-        /* @todo clean
-        if (name.match(/Flag/i)) {
-          template.find("img.flag").attr("title", Object.keys(colourMap).sort().join(", "));
-        }
-        if (name.match(/Heraldic/i)) {
-          template.find("img.heraldic").attr("title", Object.keys(colourMap).sort().join(", "));
-        }
-        */
+        var selector = name.match(/Flag/i) ? "img.flag" : "img.heraldic";
+        template.find(selector).attr("data-colours", Object.keys(colourMap).sort().join(", "));
       } catch (e) {
         $("#errors").append("Parse colours from " + svg_url + ": " + e + "<hr />");
       } finally {
@@ -305,7 +298,7 @@ var addCapitalPopulation = function(capital, country, template) {
           if (data.parse && data.parse.displaytitle) {
             // Bypass jQuery automatic image verification
             var p = $(data.parse.text["*"].replace(/<img[^>]+src=/g, function(a) { return a.substring(0, a.length - 1) + "hack="; } ));
-            p.find("span[class*=sortkey]").remove(); // Invisible, interfere with parsing
+            p.find("span[class*=sortkey]").remove(); // Invisible spans, hinder parsing
             try {
               var value = ((p.find('th,td').filter(function(){ return $(this).text().match(/population/i); }).parent().next("tr").find("td:last-child").first().text().match(/([0-9.,\s]+)/i) || ["",""])[1] || (p.find('td').filter(function(){ return $(this).text().match(/population/i); }).next("td:first").text().match(/([0-9.,\s]+)/i) || ["",""])[1]).replace(/[.,]/g, " ").trim();
               if (value) element.append(", " + formatter(value))
@@ -417,10 +410,8 @@ var makeCard = function(displaytitle, page, template) {
   if (displaytitle in KNOWN_VALUES["Title"]) {
     title = KNOWN_VALUES["Title"][displaytitle];
   } else {
-    var title = p.find("span[class='fn org country-name']:first").text()
-    if (displaytitle.length > title.length) { // Go with the longer defined name
-      title = displaytitle;
-    }
+    var title = p.find("span[class='fn org country-name']:first").text().trim();
+    title = displaytitle.length > title.length ? displaytitle : title;
     title = title.replace(/\s\(country\)/i, ""); // Entries like "Georgia (country)"
   }
 
@@ -447,9 +438,9 @@ var makeCard = function(displaytitle, page, template) {
         if (this.firstChild && this.firstChild.data && this.firstChild.data.trim()) { 
           name = this.firstChild.data.trim();
         } else if (this.lastChild && this.lastChild.data && this.lastChild.data.trim()) {
-          name = this.lastChild.data.trim(); // @todo nii ei saa hästi, lastChild võib tulla enne kui nested firstChild
+          name = this.lastChild.data.trim();
         }
-        if (name) return false; // break each()
+        if (name) return false; // break .each()
       });
     } catch (e) { console.log(e); }
     return name || title;
@@ -632,9 +623,7 @@ var generateCards = function() {
         var page = $(data.parse.text["*"].replace(/<img[^>]+src=/g, function(a) { return a.substring(0, a.length - 1) + "hack="; } ));
         var links = page.find("td:first-child > span[id]:first-child").parent().find("a");
         var titles = links.map(function() { return ($(this).attr("title") || ""); }).get();
-        COUNTRIES_EXTRA.map(function(x) { 
-          titles.indexOf(x) < 0 ? titles.push(x) : ""; 
-        });
+        COUNTRIES_EXTRA.map(function(x) { titles.indexOf(x) < 0 ? titles.push(x) : 0; });
         var countries = titles.sort().filter(function(x) { return x && true; });
 
         $("#generate").removeAttr("disabled").val("Pause generating");
@@ -657,14 +646,14 @@ var getStaticPage = function() {
   var page = $("<html />");
   var head = $("<head />").append('<title>Flag Wars</title>',
       $("#metatype").clone(), $("#metaauthor").clone(),
-      $("#favicon").clone(), $("#staticstyle").clone()).appendTo(page);
+      $("#staticstyle").clone(), $("#favicon").clone()).appendTo(page);
   var body = $("<body />").append($("#header").clone()).appendTo(page);
 
   var cards = $("#cards").clone().appendTo(body);
   if ($("#embed_img")[0].checked) cards.find("img").each(function() { 
     $(this).attr("src", $(this).attr("data-binary"));
   })
-  cards.find("img").removeAttr("data-url data-binary");
+  cards.find("img").removeAttr("data-url data-binary data-colours");
 
   $("#staticoptions").find("input").each(function() { // Force fresh input state to HTML
     !this.checked ? this.removeAttribute("checked") : this.setAttribute("checked", "checked");
@@ -832,7 +821,7 @@ $(document).ready(function() {
       <dt>Population</dt><dd>1&nbsp;311&nbsp;870</dd>
       <dt class="shifted">Population density</dt><dd>29 / km<sup><small>2</small></sup></dd>
       <dt>Capital</dt><dd>Tallinn, 430&nbsp;594</dd>
-      <dt>GDP per capita</dt><dd>$18 127</dd>
+      <dt>GDP per capita</dt><dd>$18&nbsp;127</dd>
       <dt>Life expectancy</dt><dd>76.1 (71M, 81.2F)</dd>
       <dt>Obesity rate</dt><dd>32.0</dd>
       <dt>Letters</dt><dd>state 17, capital 7</dd>
