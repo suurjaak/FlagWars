@@ -1,18 +1,22 @@
 <!doctype html><html>
 <head>
-  <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-  <meta name="Author" content="Erki Suurjaak" />
-  <title>Flag Wars | Generator</title>
+  <meta http-equiv="Content-Type" content="text/html;charset=utf-8" id="metatype" />
+  <meta name="Author" content="Erki Suurjaak" id="metaauthor" />
+  <title>Flag Wars Deck Generator</title>
   <script src="http://code.jquery.com/jquery.min.js"></script>
+  <style type="text/css">
+  <!--
+    #cards { margin-right: 250px; }
+    #sidebar { position: fixed; right: 0px; top: 100px; width: 250px; }
+    #sidebar label { display: block; }
+    #sidebar #savetext { min-width: 230px; min-height: 60px; }
+    #sidebar #savelink { white-space: nowrap; }
+    #complete { display: none; }
+    #errors { padding-top: 20px; font-size: 0.8em; color: green; word-wrap: break-word; }
+  -->
+  </style>
   <style type="text/css" id="staticstyle">
   <!--
-    @media print {
-      #header h1 { margin: 0px; padding: 0px; }
-      #cards { margin-right: 0px; }
-      #sidebar { display: none; }
-      #staticoptions { display: none; }
-      div.card { page-break-inside: avoid; }
-    }
     body { font-family: Calibri; }
     div.card {
       position: relative;
@@ -24,15 +28,17 @@
       border: 1px solid black;
       border-radius: 2px;
       overflow: hidden;
+      text-align: center;
     }
     img.flag {
-      display: block;
+      display: inline-block;
       max-width: 170px;
       max-height: 100px;
       margin-left: auto;
       margin-right: auto;
       border: 0px;
       box-shadow: 1px 1px 3px #888;
+      z-index: -1;
     }
     img.heraldic {
       position: absolute;
@@ -42,7 +48,6 @@
       z-index: -1;
     }
     img.heraldic.small { max-height: 30px; }
-    .hideHeraldic img.heraldic { display: none; }
     div.card h1 {
       font-size: 1em;
       font-weight: normal;
@@ -51,7 +56,7 @@
       padding: 0px;
       margin: 0 10px 0 10px;
     }
-    div.card dl { font-size: 0.7em; margin: 5px 0 0 0; }
+    div.card dl { font-size: 0.7em; margin: 5px 0 0 0; text-align: initial; }
     div.card dt { width: 48%; font-weight: bold; float: left; }
     div.card dt.shifted { position: relative; top: 3px; }
     div.card dd { width: 47%; margin: 0px; float: left; word-wrap: break-word; }
@@ -82,36 +87,35 @@
       white-space: nowrap;
       z-index: -2;
     }
-    .hideNativeName span.nativename { display: none; }
-    .narrowSize div.card { width: 195px; height: 310px; }
-    .narrowSize div.card span.nativename { margin-right: 8px; }
+    #cards.hideHeraldic img.heraldic { display: none; }
+    #cards.hideNativeName span.nativename { display: none; }
+    #cards.narrowSize div.card { width: 195px; height: 310px; }
+    #cards.narrowSize div.card span.nativename { margin-right: 8px; }
     #header { text-align: center; }
     #footer { clear: both; font-size: 0.8em; padding-top: 10px; text-align: center; }
     #footer table {
-     max-width: 600px;
-     padding-top: 10px;
-     margin-left: auto;
-     margin-right: auto;
-     text-align: left;
+      max-width: 600px;
+      padding-top: 10px;
+      margin-left: auto;
+      margin-right: auto;
+      text-align: left;
     }
     #footer tr { vertical-align: top; }
     #footer th { text-align: left; white-space: nowrap; }
     #footer label { display: inline-block; padding-bottom: 10px; }
-  -->
-  </style>
-  <style type="text/css">
-  <!--
-    #cards { margin-right: 250px; }
-    #sidebar { position: fixed; right: 0px; top: 100px; width: 250px; }
-    #sidebar label { display: block; }
-    #sidebar #savetext { min-width: 230px; min-height: 60px; }
-    #sidebar #savelink { white-space: nowrap; }
-    #complete { display: none; }
-    #errors { padding-top: 20px; font-size: 0.8em; color: green; word-wrap: break-word; }
+    @media print {
+      #header h1 { margin: 0px; padding: 0px; }
+      #cards { margin-right: 0px; }
+      #sidebar { display: none; }
+      #staticoptions { display: none; }
+      div.card { page-break-inside: avoid; }
+      div.card img.flag { -webkit-filter: drop-shadow(0px 0px 0px rgba(136, 136, 136, 0)); }
+    }
   -->
   </style>
   <link rel="shortcut icon" type="image/png" id="favicon" href="data:image/png;base64,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" />
 </head>
+<body>
 <script type="text/javascript">
 <!--
 /**
@@ -122,7 +126,7 @@
  *
  * @author    Erki Suurjaak
  * @created   09.03.2014
- * @modified  27.03.2014
+ * @modified  29.03.2014
  */
 "use strict";
 
@@ -144,7 +148,6 @@ var REGEX_COUNTRIES_NOBORDER = new RegExp("Nepal", "i");
 /** Regex for matching countries to skip (unrecognized/disputed states). */
 var REGEX_COUNTRIES_TOSKIP = new RegExp("^((?!(estonia|georg|hong|macau|puerto|polynesia|faroe|isle|guam|cura|caledo|papua|maurita)).)*$", "i"); // @todo remove when done
 var REGEX_COUNTRIES_TOSKIP = new RegExp("Crimea|Abkhazia|Ossetia|Transnistria|Karabakh", "i");
-var REGEX_COUNTRIES_TOSKIP = new RegExp("^((?!(estonia|cura|caledo|papua|maurita|venezu)).)*$", "i"); // @todo remove when done
 
 /** List of countries to include additionally. */
 var COUNTRIES_EXTRA = ["Hong Kong", "Macau", "Puerto Rico", "French Polynesia", "Faroe Islands", "Isle of Man", "Guam", "Curaçao", "New Caledonia"];
@@ -186,6 +189,8 @@ var FORMATTERS = {
 
 var actionCounter = 0; // For keeping track of queries and completion
 var actionTotal = 0;
+var isPaused = undefined; // undefined if generator not started yet
+var resumeFuncs = []; // functions to call after resuming from pause
 
 
 /** Adds the number of colours to template, counting all colour values in SVG url. */
@@ -295,24 +300,27 @@ var addCapitalPopulation = function(capital, country, template) {
       "format": "json",
       "page": capital
     }).done(function(data) {
-      try {
-        if (data.parse && data.parse.displaytitle) {
-          // Bypass jQuery automatic image verification
-          var p = $(data.parse.text["*"].replace(/<img[^>]+src=/g, function(a) { return a.substring(0, a.length - 1) + "hack="; } ));
-          p.find("span[class*=sortkey]").remove(); // Invisible, interfere with parsing
-          try {
-            var value = ((p.find('th,td').filter(function(){ return $(this).text().match(/population/i); }).parent().next("tr").find("td:last-child").first().text().match(/([0-9.,\s]+)/i) || ["",""])[1] || (p.find('td').filter(function(){ return $(this).text().match(/population/i); }).next("td:first").text().match(/([0-9.,\s]+)/i) || ["",""])[1]).replace(/[.,]/g, " ").trim();
-            if (value) element.append(", " + formatter(value))
-          } catch (e) {
-            $("#errors").append("Parse capital population " + capital + ": " + e + "<hr />");
+      var handler = function() {
+        try {
+          if (data.parse && data.parse.displaytitle) {
+            // Bypass jQuery automatic image verification
+            var p = $(data.parse.text["*"].replace(/<img[^>]+src=/g, function(a) { return a.substring(0, a.length - 1) + "hack="; } ));
+            p.find("span[class*=sortkey]").remove(); // Invisible, interfere with parsing
+            try {
+              var value = ((p.find('th,td').filter(function(){ return $(this).text().match(/population/i); }).parent().next("tr").find("td:last-child").first().text().match(/([0-9.,\s]+)/i) || ["",""])[1] || (p.find('td').filter(function(){ return $(this).text().match(/population/i); }).next("td:first").text().match(/([0-9.,\s]+)/i) || ["",""])[1]).replace(/[.,]/g, " ").trim();
+              if (value) element.append(", " + formatter(value))
+            } catch (e) {
+              $("#errors").append("Parse capital population " + capital + ": " + e + "<hr />");
+            }
           }
+          setTimeout(function() { sizeHeraldicIcon(template[0]); }, 500);
+        } catch (e) {
+          $("#errors").append("Query capital " + capital + ": " + e + "<hr />");
+        } finally {
+          unregisterAction(actionId);
         }
-        setTimeout(function() { sizeHeraldicIcon(template[0]); }, 500);
-      } catch (e) {
-        $("#errors").append("Query capital " + capital + ": " + e + "<hr />");
-      } finally {
-        unregisterAction(actionId);
-      }
+      };
+      isPaused ? resumeFuncs.push(handler) : handler();
     }).fail(function(xhr, status, e) {
       $("#errors").append("Query capital " + capital + ": " + status + " " + e + "<hr />");
       unregisterAction(actionId);
@@ -364,7 +372,7 @@ var addEmbeddedImage = function(url, img) {
   var actionId = registerAction();
   try {
     var xhr = new XMLHttpRequest();
-    xhr.open("GET", url, true); // true=async
+    xhr.open("GET", url, true); // true: async
     xhr.responseType = "arraybuffer";
     xhr.onload = function(e) {
       try {
@@ -503,9 +511,8 @@ var makeCard = function(displaytitle, page, template) {
 /** Makes new cards for the countries, querying Wikipedia data. */
 var makeCountries = function(countries) {
   var basetemplate = $("#template").remove();
-  basetemplate.removeAttr("id");
   basetemplate.find("img").attr({"src": "", "title": ""});
-  basetemplate.find("h1,dl,span").empty();
+  basetemplate.removeAttr("id").find("h1,dl,span").empty();
   var index = 0;
   for (var i in countries) {
     var country = countries[i];
@@ -525,18 +532,21 @@ var makeCountries = function(countries) {
         "format": "json",
         "page": country
       }).done(function(data) {
-        try {
-          if (data.parse && data.parse.displaytitle) {
-            var displaytitle = $("<span />").html(data.parse.displaytitle).text().replace(/[ _]\(country\)$/i, "");
-            makeCard(displaytitle, data.parse.text["*"], template);
-          } else {
-            template.remove();
+        var handler = function() {
+          try {
+            if (data.parse && data.parse.displaytitle) {
+              var displaytitle = $("<span />").html(data.parse.displaytitle).text().replace(/[ _]\(country\)$/i, "");
+              makeCard(displaytitle, data.parse.text["*"], template);
+            } else {
+              template.remove();
+            }
+          } catch (e) {
+            $("#errors").append("Make card for " + country + ": " + e + "<hr />");
+          } finally {
+            unregisterAction(actionId);
           }
-        } catch (e) {
-          $("#errors").append("Make card for " + country + ": " + e + "<hr />");
-        } finally {
-          unregisterAction(actionId);
-        }
+        };
+        isPaused ? resumeFuncs.push(handler) : handler();
       }).fail(function(xhr, status, e) {
         $("#errors").append("Query " + country + ": " + status + " " + e + "<hr />");
         template.remove();
@@ -627,6 +637,7 @@ var generateCards = function() {
         });
         var countries = titles.sort().filter(function(x) { return x && true; });
 
+        $("#generate").removeAttr("disabled").val("Pause generating");
         makeCountries(countries);
       }
     } catch (e) {
@@ -643,73 +654,55 @@ var generateCards = function() {
 
 /** Returns a complete static page HTML of the current content. */
 var getStaticPage = function() {
-  var content = '<!doctype html>\n<html>\n<head>' +
-    '<title>Flag Wars</title>' +
-    '<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />' +
-    '<meta name="Author" content="Erki Suurjaak" />';
-  content += document.getElementById("favicon").outerHTML;
-  content += document.getElementById("staticstyle").outerHTML;
-  content += "\n</head>\n<body>";
-  content += document.getElementById("header").outerHTML;
+  var page = $("<html />");
+  var head = $("<head />").append('<title>Flag Wars</title>',
+      $("#metatype").clone(), $("#metaauthor").clone(),
+      $("#favicon").clone(), $("#staticstyle").clone()).appendTo(page);
+  var body = $("<body />").append($("#header").clone()).appendTo(page);
 
-  var cardsElem = document.getElementById("cards");
-  var cardsDoc = $(cardsElem.outerHTML);
-  if ($("#embed_img")[0].checked) {
-    cardsDoc.find("img").each(function() { $(this).attr("src", $(this).attr("data-binary")); })
-  }
-  cardsDoc.find("img").removeAttr("data-url data-binary");
-  content += cardsDoc[0].outerHTML;
+  var cards = $("#cards").clone().appendTo(body);
+  if ($("#embed_img")[0].checked) cards.find("img").each(function() { 
+    $(this).attr("src", $(this).attr("data-binary"));
+  })
+  cards.find("img").removeAttr("data-url data-binary");
 
-  var formatDate = function(d) {
-    var a = [d.getDate(), d.getMonth() + 1, d.getYear() + 1900,
-             d.getHours(), d.getMinutes(), d.getSeconds()];
-    var result = "", inter = ".. ::";
-    for (var i in a) {
-      result += (a[i] < 10 ? "0" : "") + a[i] + inter.substr(i, 1);
-    }
-    return result;
-  }
-  var footerElem = document.getElementById("footer");
-  var footerBackup = footerElem.innerHTML;
-  var inputs = document.getElementById("staticoptions").getElementsByTagName("input");
-  for (var i = 0; i < inputs.length; i++) { // Force input state to HTML
-    !inputs[i].checked ? inputs[i].removeAttribute("checked") : inputs[i].setAttribute("checked", "checked");
-  }
-  var options = document.getElementById("staticoptions").outerHTML;
-  footerElem.innerHTML = options + footerElem.innerHTML + "<p>Page generated " + formatDate(new Date()) + ".</p>";
-  content += footerElem.outerHTML;
-  footerElem.innerHTML = footerBackup;
-
-  content += document.getElementById("staticscript").outerHTML;
-  content += "</body>\n</html>";
-  return content;
+  $("#staticoptions").find("input").each(function() { // Force fresh input state to HTML
+    !this.checked ? this.removeAttribute("checked") : this.setAttribute("checked", "checked");
+  });
+  body.append($("#footer").clone().prepend($("#staticoptions").clone()).append(
+      $("<p>Page generated " + formatDate(new Date()) + ".</p>")));
+  body.append($("#staticscript").clone());
+  return "<!doctype html>" + page[0].outerHTML;
 };
 
 
 /** Returns a new action ID, used for keeping track of progress. */
 var registerAction = function() {
+  var result = ++actionTotal;
   actionCounter++;
-  actionTotal++;
-  return actionTotal;
+  return result;
 };
 
 
 /** Unregisters the action, refreshes counters, builds static page if all done. */
 var unregisterAction = function(actionId) {
   actionCounter--;
+  var queries = (actionTotal - actionCounter) + " Wikipedia queries";
   if (actionCounter) {
-    document.getElementById("progress").innerHTML = "Creating.. (" + (actionTotal - actionCounter) + " Wikipedia queries)";
+    $("#progress").html("Creating.. (" + queries + ")");
   } else {
-    document.getElementById("progress").innerHTML = "";
-    makeDownloadLink();
-    document.getElementById("info").innerHTML = ("Generated " + document.getElementById("cards").children.length + " flag cards with " + actionTotal + " Wikipedia queries.");
+    $("#generate").attr("disabled", "disabled");
+    $("#progress").html("");
+    updateSaveContent();
+    $("#info").html("Generated " + $("#cards").children().length + " flag cards with " + queries + ".");
+    $("#generate").val("Completed");
     setTimeout(function() { alert("Generation complete!"); }, 100);
   }
 };
 
 
-/** Makes a link with current static content that can be saved to file. */
-var makeDownloadLink = function() {
+/** Fills the save-as link and textarea with current content state. */
+var updateSaveContent = function() {
   if (actionTotal && !actionCounter) {
     var content = getStaticPage();
     $("#savetext").val(content);
@@ -718,6 +711,39 @@ var makeDownloadLink = function() {
       .attr("href", "data:application/octet-stream;base64," + btoa(contentUtf8));
     $("#complete").show();
   }
+};
+
+
+/** Starts, pauses or resumes generating. */ 
+var onButton = function() {
+  if ("undefined" === typeof(isPaused)) {
+    $("#generate").attr("disabled", "disabled");
+    isPaused = false;
+    generateCards();
+  } else {
+    isPaused = !isPaused;
+    $("#generate").val((isPaused ? "Resume" : "Pause") + " generating");
+    if (!isPaused && resumeFuncs.length) {
+      var resumeAfter = function() {
+        if (isPaused) return;
+        resumeFuncs.length ? (resumeFuncs.shift())() : 0;
+        resumeFuncs.length ? setTimeout(resumeAfter, 50) : 0;
+      };
+      setTimeout(resumeAfter, 50);
+    }
+  }
+};
+
+
+/** Formats a Date into "YYYY.MM.DD hh:mm:ss". */
+var formatDate = function(d) {
+  var a = [d.getDate(), d.getMonth() + 1, d.getYear() + 1900,
+           d.getHours(), d.getMinutes(), d.getSeconds()];
+  var result = "", inter = ".. ::";
+  for (var i in a) {
+    result += (a[i] < 10 ? "0" : "") + a[i] + inter.substr(i, 1);
+  }
+  return result;
 };
 
 
@@ -749,7 +775,7 @@ var hslToRgb = function(h, s, l) {
       if (t < 1/2) return q;
       if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
       return p;
-    }
+    };
 
     var q = l < 0.5 ? l * (1 + s) : l + s - l * s;
     var p = 2 * l - q;
@@ -763,33 +789,33 @@ var hslToRgb = function(h, s, l) {
 
 
 $(document).ready(function() {
-  var refreshDownload = function(middleAction) {
+  var refreshSave = function(middleAction) {
     $("#complete").hide();
     if ("function" === typeof(middleAction)) middleAction();
-    makeDownloadLink();
+    updateSaveContent();
   };
-  $("#generate").click(generateCards);
-  $("#include_heraldic").click(function() {
-    refreshDownload(function() { $("#cards").toggleClass("hideHeraldic"); });
+
+  $("#generate").click(onButton);
+  $("#hideHeraldic, #hideNativeName").click(function() {
+    refreshSave((function(id) { $("#cards").toggleClass(id); })(this.id));
   });
-  $("#include_native").click(function() {
-    refreshDownload(function() { $("#cards").toggleClass("hideNativeName"); });
-  });
-  $("#size_wide").click(function() {
-    refreshDownload(function() {
+
+  $("#narrowSize").click(function() {
+    refreshSave(function() {
       $("#cards").toggleClass("narrowSize");
       $("div.card").each(function() { sizeHeraldicIcon(this); });
     });
   });
-  $("#embed_img").click(refreshDownload);
+
+  $("#embed_img").click(refreshSave);
 });
 
 -->
 </script>
-<body>
+
 
 <div id="header">
-<h1>Flag Wars</h1>
+<h1>Flag Wars Deck Generator</h1>
 </div>
 
 
@@ -822,14 +848,14 @@ $(document).ready(function() {
   <input type="button" id="generate" value="Generate deck" />
   <br /><br />
   <span id="staticoptions">
-  <label for="include_heraldic" title="Include coat-of-arms images in lower right corner.">
-    <input type="checkbox" id="include_heraldic" checked="checked" />Include heraldic image
+  <label for="hideHeraldic" title="Include coat-of-arms images in lower right corner.">
+    <input type="checkbox" id="hideHeraldic" checked="checked" />Include heraldic image
   </label>
-  <label for="include_native" title="Include the name of the country in its native language along the right edge.">
-    <input type="checkbox" id="include_native" checked="checked" />Include name in native language
+  <label for="hideNativeName" title="Include the name of the country in its native language along the right edge.">
+    <input type="checkbox" id="hideNativeName" checked="checked" />Include name in native language
   </label>
-  <label for="size_wide" title="Cards in poker size (88x62mm) instead of bridge size (88x56mm).">
-    <input type="checkbox" id="size_wide" checked="checked" />Wide size cards
+  <label for="narrowSize" title="Cards in poker size (88x62mm) instead of bridge size (88x56mm).">
+    <input type="checkbox" id="narrowSize" checked="checked" />Wide size cards
   </label>
   </span>
   <label for="embed_img" title="Embed image data in generated HTML. Can make page too large to save in some browsers.">
@@ -838,7 +864,7 @@ $(document).ready(function() {
   <p id="progress"></p>
   <p id="complete">
   <a id="savelink" download="cards.html" target="_blank" title="Save generated content to a file on your computer."></a>
-  <br />or copy-paste HTML:
+  <br /><br />or copy-paste HTML:
   <textarea id="savetext"></textarea>
   </p>
   <p id="info">Generate a deck of country flag cards from online Wikipedia data.</p>
@@ -862,7 +888,7 @@ $(document).ready(function() {
   </tr><tr>
     <th>Game over:</th><td>When one player loses all cards. Or when last player remains.</td>
   </tr></table>
-  <p>&copy; 2014 Erki Suurjaak. Version 1.1.22, 28.03.2014.</p>
+  <p>&copy; 2014 Erki Suurjaak. Version 1.1.23, 29.03.2014.</p>
 </div>
 
 
@@ -871,11 +897,11 @@ $(document).ready(function() {
 /** Sizes the heraldic icon to fit under text, if necessary. */
 var sizeHeraldicIcon = function(cardElem) {
   var values = cardElem.getElementsByTagName("dd");
-  var dd_lastwide = values[values.length - 3];
-  if (dd_lastwide.textContent.length < 10) dd_lastwide = values[values.length - 5];
+  var dd_floor = values[values.length - 3]; // -3: Letters, -5: Life expectancy
+  if (dd_floor.textContent.length < 10) dd_floor = values[values.length - 5];
   var img_heraldic = cardElem.getElementsByClassName("heraldic")[0];
-  var vspace = cardElem.offsetHeight - dd_lastwide.offsetTop
-               - dd_lastwide.offsetHeight - (parseInt(window.getComputedStyle(img_heraldic).bottom) || 0);
+  var vbottom = parseInt(window.getComputedStyle(img_heraldic).bottom) || 0;
+  var vspace = cardElem.offsetHeight - dd_floor.offsetTop - dd_floor.offsetHeight - vbottom;
   img_heraldic.className = img_heraldic.className.replace(/\bsmall\b/, "");
   if ((parseInt(window.getComputedStyle(img_heraldic).maxHeight) || 0) > vspace) {
     img_heraldic.className += " small";
@@ -884,22 +910,21 @@ var sizeHeraldicIcon = function(cardElem) {
 
 
 if (!document.getElementById("generate")) {
-  var optionClassMap = {"include_heraldic": "hideHeraldic",
-                        "include_native": "hideNativeName", "size_wide": "narrowSize"};
   var binder = window.addEventListener ? "addEventListener" : "attachEvent";
   var prefix = window.addEventListener ? "" : "on"; // Older IE support
-  var onToggleCheckbox = function() {
+  var onCheckbox = function() {
       var cards = document.getElementById("cards");
-      var current = cards.className, name = optionClassMap[this.id];
-      cards.className = current.match(name) ? current.replace(name, "") : current + " " + name;
-      if ("size_wide" === this.id) {
+      var classes = cards.className, regex = new RegExp("\\b" + this.id + "\\b");
+      cards.className = classes.match(regex) ? classes.replace(regex, "") : classes + " " + this.id;
+      if ("narrowSize" === this.id) {
         var elms = cards.getElementsByClassName("card");
         for (var i = 0; i < elms.length; i++) sizeHeraldicIcon(elms[i]);
       }
   };
   var onLoad = function() { 
-    for (var id in optionClassMap) {
-      document.getElementById(id)[binder](prefix + "click", onToggleCheckbox, false);
+    var inputs = document.getElementById("staticoptions").getElementsByTagName("input");
+    for (var i = 0; i < inputs.length; i++) {
+      document.getElementById(inputs[i].id)[binder](prefix + "click", onCheckbox, false);
     }
   };
   window[binder](prefix + "load", onLoad, false);
