@@ -12,7 +12,7 @@ My own hand-drawn set, from around 1992:
 
 Print-ready HTML generated from Wikipedia data, 2014:
 
-![Printable deck](https://raw.github.com/suurjaak/FlagWars/gh-pages/images/generated.png)
+![Printable deck](https://raw.github.com/suurjaak/FlagWars/gh-pages/images/th_generated.png)
 
 Online generator, print-ready PDFs and HTML content at 
 http://suurjaak.github.com/FlagWars/.
