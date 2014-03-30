@@ -1,0 +1,141 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Flag Wars by suurjaak</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="javascripts/scale.fix.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1 class="header">Flag Wars</h1>
+        <p class="header">Online deck generator for a playing card game</p>
+
+        <ul>
+          <li class="download"><a class="buttons" href="https://github.com/suurjaak/FlagWars/zipball/master">Download ZIP</a></li>
+          <li class="download"><a class="buttons" href="https://github.com/suurjaak/FlagWars/tarball/master">Download TAR</a></li>
+          <li><a class="buttons github" href="https://github.com/suurjaak/FlagWars">View On GitHub</a></li>
+        </ul>
+
+        <p class="header">This project is maintained by <a class="header name" href="https://github.com/suurjaak">suurjaak</a></p>
+
+
+      </header>
+      <section>
+        <h1>
+<a name="flag-wars" class="anchor" href="#flag-wars"><span class="octicon octicon-link"></span></a>Flag Wars</h1>
+
+<p>Flag Wars (<em>lipukaardid</em> in Estonian) was a fairly popular game in parts of
+Soviet Estonia. As such cards were not produced by any Soviet manufacturer, and
+colour printing was not easily available to the general public, kids drew the
+cards themselves. Some even cut flags out of books and glued them on.</p>
+
+<p>My own hand-drawn set, from around 1992:</p>
+
+<p><img src="img/th_handmade.jpg" alt="Hand-drawn deck"></p>
+
+<p>Print-ready HTML generated from Wikipedia data, 2014:</p>
+
+<p><img src="img/th_generated.png" alt="Printable deck"></p>
+
+<h2>
+<a name="gameplay" class="anchor" href="#gameplay"><span class="octicon octicon-link"></span></a>Gameplay</h2>
+
+<p>In general, very similar to <a href="http://en.wikipedia.org/wiki/War_(card_game)">War</a>.</p>
+
+<p><strong>Play:</strong> Shuffle and deal all cards. Player next to dealer leads the first round.</p>
+
+<p><strong>Each round:</strong> Leader announces a field from their topmost card. 
+Player with the best score puts the trick under their deck and leads the next round. 
+If a player's card has no value in chosen field, leader must choose another field.</p>
+
+<p><strong>Compare:</strong> Higher numbers are better, except for obesity rate.
+If best values are equal, tied players include their next card.</p>
+
+<p><strong>Endgame:</strong> With 3 cards or less, player can choose which card to use.</p>
+
+<p><strong>Game over:</strong> When one player loses all cards. Or when last player remains.</p>
+
+<h2>
+<a name="generating" class="anchor" href="#generating"><span class="octicon octicon-link"></span></a>Generating</h2>
+
+<p>Generator is a single stand-alone HTML page, using embedded JavaScript to 
+retrieve the country list from Wikipedia and make a number of separate
+queries to assemble card data: reading statistics from country and capital
+pages, counting colours in flag and coat-of-arms images.</p>
+
+<p>When generating is complete, the resulting deck can be printed immediately,
+or saved to a file on your computer. File can be saved with embedded images,
+making it completely stand-alone and not dependent on online Wikipedia.</p>
+
+<p>The number of flag/heraldic colours is blindly parsed from SVG image data,
+counting every colour value from image vector attributes. As some image vectors
+are crafted quite intricately, numbers can get absurdly large.</p>
+
+<p>Works best in Chrome and Firefox. Printing is crude in Safari and Opera;
+Internet Explorer has poor performance in general.</p>
+
+<h2>
+<a name="attribution" class="anchor" href="#attribution"><span class="octicon octicon-link"></span></a>Attribution</h2>
+
+<p>Card generator uses jQuery, <a href="http://jquery.com">http://jquery.com</a>.</p>
+
+<p>Images and most data from Wikipedia.</p>
+
+<p>Obesity data from CIA World Factbook 2008,
+<a href="https://www.cia.gov/library/publications/the-world-factbook/">https://www.cia.gov/library/publications/the-world-factbook/</a>.</p>
+
+<p>Obesity data for Estonia from "Obesity, impaired glucose regulation, metabolic 
+syndrome and their associations with high-molecular-weight adiponectin levels" 
+by Triin Eglit, 2014-02-14, <a href="http://dspace.utlib.ee/dspace/handle/10062/37323">http://dspace.utlib.ee/dspace/handle/10062/37323</a>.</p>
+
+<h2>
+<a name="license" class="anchor" href="#license"><span class="octicon octicon-link"></span></a>License</h2>
+
+<p>The MIT License
+Copyright (C) 2014 by Erki Suurjaak</p>
+
+<p>Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:</p>
+
+<p>The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.</p>
+
+<p>The software is provided "as is", without warranty of any kind, express or
+implied, including but not limited to the warranties of merchantability,
+fitness for a particular purpose and noninfringement. In no event shall the
+authors or copyright holders be liable for any claim, damages or other
+liability, whether in an action of contract, tort or otherwise, arising from,
+out of or in connection with the software or the use or other dealings in
+the software.</p>
+      </section>
+      <footer>
+        <p><small>Hosted on <a href="http://pages.github.com">GitHub Pages</a> using the Dinky theme</small></p>
+      </footer>
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+		          <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-49523911-1");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+  </body>
+</html>
