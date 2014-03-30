@@ -8,7 +8,7 @@ cards themselves. Some even cut flags out of books and glued them on.
 
 My own hand-drawn set, from around 1992:
 
-![Hand-drawn deck](/suurjaak/FlagWars/blob/gh-pages/images/th_handmade.jpg)
+![Hand-drawn deck](https://raw.github.com/suurjaak/FlagWars/images/th_handmade.jpg)
 
 Print-ready HTML generated from Wikipedia data, 2014:
 
