@@ -8,13 +8,14 @@ cards themselves. Some even cut flags out of books and glued them on.
 
 My own hand-drawn set, from around 1992:
 
-![Hand-drawn deck](res/th_handmade.jpg)
+![Hand-drawn deck](images/th_handmade.jpg)
 
 Print-ready HTML generated from Wikipedia data, 2014:
 
-![Printable deck](res/th_generated.png)
+![Printable deck](images/th_generated.png)
 
-PDFs, HTML pages, and online generator at http://suurjaak.github.com/FlagWars/.
+Online generator, print-ready PDFs and HTML content at 
+http://suurjaak.github.com/FlagWars/.
 
 
 Gameplay
@@ -59,16 +60,16 @@ Internet Explorer has poor performance in general.
 Attribution
 -----------
 
-Card generator uses jQuery (http://jquery.com).
+Card generator uses jQuery, http://jquery.com.
 
 Images and most data from Wikipedia.
 
-Obesity data from CIA World Factbook 2008
-(https://www.cia.gov/library/publications/the-world-factbook/).
+Obesity data from CIA World Factbook 2008,
+https://www.cia.gov/library/publications/the-world-factbook/rankorder/2228rank.html.
 
 Obesity data for Estonia from "Obesity, impaired glucose regulation, metabolic 
 syndrome and their associations with high-molecular-weight adiponectin levels" 
-by Triin Eglit, 2014-02-14 (http://dspace.utlib.ee/dspace/handle/10062/37323).
+by Triin Eglit, 2014-02-14, http://dspace.utlib.ee/dspace/handle/10062/37323.
 
 
 License
