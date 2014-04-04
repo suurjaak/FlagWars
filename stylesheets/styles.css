@@ -269,12 +269,8 @@ header.dinky a.cards {
 	background: url(../images/icon-cards.png) no-repeat;
 }
 
-header.dinky a.ziap {
+header.dinky a.zip {
 	background: url(../images/icon-zip.png) no-repeat;
-}
-
-header.dinky a.pdf {
-	background: url(../images/icon-pdf.png) no-repeat;
 }
 
 header.dinky a.buttons:hover {
