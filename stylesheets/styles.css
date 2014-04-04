@@ -249,7 +249,7 @@ header.dinky li:hover {
 
 header.dinky a.buttons {
 	-webkit-font-smoothing: antialiased;
-	background: url(../images/arrow-down.png) no-repeat;
+	background: url(../images/icon-download.png) no-repeat;
   font-size: 14px;
 	font-weight: normal;
 	text-shadow: rgba(0, 0, 0, 0.4) 0 -1px 0;
@@ -258,23 +258,23 @@ header.dinky a.buttons {
 }
 
 header.dinky a.github {
-	background: url(../images/octocat-small.png) no-repeat;
+	background: url(../images/icon-github.png) no-repeat;
 }
 
 header.dinky a.generator {
-	background: url(../images/gears.png) no-repeat;
+	background: url(../images/icon-generate.png) no-repeat;
 }
 
 header.dinky a.cards {
-	background: url(../images/cards.png) no-repeat;
+	background: url(../images/icon-cards.png) no-repeat;
 }
 
 header.dinky a.ziap {
-	background: url(../images/zip.png) no-repeat;
+	background: url(../images/icon-zip.png) no-repeat;
 }
 
 header.dinky a.pdf {
-	background: url(../images/pdf.png) no-repeat;
+	background: url(../images/icon-pdf.png) no-repeat;
 }
 
 header.dinky a.buttons:hover {
