@@ -1,137 +1,107 @@
 @import url(https://fonts.googleapis.com/css?family=Arvo:400,700,400italic);
 
-/* MeyerWeb Reset */
-
-html, body, div, span, applet, object, iframe,
-h1, h2, h3, h4, h5, h6, p, blockquote, pre,
-a, abbr, acronym, address, big, cite, code,
-del, dfn, em, img, ins, kbd, q, s, samp,
-small, strike, strong, sub, sup, tt, var,
-b, u, i, center,
-dl, dt, dd, ol, ul, li,
-fieldset, form, label, legend,
-table, caption, tbody, tfoot, thead, tr, th, td,
-article, aside, canvas, details, embed,
-figure, figcaption, footer, header, hgroup,
-menu, nav, output, ruby, section, summary,
-time, mark, audio, video {
-  margin: 0;
-  padding: 0;
-  border: 0;
-  font: inherit;
-  vertical-align: baseline;
-}
-
-
-/* Base text styles */
-
-body {
-  padding:10px 50px 0 0;
-  font-family:"Helvetica Neue", Helvetica, Arial, sans-serif;
-	font-size: 14px;
-	color: #232323;
-	background-color: #FBFAF7;
-	margin: 0;
-	line-height: 1.8em;
-	-webkit-font-smoothing: antialiased;
-
-}
-
-h1, h2, h3, h4, h5, h6 {
-  color:#232323;
-  margin:36px 0 10px;
-}
-
-p, ul, ol, table, dl {
-  margin:0 0 22px;
-}
-
-h1, h2, h3 {
+.dinky h1, .dinky h2, .dinky h3 {
 	font-family: Arvo, Monaco, serif;
-  line-height:1.3;
+  line-height: 1.3;
 	font-weight: normal;
-}
-
-h1,h2, h3 {
 	display: block;
 	border-bottom: 1px solid #ccc;
 	padding-bottom: 5px;
 }
 
-h1 {
+header p {
+	font-size: 16px;
+  line-height: 25px;
+}
+
+
+.dinky * {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  vertical-align: baseline;
+}
+
+/* Base text styles */
+
+body {
+  padding: 10px 50px 0 0;
+	background-color: #FBFAF7;
+	color: #232323;
+	margin: 0;
+	-webkit-font-smoothing: antialiased;
+}
+
+section.dinky {
+	font-size: 14px;
+	line-height: 1.8em;
+  width: 660px;
+}
+
+header {
+	margin: 0;
+	line-height: 1.8em;
+  min-height: 220px;
+	-webkit-font-smoothing: antialiased;
+}
+
+.dinky h1, .dinky h2, .dinky h3 {
+  color: #232323;
+  margin: 36px 0 10px;
+}
+
+.dinky p, .dinky ul, .dinky ol, .dinky table, .dinky dl {
+  margin: 0 0 22px;
+}
+
+.dinky h1 {
 	font-size: 30px;
 }
 
-h2 {
+.dinky h2 {
 	font-size: 24px;
 }
 
-h3 {
+.dinky h3 {
 	font-size: 18px;
 }
 
-h4, h5, h6 {
-	font-family: Arvo, Monaco, serif;
-	font-weight: 700;
+.dinky a {
+  color: #C30000;
+  font-weight: 200;
+  text-decoration: none;
 }
 
-a {
-  color:#C30000;
-  font-weight:200;
-  text-decoration:none;
-}
-
-a:hover {
+.dinky a:hover {
 	text-decoration: underline;
 }
 
-a small {
-	font-size: 12px;
-}
-
-em {
+.dinky em {
 	font-style: italic;
 }
 
-strong {
+.dinky strong {
   font-weight:700;
 }
 
-ul {
+.dinky ul {
   list-style: inside;
   padding-left: 25px;
 }
 
-ol {
+.dinky ol {
   list-style: decimal inside;
   padding-left: 20px;
 }
 
-blockquote {
+.dinky blockquote {
   margin: 0;
   padding: 0 0 0 20px;
   font-style: italic;
 }
 
-dl, dt, dd, dl p {
-	font-color: #444;
-}
-
-dl dt {
-  font-weight: bold;
-}
-
-dl dd {
-  padding-left: 20px;
-  font-style: italic;
-}
-
-dl p {
-  padding-left: 20px;
-  font-style: italic;
-}
-
-hr {
+.dinky hr {
   border:0;
   background:#ccc;
   height:1px;
@@ -139,8 +109,7 @@ hr {
 }
 
 /* Images */
-
-img {
+.dinky img {
   position: relative;
   margin: 0 auto;
   max-width: 650px;
@@ -149,7 +118,7 @@ img {
   border: 1px solid #ccc;
 }
 
-p img {
+.dinky p img {
   display: inline;
   margin: 0;
   padding: 0;
@@ -159,14 +128,13 @@ p img {
 }
 
 /* Code blocks */
-
-code, pre {
+.dinky code, .dinky pre {
 	font-family: Monaco, "Bitstream Vera Sans Mono", "Lucida Console", Terminal, monospace;
   color:#000;
   font-size:14px;
 }
 
-pre {
+.dinky pre {
 	padding: 4px 12px;
   background: #FDFEFB;
   border-radius:4px;
@@ -178,18 +146,14 @@ pre {
 
 
 /* Tables */
-
-table {
-  width:100%;
-}
-
-table {
+.dinky table {
+  width: 100%;
   border: 1px solid #ccc;
   margin-bottom: 32px;
   text-align: left;
  }
 
-th {
+.dinky th {
   font-family: 'Arvo', Helvetica, Arial, sans-serif;
 	font-size: 18px;
 	font-weight: normal;
@@ -198,20 +162,13 @@ th {
   color: #FDFEFB;
  }
 
-td {
+.dinky td {
   padding: 10px;
 	background: #ccc;
  }
 
 
-/* Wrapper */
-.wrapper {
-  width:960px;
-}
-
-
 /* Header */
-
 header {
 	background-color: #171717;
 	color: #FDFDFB;
@@ -230,11 +187,7 @@ header {
 	-webkit-font-smoothing: antialiased;
 }
 
-p.header {
-	font-size: 16px;
-}
-
-h1.header {
+header.dinky h1 {
 	font-family: Arvo, sans-serif;
 	font-size: 30px;
 	font-weight: 300;
@@ -244,27 +197,27 @@ h1.header {
 }
 
 
-h1.header, a.header, a.name, header a{
+header.dinky h1, header.dinky a {
 	color: #fff;
 }
 
-a.header {
+header.dinky p a {
 	text-decoration: underline;
 }
 
-a.name {
+header.dinky a.name {
 	white-space: nowrap;
 }
 
-header ul {
-  list-style:none;
-  padding:0;
+header.dinky ul {
+  list-style: none;
+  padding: 0;
 }
 
-header li {
+header.dinky li {
 	list-style-type: none;
-  width:132px;
-  height:15px;
+  width: 132px;
+  height: 15px;
 	margin-bottom: 12px;
 	line-height: 1em;
 	padding: 6px 6px 6px 7px;
@@ -282,10 +235,9 @@ header li {
 
 	-webkit-box-shadow: inset 0px 1px 1px 0 rgba(233,2,38, 1);
 	box-shadow: inset 0px 1px 1px 0 rgba(233,2,38, 1);
-
 }
 
-header li:hover {
+header.dinky li:hover {
 	background: #C3001D;
 	background: -moz-linear-gradient(top, #C3001D 0%, #950119 100%);
   background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f8f8f8), color-stop(100%,#dddddd));
@@ -295,127 +247,123 @@ header li:hover {
   background: linear-gradient(top, #C3001D 0%,#950119 100%);
 }
 
-a.buttons {
+header.dinky a.buttons {
 	-webkit-font-smoothing: antialiased;
 	background: url(../images/arrow-down.png) no-repeat;
+  font-size: 14px;
 	font-weight: normal;
 	text-shadow: rgba(0, 0, 0, 0.4) 0 -1px 0;
 	padding: 2px 2px 2px 22px;
 	height: 30px;
 }
 
-a.github {
-	background: url(../images/octocat-small.png) no-repeat 1px;
+header.dinky a.github {
+	background: url(../images/octocat-small.png) no-repeat;
 }
 
-a.buttons:hover {
+header.dinky a.generator {
+	background: url(../images/gears.png) no-repeat;
+}
+
+header.dinky a.buttons:hover {
 	color: #fff;
 	text-decoration: none;
 }
 
 
 /* Section - for main page content */
-
 section {
-  width:650px;
-  float:right;
-  padding-bottom:50px;
+  min-width: 650px;
+  margin-left: 300px;
+  padding-bottom: 50px;
 }
 
 
 /* Footer */
-
 footer {
-  width:170px;
-  float:left;
-  position:fixed;
-  bottom:10px;
+  width: 170px;
+  float: left;
+  position: fixed;
+  bottom: 10px;
 	padding-left: 50px;
+  font-size: 0.8em;
 }
 
 @media print, screen and (max-width: 960px) {
 
   div.wrapper {
-    width:auto;
-    margin:0;
+    width: auto;
+    margin: 0;
   }
 
-  header, section, footer {
-    float:none;
-    position:static;
-    width:auto;
+  header.dinky, section.dinky, footer.dinky {
+    float: none;
+    position: static;
+    width: auto;
   }
 
-	footer {
+	footer.dinky {
 		border-top: 1px solid #ccc;
-		margin:0 84px 0 50px;
-		padding:0;
+		margin: 0 84px 0 50px;
+		padding: 0;
 	}
 
-  header {
-    padding-right:320px;
+  header.dinky {
+    padding-right: 320px;
   }
 
-  section {
-    padding:20px 84px 20px 50px;
-    margin:0 0 20px;
+  section.dinky {
+    padding: 20px 84px 20px 50px;
+    margin: 0 0 20px;
   }
 
-  header a small {
-    display:inline;
+  header.dinky a small {
+    display: inline;
   }
 
-  header ul {
-    position:absolute;
-    right:130px;
-    top:84px;
+  header.dinky ul {
+    position: absolute;
+    right: 130px;
+    top: 84px;
   }
 }
 
 @media print, screen and (max-width: 720px) {
   body {
-    word-wrap:break-word;
+    word-wrap: break-word;
   }
 
-  header {
-    padding:10px 20px 0;
+  header.dinky {
+    padding: 10px 20px 0;
 		margin-right: 0;
   }
 
 	section {
-    padding:10px 0 10px 20px;
-    margin:0 0 30px;
+    padding: 10px 0 10px 20px;
+    margin: 0 0 30px 0;
   }
 
-	footer {
+	footer.dinky {
 		margin: 0 0 0 30px;
 	}
 
-  header ul, header p.view {
-    position:static;
+  header.dinky ul {
+    position: static;
   }
 }
 
 @media print, screen and (max-width: 480px) {
 
-  header ul li.download {
-    display:none;
-  }
-
-	footer {
+	footer.dinky {
 		margin: 0 0 0 20px;
 	}
 
-	footer a{
-		display:block;
+	footer.dinky a {
+		display: block;
 	}
 
-}
-
-@media print {
-  body {
-    padding:0.4in;
-    font-size:12pt;
-    color:#444;
+  section {
+    margin-left: 0px;
   }
+
 }
