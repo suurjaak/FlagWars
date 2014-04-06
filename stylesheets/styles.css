@@ -48,7 +48,7 @@ header {
 
 .dinky h1, .dinky h2, .dinky h3 {
   color: #232323;
-  margin: 36px 0 10px;
+  margin: 0px 0 10px;
 }
 
 .dinky p, .dinky ul, .dinky ol, .dinky table, .dinky dl {
@@ -282,6 +282,7 @@ header.dinky a.buttons:hover {
 /* Section - for main page content */
 section {
   min-width: 650px;
+  margin-top: 20px;
   margin-left: 300px;
   padding-bottom: 50px;
 }
