@@ -17,7 +17,7 @@
   </style>
   <style type="text/css" id="staticstyle">
   <!--
-    body { font-family: Calibri; }
+    #header, #cards, #sidebar, #footer { font-family: Calibri; }
     div.card {
       position: relative;
       float: left;
@@ -29,6 +29,7 @@
       border-radius: 2px;
       overflow: hidden;
       text-align: center;
+      background-color: #FFF;
     }
     img.flag {
       display: inline-block;
@@ -38,14 +39,14 @@
       margin-right: auto;
       border: 0px;
       box-shadow: 1px 1px 3px #888;
-      z-index: -1;
+      z-index: 2;
     }
     img.heraldic {
       position: absolute;
       bottom: 5px;
       right: 5px;
       max-height: 50px;
-      z-index: -1;
+      z-index: 2;
     }
     img.heraldic.small { max-height: 30px; }
     div.card h1 {
@@ -56,7 +57,7 @@
       padding: 0px;
       margin: 0 10px 0 10px;
     }
-    div.card dl { font-size: 0.7em; margin: 5px 0 0 0; text-align: left; }
+    div.card dl { font-size: 0.7em; margin: 5px 0 0 0; text-align: left; z-index: 3; }
     div.card dt { width: 48%; font-weight: bold; float: left; }
     div.card dt.shifted { position: relative; top: 3px; }
     div.card dd { width: 47%; margin: 0px; float: left; word-wrap: break-word; }
@@ -65,7 +66,7 @@
       position: absolute;
       bottom: 0px;
       left: 3px;
-      z-index: -2;
+      z-index: 1;
       color: #DDD;
       font-size: 0.6em;
     }
@@ -85,7 +86,7 @@
       color: #DDD;
       font-size: 0.8em;
       white-space: nowrap;
-      z-index: -2;
+      z-index: 1;
     }
     #cards.hideHeraldic img.heraldic { display: none; }
     #cards.hideNativeName span.nativename { display: none; }
@@ -110,23 +111,22 @@
       #staticoptions { display: none; }
       div.card { page-break-inside: avoid; }
       div.card img.flag { -webkit-filter: drop-shadow(0px 0px 0px rgba(136, 136, 136, 0)); }
+      .stylecontent { display: none; }
     }
   -->
   </style>
   <link rel="shortcut icon" type="image/png" id="favicon" href="data:image/png;base64,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" />
-</head>
-<body>
 <script type="text/javascript">
 <!--
 /**
  * Generates flag war cards from Wikipedia data, loading text and binary content
- * dynamically and offering it for printing or saving.
+ * dynamically, and offering it for printing or saving.
  *
  * Released under the MIT License.
  *
  * @author    Erki Suurjaak
  * @created   09.03.2014
- * @modified  29.03.2014
+ * @modified  06.04.2014
  */
 "use strict";
 
@@ -203,7 +203,7 @@ var addColourValue = function(name, country, template, url) {
     value = KNOWN_VALUES[name][country];
   } else {
     if (url.match(/svg/i)) {
-      // Example: //upload.wikimedia..../thumb/.../Greater_coat_of_arms_of_Georgia.svg/85px-Greater_coat_of_arms_of_Georgia.svg.png
+      // Example: //upload.wikimedia.org/.../thumb/.../Greater_coat_of_arms_of_Georgia.svg/85px-Greater_coat_of_arms_of_Georgia.svg.png
       url = "http://" + url.replace(/^(https*\:)*\/+/, "");
       svg_url = url.replace(/\.svg\/(.+)$/, ".svg").replace("/thumb/", "/");
     }
@@ -642,12 +642,13 @@ var generateCards = function() {
 
 
 /** Returns a complete static page HTML of the current content. */
-var getStaticPage = function() {
+var buildStaticPage = function() {
   var page = $("<html />");
   var head = $("<head />").append('<title>Flag Wars</title>',
       $("#metatype").clone(), $("#metaauthor").clone(),
       $("#staticstyle").clone(), $("#favicon").clone()).appendTo(page);
   var body = $("<body />").append($("#header").clone()).appendTo(page);
+  body.find("#header h1").text("Flag Wars");
 
   var cards = $("#cards").clone().appendTo(body);
   if ($("#embed_img")[0].checked) cards.find("img").each(function() { 
@@ -693,7 +694,7 @@ var unregisterAction = function(actionId) {
 /** Fills the save-as link and textarea with current content state. */
 var updateSaveContent = function() {
   if (actionTotal && !actionCounter) {
-    var content = getStaticPage();
+    var content = buildStaticPage();
     $("#savetext").val(content);
     var contentUtf8 = unescape(encodeURIComponent(content));
     $("#savelink").html("Save file (" + contentUtf8.length + " bytes)")
@@ -801,6 +802,8 @@ $(document).ready(function() {
 
 -->
 </script>
+</head>
+<body>
 
 
 <div id="header">
@@ -877,7 +880,7 @@ $(document).ready(function() {
   </tr><tr>
     <th>Game over:</th><td>When one player loses all cards. Or when last player remains.</td>
   </tr></table>
-  <p>&copy; 2014 Erki Suurjaak. Version 1.2, 29.03.2014.</p>
+  <p>&copy; 2014 Erki Suurjaak. Version 1.2.1, 06.04.2014.</p>
 </div>
 
 

@@ -21,8 +21,6 @@ http://suurjaak.github.com/FlagWars/.
 Gameplay
 --------
 
-In general, very similar to [War](http://en.wikipedia.org/wiki/War_(card_game)).
-
 **Play:** Shuffle and deal all cards. Player next to dealer leads the first round.
 
 **Each round:** Leader announces a field from their topmost card. 
@@ -35,6 +33,8 @@ If best values are equal, tied players include their next card.
 **Endgame:** With 3 cards or less, player can choose which card to use.
 
 **Game over:** When one player loses all cards. Or when last player remains.
+
+In general, very similar to [War](http://en.wikipedia.org/wiki/War_(card_game)).
 
 
 Generating
