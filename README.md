@@ -8,11 +8,11 @@ cards themselves. Some even cut flags out of books and glued them on.
 
 My own hand-drawn set, from around 1992:
 
-[![Hand-drawn deck](https://raw.github.com/suurjaak/FlagWars/gh-pages/images/th_handmade.jpg)](https://raw.githubusercontent.com/suurjaak/FlagWars/gh-pages/images/handmade.jpg)
+[!(https://raw.github.com/suurjaak/FlagWars/gh-pages/images/th_handmade.jpg)](https://raw.githubusercontent.com/suurjaak/FlagWars/gh-pages/images/handmade.jpg)
 
 Print-ready HTML generated from Wikipedia data, 2014:
 
-[![Printable deck](https://raw.github.com/suurjaak/FlagWars/gh-pages/images/th_generated.png)](https://raw.githubusercontent.com/suurjaak/FlagWars/gh-pages/images/generated.png)
+[!(https://raw.github.com/suurjaak/FlagWars/gh-pages/images/th_generated.png)](https://raw.githubusercontent.com/suurjaak/FlagWars/gh-pages/images/generated.png)
 
 
 Online generator, print-ready PDFs and HTML content at 
