@@ -139,8 +139,8 @@
   <ul>
     <li class="download"><a class="buttons cards" href="cards.html">Cards</a></li>
     <li class="download"><a class="buttons generator" href="generator.html">Generate</a></li>
-    <li class="download"><a class="buttons pdf" href="http://erki.lap.ee/downloads/FlagWars/flagwars-1.3.pdf">Download PDF</a></li>
-    <li class="download"><a class="buttons zip" href="http://erki.lap.ee/downloads/FlagWars/flagwars-1.3.html.zip">Download HTML</a></li>
+    <li class="download"><a class="buttons pdf" href="http://erki.lap.ee/downloads/FlagWars/flagwars-1.4.pdf">Download PDF</a></li>
+    <li class="download"><a class="buttons zip" href="http://erki.lap.ee/downloads/FlagWars/flagwars-1.4.html.zip">Download HTML</a></li>
     <li><a class="buttons github" href="https://github.com/suurjaak/FlagWars">View On GitHub</a></li>
   </ul>
 
@@ -161,7 +161,7 @@
  *
  * @author    Erki Suurjaak
  * @created   09.03.2014
- * @modified  06.04.2014
+ * @modified  09.08.2020
  */
 "use strict";
 
@@ -192,15 +192,15 @@ var BLANK_IMG = "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAA
 
 // Some values are hard to parse from Wikipedia, or missing there altogether.
 var KNOWN_VALUES = {
-  "Area": {"South Korea": 100210, "Taiwan": 35883, "Vatican City": 0.44},
+  "Area": {"South Korea": 100210, "Taiwan": 35883, "United States of America": 9833520, "Vatican City": 0.44},
   "Capital": {"Monaco": "Monaco", "Singapore": "Singapore", "Vatican City": "Vatican City"},
   "Capital population": {"Cook Islands": 13373, "Nauru": 1292, "Singapore": "", "Vatican City": ""},
-  "Obesity rate": {"Afghanistan": 2.2, "Albania": 21.3, "Algeria": 16.0, "American Samoa": 74.6, "Andorra": 25.2, "Angola": 6.4, "Antigua and Barbuda": 25.6, "Argentina": 29.7, "Armenia": 24.0, "Australia": 26.8, "Austria": 20.9, "Azerbaijan": 23.8, "Bahamas": 34.7, "Bahrain": 32.9, "Bangladesh": 3.5, "Barbados": 34.7, "Belarus": 24.3, "Belgium": 22.1, "Belize": 33.7, "Benin": 6.0, "Bhutan": 5.3, "Bolivia": 17.9, "Bosnia and Herzegovina": 26.5, "Botswana": 11.2, "Brazil": 18.8, "Brunei": 7.5, "Bulgaria": 23.7, "Burkina Faso": 2.3, "Burma": 4.0, "Burundi": 2.9, "Cape Verde": 10.0, "Cambodia": 2.1, "Cameroon": 10.3, "Canada": 26.2, "Central African Republic": 3.5, "Chad": 2.7, "Chile": 29.4, "China": 5.7, "Colombia": 17.3, "Comoros": 4.4, "Democratic Republic of the Congo": 1.7, "Republic of the Congo": 4.7, "Cook Islands": 63.7, "Costa Rica": 23.7, "Ivory Coast": 6.2, "Croatia": 24.2, "Cuba": 21.5, "Cyprus": 25.5, "Czech Republic": 32.7, "Denmark": 18.2, "Djibouti": 9.4, "Dominica": 24.9, "Dominican Republic": 21.2, "Ecuador": 21.4, "Egypt": 33.1, "El Salvador": 25.8, "Equatorial Guinea": 10.6, "Eritrea": 1.5, "Estonia": 32.0, "Ethiopia": 1.1, "Fiji": 30.6, "Finland": 23.0, "France": 18.2, "Gabon": 13.9, "The Gambia": 7.9, "Georgia": 22.1, "Germany": 25.1, "Ghana": 7.5, "Greece": 20.1, "Grenada": 22.5, "Guatemala": 19.2, "Guinea": 4.4, "Guinea-Bissau": 4.9, "Guyana": 17.2, "Haiti": 7.9, "Honduras": 18.4, "Hungary": 27.6, "Iceland": 23.2, "India": 1.9, "Indonesia": 4.8, "Iran": 19.4, "Iraq": 27.0, "Republic of Ireland": 25.2, "Israel": 26.2, "Italy": 19.8, "Jamaica": 24.1, "Japan": 5.0, "Jordan": 30.0, "Kazakhstan": 23.7, "Kenya": 4.2, "Kiribati": 46.0, "North Korea": 3.9, "South Korea": 7.7, "Kuwait": 42.0, "Kyrgyzstan": 15.5, "Laos": 2.6, "Latvia": 24.9, "Lebanon": 27.4, "Lesotho": 14.6, "Liberia": 4.8, "Libya": 27.8, "Lithuania": 27.6, "Luxembourg": 26.0, "Republic of Macedonia": 21.1, "Madagascar": 1.6, "Malawi": 4.3, "Malaysia": 14.0, "Maldives": 12.9, "Mali": 4.3, "Malta": 28.8, "Marshall Islands": 45.4, "Mauritania": 12.7, "Mauritius": 18.5, "Mexico": 32.1, "Federated States of Micronesia": 40.6, "Moldova": 21.2, "Mongolia": 14.4, "Montenegro": 22.5, "Morocco": 16.4, "Mozambique": 4.9, "Namibia": 9.5, "Nauru": 71.1, "Nepal": 1.4, "Kingdom of the Netherlands": 18.8, "New Zealand": 28.3, "Nicaragua": 22.2, "Niger": 2.4, "Nigeria": 6.5, "Norway": 21.5, "Oman": 20.9, "Pakistan": 5.5, "Palau": 48.9, "Panama": 25.4, "Papua New Guinea": 16.2, "Paraguay": 17.9, "Peru": 15.7, "Philippines": 6.3, "Poland": 25.3, "Portugal": 24.0, "Qatar": 33.2, "Romania": 19.1, "Russia": 26.5, "Rwanda": 4.3, "Saint Kitts and Nevis": 40.7, "Saint Lucia": 21.4, "Saint Vincent and the Grenadines": 23.4, "Samoa": 54.1, "São Tomé and Príncipe": 9.5, "Saudi Arabia": 33.0, "Senegal": 6.8, "Serbia": 24.8, "Seychelles": 23.9, "Sierra Leone": 6.8, "Singapore": 7.1, "Slovakia": 25.4, "Slovenia": 28.6, "Solomon Islands": 30.0, "Somalia": 4.8, "South Africa": 31.3, "Spain": 26.6, "Sri Lanka": 5.1, "Sudan": 6.0, "Suriname": 25.1, "Swaziland": 19.7, "Sweden": 18.6, "Switzerland": 17.5, "Syria": 27.1, "Tajikistan": 8.6, "Tanzania": 5.0, "Thailand": 8.8, "East Timor": 2.7, "Togo": 4.3, "Tokelau": 63.4, "Tonga": 57.6, "Trinidad and Tobago": 29.3, "Tunisia": 22.3, "Turkey": 27.8, "Turkmenistan": 13.2, "Uganda": 4.3, "Ukraine": 21.3, "United Arab Emirates": 32.7, "United Kingdom": 26.9, "United States": 33.0, "Uruguay": 24.8, "Uzbekistan": 15.1, "Vanuatu": 27.5, "Venezuela": 30.3, "Vietnam": 1.7, "Yemen": 14.5, "Zambia": 3.6, "Zimbabwe": 7.0},
-  "Life expectancy": {"Montenegro": "74.5 (71.5M 77.5F)", "Swaziland": "50 (49M 51F)"},
-  "Flag colours": {"Albania": 2, "Belgium": 3, "Botswana": 3, "Ghana": 4, "Iraq": 4, "Jamaica": 3, "Jordan": 4, "Kuwait": 4, "Malawi": 3, "State of Palestine": 4, "Saint Lucia": 4, "Somaliland": 4, "United Arab Emirates": 4, "Yemen": 3 },
-  "Heraldic colours": {"Albania": 3, "Bosnia and Herzegovina": 3, "Cook Islands": 10, "Cyprus": 3, "Dominica": 8, "Grenada": 14, "Lebanon": 4, "Libya": 1, "Marshall Islands": 4, "Nigeria": 9, "South Africa": 11, "São Tomé and Príncipe": 10},
-  "Title": {"Hong Kong": "Hong Kong Special Administrative Region of the PRC", "Macau": "Macau Special Administrative Region of the PRC"},
-  "Native name": {"Curaçao": "Pais Kòrsou", "Burma": "Pyidaunzu Thanmăda Myăma Nainngandaw", "Cambodia": "Preăh Réachéanachâk Kâmpŭchéa", "Chad": "جمهورية تشاد", "Comoros": "Udzima wa Komori", "East Timor": "Repúblika Demokrátika Timór-Leste", "Monaco": "Principauté de Monaco", "South Korea": "대한민국", "Switzerland": "Svizra", "Togo": "République Togolaise"}
+  "Obesity rate": {"Afghanistan": 5.5, "Albania": 21.7, "Algeria": 27.4, "Andorra": 25.6, "Angola": 8.2, "Antigua and Barbuda": 18.9, "Argentina": 28.3, "Armenia": 20.2, "Australia": 29.0, "Austria": 20.1, "Azerbaijan": 19.9, "Bahrain": 29.8, "Bangladesh": 3.6, "Barbados": 23.1, "Belarus": 24.5, "Belgium": 22.1, "Belize": 24.1, "Benin": 9.6, "Bhutan": 6.4, "Bolivia": 20.2, "Bosnia and Herzegovina": 17.9, "Botswana": 18.9, "Brazil": 22.1, "Brunei": 14.1, "Bulgaria": 25.0, "Burkina Faso": 5.6, "Myanmar": 5.8, "Burundi": 5.4, "Cabo Verde": 11.8, "Cambodia": 3.9, "Cameroon": 11.4, "Canada": 29.4, "Central African Republic": 7.5, "Chad": 6.1, "Chile": 28.0, "China": 6.2, "Colombia": 22.3, "Comoros": 7.8, "Cook Islands": 55.9, "Costa Rica": 25.7, "Cote d'Ivoire": 10.3, "Croatia": 24.4, "Cuba": 24.6, "Cyprus": 21.8, "Czechia": 26.0, "Democratic Republic of the Congo": 6.7, "Denmark": 19.7, "Djibouti": 13.5, "Dominica": 27.9, "Dominican Republic": 27.6, "Ecuador": 19.9, "Egypt": 32.0, "El Salvador": 24.6, "Equatorial Guinea": 8.0, "Eritrea": 5.0, "Estonia": 21.2, "Ethiopia": 4.5, "Federated States of Micronesia": 45.8, "Fiji": 30.2, "Finland": 22.2, "France": 21.6, "Gabon": 15.0, "Georgia": 21.7, "Germany": 22.3, "Ghana": 10.9, "Greece": 24.9, "Grenada": 21.3, "Guatemala": 21.2, "Guinea": 7.7, "Guinea-Bissau": 9.5, "Guyana": 20.2, "Haiti": 22.7, "Honduras": 21.4, "Hungary": 26.4, "Iceland": 21.9, "India": 3.9, "Indonesia": 6.9, "Iran": 25.8, "Iraq": 30.4, "Ireland": 25.3, "Israel": 26.1, "Italy": 19.9, "Jamaica": 24.7, "Japan": 4.3, "Jordan": 35.5, "Kazakhstan": 21.0, "Kenya": 7.1, "Kiribati": 46.0, "Kuwait": 37.9, "Kyrgyzstan": 16.6, "Laos": 5.3, "Latvia": 23.6, "Lebanon": 32.0, "Lesotho": 16.6, "Liberia": 9.9, "Libya": 32.5, "Lithuania": 26.3, "Luxembourg": 22.6, "Macedonia": 22.4, "Madagascar": 5.3, "Malawi": 5.8, "Malaysia": 15.6, "Maldives": 8.6, "Mali": 8.6, "Malta": 28.9, "Marshall Islands": 52.9, "Mauritania": 12.7, "Mauritius": 10.8, "Mexico": 28.9, "Moldova": 18.9, "Mongolia": 20.6, "Montenegro": 23.3, "Morocco": 26.1, "Mozambique": 7.2, "Namibia": 17.2, "Nauru": 61.0, "Nepal": 4.1, "Netherlands": 20.4, "New Zealand": 30.8, "Nicaragua": 23.7, "Niger": 5.5, "Nigeria": 8.9, "Niue": 50.0, "North Korea": 6.8, "Norway": 23.1, "Oman": 27.0, "Pakistan": 8.6, "Palau": 55.3, "Panama": 22.7, "Papua New Guinea": 21.3, "Paraguay": 20.3, "Peru": 19.7, "Philippines": 6.4, "Poland": 23.1, "Portugal": 20.8, "Qatar": 35.1, "Republic of the Congo": 9.6, "Romania": 22.5, "Russia": 23.1, "Rwanda": 5.8, "Saint Kitts and Nevis": 22.9, "Saint Lucia": 19.7, "Saint Vincent and the Grenadines": 23.7, "Samoa": 47.3, "Sao Tome and Principe": 12.4, "Saudi Arabia": 35.4, "Senegal": 8.8, "Serbia": 21.5, "Seychelles": 14.0, "Sierra Leone": 8.7, "Singapore": 6.1, "Slovakia": 20.5, "Slovenia": 20.2, "Solomon Islands": 22.5, "Somalia": 8.3, "South Africa": 28.3, "South Korea": 4.7, "South Sudan": 6.6, "Spain": 23.8, "Sri Lanka": 5.2, "Sudan": 6.6, "Suriname": 26.4, "Swaziland": 16.5, "Sweden": 20.6, "Switzerland": 19.5, "Syria": 27.8, "Tajikistan": 14.2, "Tanzania": 8.4, "Thailand": 10.0, "The Bahamas": 31.6, "The Gambia": 10.3, "Timor-Leste": 3.8, "Togo": 8.4, "Tonga": 48.2, "Trinidad and Tobago": 18.6, "Tunisia": 26.9, "Turkey": 32.1, "Turkmenistan": 18.6, "Tuvalu": 51.6, "Uganda": 5.3, "Ukraine": 24.1, "United Arab Emirates": 31.7, "United Kingdom": 27.8, "United States": 36.2, "Uruguay": 27.9, "Uzbekistan": 16.6, "Vanuatu": 25.2, "Venezuela": 25.6, "Vietnam": 2.1, "Yemen": 17.1, "Zambia": 8.1, "Zimbabwe": 15.5},
+  "Life expectancy": {"Cabo Verde": "76.2 (72.2M, 80.2F)", "Montenegro": "74.5 (71.5M, 77.5F)", "Saint Vincent and the Grenadines": "73.7 (71.8M, 75.5F)", "Swaziland": "50 (49M, 51F)"},
+  "Flag colours": {"Afghanistan": 4, "Albania": 2, "Angola": 3, "Antigua and Barbuda": 5, "Belgium": 3, "Botswana": 3, "Egypt": 4, "Estonia": 3, "Ghana": 4, "Iraq": 4, "Jamaica": 3, "Jordan": 4, "Kuwait": 4, "Lesotho": 4, "Malawi": 3, "State of Palestine": 4, "Saint Lucia": 4, "Somaliland": 4, "Timor-Leste": 4, "Trinidad and Tobago": 3, "United Arab Emirates": 4, "Yemen": 3},
+  "Heraldic colours": {"Afghanistan": 6, "Albania": 3, "Bosnia and Herzegovina": 3, "Cook Islands": 10, "Cyprus": 3, "Dominica": 8, "Grenada": 14, "Lebanon": 4, "Libya": 1, "Marshall Islands": 4, "Mongolia": 3, "Nigeria": 9, "South Africa": 11, "São Tomé and Príncipe": 10},
+  "Title": {"Hong Kong": "Hong Kong SAR of the PRC", "Macau": "Macau SAR of the PRC"},
+  "Native name": {"Curaçao": "Pais Kòrsou", "Myanmar": "Pyidaunzu Thanmăda Myăma Nainngandaw", "Cambodia": "Preăh Réachéanachâk Kâmpŭchéa", "Chad": "جمهورية تشاد", "Comoros": "Udzima wa Komori", "East Timor": "Repúblika Demokrátika Timór-Leste", "Monaco": "Principauté de Monaco", "South Korea": "대한민국", "Switzerland": "Svizra", "Togo": "République Togolaise"}
 };
 
 /** Formats number with thousand separator char (default " "). */
@@ -335,7 +335,17 @@ var addCapitalPopulation = function(capital, country, template) {
             var p = $(data.parse.text["*"].replace(/<img[^>]+src=/g, function(a) { return a.substring(0, a.length - 1) + "hack="; } ));
             p.find("span[class*=sortkey]").remove(); // Invisible spans, hinder parsing
             try {
-              var value = ((p.find('th,td').filter(function(){ return $(this).text().match(/population/i); }).parent().next("tr").find("td:last-child").first().text().match(/([0-9.,\s]+)/i) || ["",""])[1] || (p.find('td').filter(function(){ return $(this).text().match(/population/i); }).next("td:first").text().match(/([0-9.,\s]+)/i) || ["",""])[1]).replace(/[.,]/g, " ").trim();
+              var row = p.find('th,td').filter(function() { return $(this).text().match(/population/i); }).parent();
+              var value = (p.find("th,td").filter(function(){ return $(this).text().match(/population/i); }).next("td:first").text().match(/([0-9.,\s]+)/i) || ["",""])[1].replace(/[.,]/g, " ").trim();
+              var index = 0;
+              while (!value && index < 5) {
+                row = row.next("tr");
+                var td = row.find("td:last-child").first();
+                var v = td.text().match(/([0-9.,\s]+)/i)[1];
+                // Skip links like "1st", and population density cells
+                if (v && !td.find("a").text().match(v) && !td.text().includes("km")) value = v;
+                index++;
+              };
               if (value) element.append(", " + formatter(value))
             } catch (e) {
               $("#errors").append("Parse capital population " + capital + ": " + e + "<hr />");
@@ -438,14 +448,18 @@ var makeCard = function(displaytitle, page, template) {
   var flag_svg_url = null;
   var heraldic_svg_url = null;
 
-  var flag_url = p.find("img[srchack*=Flag_of]:first").attr("srchack").replace(/svg\/(\d+)px/, "svg/180px") || "";
+  var flag_url = (p.find("img[srchack*=Flag_of]:first").attr("srchack") || p.find("img").filter(function() { return ($(this).attr("alt") || "").match(/Flag of/i); }).first().attr("srchack") || "").replace(/svg\/(\d+)px/, "svg/180px");
   var heraldic_url = KNOWN_HERALDIC_URLS[displaytitle] || p.find("img").filter(function() { return $(this).attr("srchack").match(/Coats*_of_arms|Emblem|Seal_of|Koninklijk|Bundesadler|Armoiries|Staatswappen|Arms_of|Escudo_|Herb_|_COA|coa_|-arms/i); }).first().attr("srchack") || "";
 
-  p.find("span[class='fn org country-name']:first").find("a").remove(); // Name-span can contain bothersome links
+  p.find("*[class='fn org country-name']:first").find("a").remove(); // Name-tag can contain bothersome links
   if (displaytitle in KNOWN_VALUES["Title"]) {
-    title = KNOWN_VALUES["Title"][displaytitle];
+    var title = KNOWN_VALUES["Title"][displaytitle];
   } else {
-    var title = p.find("span[class='fn org country-name']:first").text().trim();
+    var title = ""
+    p.find("*[class='fn org country-name'],*[class='fn org country-name'] *").each(function() {
+      title = $(this).clone().children().remove().end().text().trim();
+      return !title;
+    });
     title = displaytitle.length > title.length ? displaytitle : title;
     title = title.replace(/\s\(country\)/i, ""); // Entries like "Georgia (country)"
   }
@@ -467,32 +481,40 @@ var makeCard = function(displaytitle, page, template) {
   template.find(".nativename").html((function() {
     var name = KNOWN_VALUES["Native name"] && KNOWN_VALUES["Native name"][displaytitle] || "";
     if (!name) try { // Find first flat element with content after official name
-      var infocell = p.find("table.infobox").find("span.country-name").parent();
-      infocell.find("span.country-name").remove();
+      var infocell = p.find("table.infobox").find("*.country-name").parent();
+      var backup = infocell.clone();
+      infocell.find("*.country-name").remove();
       infocell.find("*").each(function() {
-        if (this.firstChild && this.firstChild.data && this.firstChild.data.trim()) { 
+        if ("style" == this.tagName.toLowerCase()) {
+        } else if (this.firstChild && this.firstChild.data && this.firstChild.data.trim()) { 
           name = this.firstChild.data.trim();
         } else if (this.lastChild && this.lastChild.data && this.lastChild.data.trim()) {
           name = this.lastChild.data.trim();
         }
         if (name) return false; // break .each()
       });
+      if (!name) backup.find("*").each(function() {
+        if (this.getAttribute("lang")) name = this.textContent;
+        if (name) return false; // break .each()
+      });
     } catch (e) { console.log(e); }
     return name || title;
   })());
 
-  addValue("Area", displaytitle, template, function() { return $("<span />").html(
-      (p.find('th,td').filter(function(){ return $(this).text().toLowerCase() === "area"; }).parent().next("tr").find("th:last,td:last").html().match(/([0-9 ,.]+).*km/) || p.find('th,td').filter(function(){ return $(this).text().toLowerCase() === "area"; }).next("th,td").html().match(/([0-9 ,.]+).*km/))[1]
-    ).text(); }
-  );
+  addValue("Area", displaytitle, template, function() {
+
+    // @todo usa puhul ei parsi välja km-e
+
+    return $("<span />").html(((p.find('th,td').filter(function(){ return $(this).text().toLowerCase().trim() === "area"; }).parent().next("tr").find("th,td").filter(function() { return $(this).text().toLowerCase().match(/([0-9 ,.]+).*km/); }).text() || "").match(/([0-9 ,.]+).*km/) || p.find('th,td').filter(function(){ return $(this).text().toLowerCase().trim() === "area"; }).next("th,td").html().match(/([0-9 ,.]+).*km/))[1]).text();
+  });
 
   addValue("Population", displaytitle, template, function() { return $("<span />").html(
-      p.find("th,td").filter(function(){ return $(this).text().toLowerCase() === "population"; }).parent().next("tr").find("td:last").text().match(/([0-9,.\s]+)/)[1]
+      p.find("th,td").filter(function(){ return $(this).text().toLowerCase().trim() === "population"; }).parent().next("tr").find("td:last").text().match(/([0-9,.\s]+)/)[1]
     ).text(); }
   );
 
   addValue("Population density", displaytitle, template, function() { return $("<span />").html(
-      p.find("th,td").filter(function(){ return $(this).text().toLowerCase() === "population"; }).parent().parent().find("th,td").filter(function(){ return $(this).text().match(/^Density/i); }).next().text().match(/([0-9.,\s]+).*\/km/i)[1]
+      p.find("th,td").filter(function(){ return $(this).text().toLowerCase().trim() === "population"; }).parent().parent().find("th,td").filter(function(){ return $(this).text().match(/Density/i); }).next().text().match(/([0-9.,\s]+).*\/km/i)[1]
     ).text(); }
   );
 
@@ -522,9 +544,9 @@ var makeCard = function(displaytitle, page, template) {
   addValue("Life expectancy", displaytitle, template);
   addValue("Obesity rate", displaytitle, template);
 
-  var letters = "state " + title.replace(/\s/, "").length;
+  var letters = "state " + title.replace(/\s/g, "").length;
   if (capital !== "-") {
-    letters += ", capital " + capital.replace(/\s/, "").length;
+    letters += ", capital " + capital.replace(/\s/g, "").length;
   }
   template.find("dl").append($("<dt />").html("Letters"), $("<dd />").html(letters));
 
@@ -589,6 +611,39 @@ var generateCards = function() {
   $("#cards").find("div:not([id])").remove();
   $("#progress").html("Creating..");
 
+  var mainActionId = registerAction();
+  var processCountryList = function() {
+    $.getJSON(WIKIPEDIA_API_URL, {
+      "action": "parse",
+      "disablepp": "1",
+      "redirects": "1",
+      "format": "json",
+      "prop": "text",
+      "page": "List of countries"
+    }).done(function(data) { 
+      try {
+        if (data.parse && data.parse.text) {
+          // Bypass jQuery automatic image verification
+          var page = $(data.parse.text["*"].replace(/<img[^>]+src=/g, function(a) { return a.substring(0, a.length - 1) + "hack="; } ));
+          var links = page.find("td:first-child > span[id]:first-child").parent().find("a");
+          var titles = links.map(function() { return ($(this).attr("title") || ""); }).get();
+          COUNTRIES_EXTRA.map(function(x) { titles.indexOf(x) < 0 ? titles.push(x) : 0; });
+          var countries = titles.sort().filter(function(x) { return x && true; });
+
+          $("#generate").removeAttr("disabled").val("Pause generating");
+          makeCountries(countries);
+        }
+      } catch (e) {
+        $("#errors").append("Making countries: " + e + "<hr />");
+      } finally {
+        unregisterAction(mainActionId);
+      }
+    }).fail(function(xhr, status, e) {
+      $("#errors").append("Query countries: " + status + " " + e + "<hr />");
+      unregisterAction(mainActionId);
+    });
+  };
+
   var DATAQUERIES = {
     "GDP per capita": {
       "page": "List of countries by GDP (PPP) per capita",
@@ -600,7 +655,9 @@ var generateCards = function() {
       "val": function(x) { 
         var format = function(v) { return parseFloat(v).toFixed(1); };
         var total = x.find("td").eq(3).text(), m = x.find("td").eq(4).text(), f = x.find("td").eq(5).text();
-        return format(total) + (!(m && f) ? "" : " (" + format(m) + "M, " + format(f) + "F)");
+        if (!isFinite(total)) return;
+        var mf = [m, f].map(function(x, i) { return isFinite(x) ? (format(x) + (i ? "F" : "M")) : ""; }).filter(Boolean).join(", ");
+        return format(total) + (mf ? " (" + mf + ")" : "");
       },
       "key": function(x) { return x.find("a:first").attr("title"); },
       "filter": function() { return $(this).find("a:first").attr("title"); }},
@@ -610,6 +667,7 @@ var generateCards = function() {
       "key": function(x) { return x.find("a:first").text(); },
       "filter": function() { return $(this).find("td:first").text(); } }
   };
+  var pending = Object.keys(DATAQUERIES);
   for (var valuename in DATAQUERIES) {
     (function(valuename, query) {
       var actionId = registerAction();
@@ -639,40 +697,12 @@ var generateCards = function() {
       }).fail(function(xhr, status, e) {
         $("#errors").append("Query " + valuename + ": " + status + " " + e + "<hr />");
         unregisterAction(actionId);
+      }).complete(function() {
+        pending = pending.filter(function(x) { return x != valuename; });
+        if (!pending.length) processCountryList();
       });
     })(valuename, DATAQUERIES[valuename]);
   }
-
-  var actionId = registerAction();
-  $.getJSON(WIKIPEDIA_API_URL, {
-    "action": "parse",
-    "disablepp": "1",
-    "redirects": "1",
-    "format": "json",
-    "prop": "text",
-    "page": "List of countries"
-  }).done(function(data) { 
-    try {
-      if (data.parse && data.parse.text) {
-        // Bypass jQuery automatic image verification
-        var page = $(data.parse.text["*"].replace(/<img[^>]+src=/g, function(a) { return a.substring(0, a.length - 1) + "hack="; } ));
-        var links = page.find("td:first-child > span[id]:first-child").parent().find("a");
-        var titles = links.map(function() { return ($(this).attr("title") || ""); }).get();
-        COUNTRIES_EXTRA.map(function(x) { titles.indexOf(x) < 0 ? titles.push(x) : 0; });
-        var countries = titles.sort().filter(function(x) { return x && true; });
-
-        $("#generate").removeAttr("disabled").val("Pause generating");
-        makeCountries(countries);
-      }
-    } catch (e) {
-      $("#errors").append("Making countries: " + e + "<hr />");
-    } finally {
-      unregisterAction(actionId);
-    }
-  }).fail(function(xhr, status, e) {
-    $("#errors").append("Query countries: " + status + " " + e + "<hr />");
-    unregisterAction(actionId);
-  });
 };
 
 
@@ -837,6 +867,8 @@ $(document).ready(function() {
 
 -->
 </script>
+</head>
+<body>
 
 
 <div id="header">
@@ -913,7 +945,7 @@ $(document).ready(function() {
   </tr><tr>
     <th>Game over:</th><td>When one player loses all cards. Or when last player remains.</td>
   </tr></table>
-  <p>&copy; 2014 Erki Suurjaak. Version 1.3, 06.04.2014.</p>
+  <p>&copy; 2014 Erki Suurjaak. Version 1.4, 09.08.2020.</p>
 </div>
 
 
@@ -942,10 +974,8 @@ if (!document.getElementById("generate")) {
       var cards = document.getElementById("cards");
       var classes = cards.className, regex = new RegExp("\\b" + this.id + "\\b");
       cards.className = classes.match(regex) ? classes.replace(regex, "") : classes + " " + this.id;
-      if ("narrowSize" === this.id) {
-        var elms = cards.getElementsByClassName("card");
-        for (var i = 0; i < elms.length; i++) sizeHeraldicIcon(elms[i]);
-      }
+      var elms = cards.getElementsByClassName("card");
+      for (var i = 0; i < elms.length; i++) sizeHeraldicIcon(elms[i]);
   };
   var onLoad = function() { 
     var inputs = document.getElementById("staticoptions").getElementsByTagName("input");
