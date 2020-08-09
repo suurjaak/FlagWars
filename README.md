@@ -16,7 +16,7 @@ Print-ready HTML generated from Wikipedia data, 2014:
 
 
 Online generator, print-ready PDFs and HTML content at 
-http://suurjaak.github.com/FlagWars/.
+https://suurjaak.github.io/FlagWars/.
 
 
 Gameplay
