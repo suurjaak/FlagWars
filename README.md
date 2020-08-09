@@ -65,7 +65,7 @@ Card generator uses jQuery, http://jquery.com.
 
 Images and most data from Wikipedia.
 
-Obesity data from CIA World Factbook 2008,
+Obesity data from CIA World Factbook 2016,
 https://www.cia.gov/library/publications/the-world-factbook/rankorder/2228rank.html.
 
 Obesity data for Estonia from "Obesity, impaired glucose regulation, metabolic 
